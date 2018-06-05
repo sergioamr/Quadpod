@@ -38,8 +38,20 @@ var joint_mesh_1 = new THREE.Object3D();
 var joint_mesh_2 = new THREE.Object3D();
 var joint_mesh_3 = new THREE.Object3D();
 var joint_mesh_4 = new THREE.Object3D();
+var foot_mesh = new THREE.Object3D();
+
+function center_object(obj3d) {
+    var box = new THREE.Box3().setFromObject( obj3d );
+    box.getCenter( obj3d.position );
+    obj3d.position.multiplyScalar( - 1 );
+    return box;
+}
 
 function create_leg(angle) {
+    var box;
+    var size;
+    var helper;
+
     // rotateAboutPoint(mesh, new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 1, 0, 0 ))
     // mesh.rotateOnAxis( new THREE.Vector3( 0, 1, 0 ), 90 * ( Math.PI/180 ) );
     // https://stackoverflow.com/questions/42812861/three-js-pivot-point/42866733#42866733
@@ -55,28 +67,41 @@ function create_leg(angle) {
 
     //---------- Joint 1 -----------------
     var j1_clone = joint_mesh_1.clone();
-    var box = new THREE.Box3().setFromObject( j1_clone );
-    box.getCenter( j1_clone.position );
-    j1_clone.position.multiplyScalar( - 1 );
 
-    var size = box.getSize( new THREE.Vector3() );
+    //helper = new THREE.BoxHelper(j1_clone, 0x0000ff);
+    //j1_clone.add(helper);
 
-    j1_clone.position.x += 50.0 * SCALE;
-    joint_body.add(j1_clone);
+    box = center_object( j1_clone );
+    //size = box.getSize( new THREE.Vector3() );
+    j1_clone.position.x += 58.0 * SCALE;
 
     //---------- Joint 2 -----------------
     var j2_clone = joint_mesh_2.clone();
+    center_object( j2_clone );
 
-    var box = new THREE.Box3().setFromObject( j2_clone );
-    box.getCenter( j2_clone.position );
-    j2_clone.position.multiplyScalar( - 1 );
-
-    j2_clone.position.x +=  j1_clone.position.x + 19 * SCALE;
+    j2_clone.position.x +=  j1_clone.position.x + 12 * SCALE;
     j2_clone.position.z +=  j1_clone.position.y + 32 * SCALE;
 
-    j1_clone.add(j2_clone);
-
     //---------- Joint 3 -----------------
+
+    var j3_clone = joint_mesh_3.clone();
+    box = center_object( j3_clone );
+    size = box.getSize( new THREE.Vector3() );
+
+    j3_clone.position.x +=  20 * SCALE;
+    j3_clone.position.y -=  9 * SCALE;
+    j3_clone.position.z +=  5 * SCALE;
+
+    var j4_clone = joint_mesh_4.clone();
+    size = box.getSize( new THREE.Vector3() );
+
+    //---------- Rotate leg -----------------
+
+    joint_body.add(j1_clone);
+    j1_clone.add(j2_clone);
+    j2_clone.add(j3_clone);
+    j3_clone.add(j4_clone);
+    j4_clone.add(foot_mesh.clone());
 
     leg.rotation.set( 0,0, angle * ( Math.PI/180 ));
 
@@ -84,16 +109,18 @@ function create_leg(angle) {
 }
 
 var loaded_meshes = 0;
+var total_meshes = 0;
 var legs = new Array();
 
 function finished_loading() {
-    console.log("- Mesh loaded -");
+    console.log("- Mesh loaded - " + loaded_meshes);
     loaded_meshes++;
 
-    if (loaded_meshes < 5)
+    if (loaded_meshes != total_meshes)
         return;
 
-    console.log("- Create legs -");
+    console.log("--------------------------------------- ");
+    console.log("- Create legs - " + loaded_meshes);
 
     robot.add( shell );
 
@@ -144,8 +171,9 @@ function init() {
 
     //----------------- SHELL ------------------------
 
+    total_meshes++;
     loader.load( 'models/Shell (x1).stl', function ( geometry ) {
-        var mesh = new THREE.Mesh( geometry, material_shell );
+        var mesh = new THREE.Mesh( geometry, material_white );
 
         mesh.position.set( 0, 0, 0 );
         mesh.rotation.set( 0, 0, 0 );
@@ -154,9 +182,8 @@ function init() {
         mesh.castShadow = true;
         mesh.receiveShadow = true;
 
-        var box = new THREE.Box3().setFromObject( mesh );
-        box.getCenter( mesh.position ); // this re-sets the mesh position
-        mesh.position.multiplyScalar( - 1 );
+        box = center_object( mesh );
+
         mesh.position.y /= 2;
 
         var dummyshell = new THREE.Object3D();
@@ -165,12 +192,112 @@ function init() {
         dummyshell.position.z+= 20 * SCALE;
 
         shell.add(dummyshell);
+        finished_loading();
+    });
 
+    //---------------- FOOT ------------------------
+    total_meshes++;
+    loader.load( 'models/Foot (x4).stl', function ( geometry ) {
+        var mesh = new THREE.Mesh( geometry, material_white );
+
+        mesh.position.set( 0, 0, 0 );
+        mesh.rotation.set(90 * ( Math.PI/180 ), 0,0  );
+        mesh.scale.set( SCALE * 0.1, SCALE * 0.1, SCALE * 0.1 );
+
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        var dummy = new THREE.Object3D();
+        dummy.add( mesh );
+        box = center_object( dummy );
+        var size = box.getSize( new THREE.Vector3() );
+
+        dummy.position.x += 3.8 * SCALE;
+        dummy.position.y += size.y /2;
+        dummy.position.z -= 13 * SCALE;
+        foot_mesh.add( dummy );
+
+        finished_loading();
+    });
+
+    //---------------- JOINT 4 ------------------------
+
+    total_meshes++;
+    loader.load( 'models/Link Flip (x8).stl', function ( geometry ) {
+        console.log(" Load link! ");
+        var mesh = new THREE.Mesh( geometry, material_black );
+        mesh.position.set( 0, 0, 0 );
+        mesh.scale.set( SCALE, SCALE, SCALE );
+
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        var flip = mesh.clone();
+        flip.position.set( 0, 0, 0 );
+
+        var box = new THREE.Box3().setFromObject( flip );
+        var size = box.getSize( new THREE.Vector3() );
+
+        flip.rotation.set( 180 * ( Math.PI/180 ), 0, 0 );
+
+        mesh.position.y -= 2* size.y;
+
+        var dummy = new THREE.Object3D();
+        dummy.add( mesh );
+        dummy.add( flip );
+
+        dummy.position.x -= 42 * SCALE;
+        dummy.position.y += 2* size.y;
+        joint_mesh_4.add( dummy );
+
+        joint_mesh_4.position.z += 24 * SCALE;
+
+        finished_loading();
+    });
+
+    //---------------- JOINT 3 ------------------------
+    total_meshes++;
+    loader.load( 'models/Knee Ball (x4).stl', function ( geometry ) {
+        var mesh = new THREE.Mesh( geometry, material_black );
+
+        mesh.position.set( 0, 0, 0 );
+        mesh.rotation.set( 0, 180 * ( Math.PI/180 ), 0 );
+        mesh.scale.set( SCALE, SCALE, SCALE );
+
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        var dummy = new THREE.Object3D();
+        dummy.add( mesh );
+
+        joint_mesh_3.add( dummy );
+
+        finished_loading();
+    });
+
+    total_meshes++;
+    loader.load( 'models/Knee Servo (x4).stl', function ( geometry ) {
+        var mesh = new THREE.Mesh( geometry, material_black );
+
+        mesh.position.set( 0, 0, 0 );
+        mesh.rotation.set( 0, 180 * ( Math.PI/180 ), 180 * ( Math.PI/180 ) );
+        mesh.scale.set( SCALE, SCALE, SCALE );
+
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        var dummy = new THREE.Object3D();
+        dummy.add( mesh );
+        dummy.rotation.set( 0,  180 * ( Math.PI/180 ), 0 );
+        dummy.position.y += 36.9 * SCALE;
+
+        joint_mesh_3.add( dummy );
         finished_loading();
     });
 
     //---------------- JOINT 2 ------------------------
 
+    total_meshes++;
     loader.load( 'models/leg_bottom1.stl', function ( geometry ) {
         var mesh = new THREE.Mesh( geometry, material_white );
 
@@ -182,10 +309,10 @@ function init() {
         mesh.receiveShadow = true;
 
         joint_mesh_2.add( mesh );
-        console.log("Joint Mesh 2 loaded 1");
         finished_loading();
     });
 
+    total_meshes++;
     loader.load( 'models/leg_top1.stl', function ( geometry ) {
         var mesh = new THREE.Mesh( geometry, material_white );
 
@@ -197,12 +324,12 @@ function init() {
         mesh.receiveShadow = true;
 
         joint_mesh_2.add( mesh );
-        console.log("Joint Mesh 2 loaded 2");
         finished_loading();
     });
 
     //---------------- JOINT 1 ------------------------
 
+    total_meshes++;
     loader.load( 'models/Hip Ball (x4).stl', function ( geometry ) {
         var mesh = new THREE.Mesh( geometry, material_black );
 
@@ -214,10 +341,10 @@ function init() {
         mesh.receiveShadow = true;
 
         joint_mesh_1.add( mesh );
-        console.log("Joint Mesh 1 loaded 1");
         finished_loading();
     });
 
+    total_meshes++;
     loader.load( 'models/Hip Servo (x4).stl', function ( geometry ) {
         var mesh = new THREE.Mesh( geometry, material_black );
 
@@ -229,14 +356,14 @@ function init() {
         mesh.receiveShadow = true;
 
         joint_mesh_1.add( mesh );
-        console.log("Joint Mesh 1 loaded 2");
         finished_loading();
     });
 
     //---------------- PELVIS ------------------------
 
+    total_meshes++;
     loader.load( 'models/Pelvis(x4).stl', function ( geometry ) {
-        var mesh = new THREE.Mesh( geometry, material_shell );
+        var mesh = new THREE.Mesh( geometry, material_white );
 
         mesh.position.set( 0, 0, 0 );
         mesh.rotation.set( 90 * ( Math.PI/180 ), 0, 0 );
@@ -251,9 +378,30 @@ function init() {
         mesh.position.x += 35 * SCALE;
 
         pelvis.add( mesh );
-        console.log("Link Body loaded");
         finished_loading();
     });
+
+    total_meshes++;
+    loader.load( 'models/servo_alone.stl', function ( geometry ) {
+        var mesh = new THREE.Mesh( geometry, material_blue );
+
+        mesh.position.set( 0, 0, 0 );
+        mesh.rotation.set( 90 * ( Math.PI/180 ), 90 * ( Math.PI/180 ), 0 );
+        mesh.scale.set( SCALE, SCALE, SCALE );
+
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        var box = new THREE.Box3().setFromObject( mesh );
+        box.getCenter( mesh.position );
+        mesh.position.multiplyScalar( - 1 );
+        mesh.position.x += 35 * SCALE;
+        mesh.position.z += 5 * SCALE;
+
+        pelvis.add( mesh );
+        finished_loading();
+    });
+
 
     var controls = new THREE.OrbitControls( camera, renderer.domElement );
     controls.addEventListener( 'change', render );
