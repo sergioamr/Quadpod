@@ -3,6 +3,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 var camera, scene, renderer;
 
 var SCALE = 0.01
+var controls;
 
 function render() {
     renderer.render( scene, camera );
@@ -31,7 +32,6 @@ function rotateAboutPoint(obj, point, axis, theta, pointIsWorld) {
     obj.rotateOnAxis(axis, theta); // rotate the OBJECT
 }
 
-var robot = new THREE.Object3D();
 var shell = new THREE.Object3D();
 var pelvis = new THREE.Object3D();
 var joint_mesh_1 = new THREE.Object3D();
@@ -39,6 +39,27 @@ var joint_mesh_2 = new THREE.Object3D();
 var joint_mesh_3 = new THREE.Object3D();
 var joint_mesh_4 = new THREE.Object3D();
 var foot_mesh = new THREE.Object3D();
+
+var Robot = function()  {
+    this.name = 'QuadPod';
+    this.display_outline = true;
+    this.geometry = new THREE.Object3D();
+    this.legs = new Array();
+
+    this.setOutline = function(value) {
+        for (var i in this.legs) {
+            leg=this.legs[i];
+            for (var c in leg.highlights) {
+                outline = leg.highlights[c];
+                outline.visible = value;
+            }
+        }
+        render();
+    }
+
+};
+
+var robot = new Robot();
 
 function center_object(obj3d) {
     var box = new THREE.Box3().setFromObject( obj3d );
@@ -98,10 +119,37 @@ function create_leg(angle) {
     //---------- Rotate leg -----------------
 
     joint_body.add(j1_clone);
+
+    leg.highlights = new Array();
+
+    helper = new THREE.BoxHelper(j1_clone, 0x0000ff);
+    leg.add(helper);
+    leg.highlights.push(helper);
+
     j1_clone.add(j2_clone);
+
+    helper = new THREE.BoxHelper(j2_clone, 0x0000ff);
+    leg.add(helper);
+    leg.highlights.push(helper);
+
     j2_clone.add(j3_clone);
+
+    helper = new THREE.BoxHelper(j3_clone, 0x0000ff);
+    leg.add(helper);
+    leg.highlights.push(helper);
+
     j3_clone.add(j4_clone);
-    j4_clone.add(foot_mesh.clone());
+
+    helper = new THREE.BoxHelper(j4_clone, 0x0000ff);
+    leg.add(helper);
+    leg.highlights.push(helper);
+
+    var foot_clone = foot_mesh.clone();
+    j4_clone.add(foot_clone);
+
+    helper = new THREE.BoxHelper(foot_clone, 0x0000ff);
+    leg.add(helper);
+    leg.highlights.push(helper);
 
     leg.rotation.set( 0,0, angle * ( Math.PI/180 ));
 
@@ -110,7 +158,6 @@ function create_leg(angle) {
 
 var loaded_meshes = 0;
 var total_meshes = 0;
-var legs = new Array();
 
 function finished_loading() {
     console.log("- Mesh loaded - " + loaded_meshes);
@@ -122,17 +169,17 @@ function finished_loading() {
     console.log("--------------------------------------- ");
     console.log("- Create legs - " + loaded_meshes);
 
-    robot.add( shell );
+    robot.geometry.add( shell );
 
-    legs[0] = create_leg(0);
-    legs[1] = create_leg(90);
-    legs[2] = create_leg(180);
-    legs[3] = create_leg(270);
+    robot.legs[0] = create_leg(0);
+    robot.legs[1] = create_leg(90);
+    robot.legs[2] = create_leg(180);
+    robot.legs[3] = create_leg(270);
 
     for( x=0 ;x<4 ;x++ )
-        robot.add(legs[x]);
+        robot.geometry.add(robot.legs[x]);
 
-    scene.add(robot);
+    scene.add(robot.geometry);
 
     render();
 }
@@ -402,8 +449,7 @@ function init() {
         finished_loading();
     });
 
-
-    var controls = new THREE.OrbitControls( camera, renderer.domElement );
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
     controls.addEventListener( 'change', render );
     controls.target.set( 0, 0.2, 0.0 );
     controls.update();
