@@ -40,21 +40,102 @@ var joint_mesh_3 = new THREE.Object3D();
 var joint_mesh_4 = new THREE.Object3D();
 var foot_mesh = new THREE.Object3D();
 
-var Robot = function()  {
-    this.name = 'Spider';
-	this.state = 'Loading';
-    this.display_outline = true;
-    this.geometry = new THREE.Object3D();
-    this.legs = new Array();
+class Robot extends THREE.Object3D {
+    constructor() {
+        super();
+        this.name = 'Spider';
+        this.state = 'Loading';
+        this.display_outline = false;
+        this.show_joints = false;
+        this.transparent = true;
+        this.shell = null;
+        this.legs = new Array();
+    }
 
-    this.setOutline = function(value) {
+    setOutline(value) {
         for (var i in this.legs) {
-            leg=this.legs[i];
-            for (var c in leg.highlights) {
-                outline = leg.highlights[c];
+            var leg = this.legs[i];
+            for (var c in leg.outlines) {
+                var outline = leg.outlines[c];
                 outline.visible = value;
             }
         }
+        render();
+    }
+
+    showJoints(value) {
+        if (value && this.transparent == false)
+            this.showTransparent(true);
+
+        for (var i in this.legs) {
+            var leg = this.legs[i];
+            var next = leg.next_joint;
+
+            while (next != null) {
+                next.setPivotVisibility(value);
+                next = next.next_joint;
+            }
+        }
+        render();
+    }
+
+    showTransparent(value) {
+        this.transparent = value;
+        for (var i in this.shell.children ) {
+            var mesh = this.shell.children[i];
+            if (mesh.userData.transparent) {
+                mesh.visible = value;
+            } else {
+                mesh.visible = !value;
+            }
+        }
+
+        for (var i in this.legs) {
+            var leg = this.legs[i];
+            var next = leg.next_joint;
+
+            while (next != null) {
+                next.setTransparent(value);
+                next = next.next_joint;
+            }
+        }
+        render();
+    }
+
+    setPose(value) {
+        if (value == "calibration") {
+            for (var i in this.legs) {
+                var leg = this.legs[i];
+                var next = leg.next_joint;
+                while (next != null) {
+                    next.setAngle(0);
+                    next = next.next_joint;
+                }
+            }
+
+        } else
+        if (value == "relax") {
+            for (var i in this.legs) {
+                var leg = this.legs[i];
+                var next = leg.next_joint;
+                while (next != null) {
+                    next.setAngle(10);
+                    next = next.next_joint;
+                }
+            }
+
+        } else
+        if (value == "stand") {
+            for (var i in this.legs) {
+                var leg = this.legs[i];
+                var next = leg.next_joint;
+                while (next != null) {
+                    next.setAngle(45);
+                    next = next.next_joint;
+                }
+            }
+        }
+
         render();
     }
 };
@@ -70,73 +151,66 @@ function center_object(obj3d) {
     return box;
 }
 
+function create_pivot_geometry(color) {
+    //console.log("Pivot creation");
+    var geometry = new THREE.SphereGeometry( 2.5 * SCALE, 32, 32 );
+    var material = new THREE.MeshBasicMaterial( color );
+    var sphere = new THREE.Mesh( geometry, material );
+    return sphere;
+}
+
 function create_leg(angle) {
     var box;
     var size;
     var helper;
+    var pivot;
+
+    var empty_geometry = new THREE.Object3D();
 
     // rotateAboutPoint(mesh, new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 1, 0, 0 ))
     // mesh.rotateOnAxis( new THREE.Vector3( 0, 1, 0 ), 90 * ( Math.PI/180 ) );
     // https://stackoverflow.com/questions/42812861/three-js-pivot-point/42866733#42866733
 
-    var leg = new THREE.Object3D();
+    var leg = new Joint("leg_root", empty_geometry);
 
-    var joint_body = new THREE.Object3D();
-    leg.add(joint_body);
+    // The process to create a leg is to create the joints
+    // The joints will always be centered on the first pivot
+
+    // The second pivot is defined by setNextPivotPosition and it
+    // will define where the next joint will be attached.
+
+    // Add the geometry centered on the joint attachment
+
+    leg.setNextPivotPosition(42.3 * SCALE, 0,  3.8 * SCALE);
 
     //---------- Joint 1 -----------------
-    var j1_clone = joint_mesh_1.clone();
-    box = center_object( j1_clone );    
-    j1_clone.position.x += 48.5 * SCALE;
-	j1_clone.position.z += 3.8 * SCALE;
+    var joint_coxa = new Joint("leg_coxa", joint_mesh_1);
+    joint_coxa.setPivotVisibility(false);
+    joint_coxa.setNextPivotPosition(12.5 * SCALE, 0, 0);
+    joint_coxa.setOrientation('Z');
+    leg.attach(joint_coxa);
 
     //---------- Joint 2 -----------------
-    var j2_clone = joint_mesh_2.clone();	
-    center_object( j2_clone );
-    j2_clone.position.x += 22.5 * SCALE;
-	j2_clone.position.y += 8.0 * SCALE;
-	j2_clone.position.z += 7.5 * SCALE;
-	
+    var joint_femur = new Joint("leg_femur", joint_mesh_2);
+    joint_femur.setNextPivotPosition(30.3 * SCALE, 17.0 * SCALE, 0.5 * SCALE);
+    joint_femur.setOrientation('Y');
+
+    joint_coxa.attach(joint_femur);
+
     //---------- Joint 3 -----------------
 
-    var j3_clone = joint_mesh_3.clone();
-    box = center_object( j3_clone );
-    size = box.getSize( new THREE.Vector3() );
+    var joint_claws = new Joint("leg_claws", joint_mesh_3);
+    joint_claws.setNextPivotPosition(92 * SCALE, -5.0 * SCALE, -3.5 * SCALE);
+    joint_claws.setOrientation('Y');
 
-    j3_clone.position.x += size.x /2 + 10 * SCALE;
-	j3_clone.position.y += 3.0 * SCALE;
-	j3_clone.position.z += 8.5 * SCALE;
-	
-    var j4_clone = joint_mesh_4.clone();
-    size = box.getSize( new THREE.Vector3() );
+    joint_femur.attach(joint_claws);
 
     //---------- Rotate leg -----------------
 
-    joint_body.add(j1_clone);
-
-    leg.highlights = new Array();
-
-    helper = new THREE.BoxHelper(j1_clone, 0x0000ff);
-    leg.add(helper);
-    leg.highlights.push(helper);
-
-    j1_clone.add(j2_clone);
-
-    helper = new THREE.BoxHelper(j2_clone, 0x0000ff);
-    leg.add(helper);
-    leg.highlights.push(helper);
-
-    j2_clone.add(j3_clone);
-
-    helper = new THREE.BoxHelper(j3_clone, 0x0000ff);
-    leg.add(helper);
-    leg.highlights.push(helper);
-
-    j3_clone.add(j4_clone);
-
-    helper = new THREE.BoxHelper(j4_clone, 0x0000ff);
-    leg.add(helper);
-    leg.highlights.push(helper);
+    leg.outlines = new Array();
+    leg.outlines.push(joint_coxa.outline);
+    leg.outlines.push(joint_femur.outline);
+    leg.outlines.push(joint_claws.outline);
 
     leg.rotation.set( 0,0, angle * ( Math.PI/180 ));
 
@@ -144,12 +218,12 @@ function create_leg(angle) {
 }
 
 var loaded_meshes = 0;
-var total_meshes = 0;
+var total_meshes = 1;
 
 function finished_loading() {
     console.log("- Mesh loaded - " + loaded_meshes);
     loaded_meshes++;
-	
+
 	robot.state = 'Loading of ' + loaded_meshes + "/" + total_meshes;
 
     if (loaded_meshes != total_meshes)
@@ -158,8 +232,9 @@ function finished_loading() {
     console.log("--------------------------------------- ");
     console.log("- Create legs - " + loaded_meshes);
 
-    robot.geometry.add( shell );
-	robot.geometry.position.z += 10 * SCALE;
+    robot.add( shell );
+    robot.shell = shell;
+	robot.position.z += 10 * SCALE;
 
     robot.legs[0] = create_leg(0);
     robot.legs[1] = create_leg(90);
@@ -167,9 +242,9 @@ function finished_loading() {
     robot.legs[3] = create_leg(270);
 
     for( x=0 ;x<4 ;x++ )
-        robot.geometry.add(robot.legs[x]);
+        robot.add(robot.legs[x]);
 
-    scene.add(robot.geometry);
+    scene.add(robot);
 	robot.state = 'Loaded';
 
     render();
@@ -212,24 +287,28 @@ function init() {
     total_meshes++;
     loader.load( 'models/body.STL', function ( geometry ) {
         var mesh = new THREE.Mesh( geometry, material_blue );
-
         mesh.position.set( 0, 0, 0 );
         mesh.rotation.set( 0, 0, 0 );
         mesh.scale.set( SCALE, SCALE, SCALE );
-
         mesh.castShadow = true;
         mesh.receiveShadow = true;
+        mesh.visible = false;
+        mesh.userData = { transparent: false };
+
+        var mesh_trans = new THREE.Mesh( geometry, material_transparent );
+        mesh_trans.scale.set( SCALE, SCALE, SCALE );
+        mesh_trans.userData = { transparent: true };
 
         box = center_object( mesh );
+        box = center_object( mesh_trans );
 
-        var dummyshell = new THREE.Object3D();
-        dummyshell.add( mesh );
-        dummyshell.rotation.set(  90 * ( Math.PI/180 ), 45 * ( Math.PI/180 ), 0 );        
+        shell.add( mesh );
+        shell.rotation.set(  90 * ( Math.PI/180 ), 45 * ( Math.PI/180 ), 0 );
 
-        shell.add(dummyshell);
+        shell.add( mesh_trans );
         finished_loading();
     });
-	
+
     //---------------- JOINT 3 ------------------------
 
     total_meshes++;
@@ -242,8 +321,24 @@ function init() {
 
         mesh.castShadow = true;
         mesh.receiveShadow = true;
+        mesh.visible = false;
+        mesh.userData = { transparent: false };
 
         joint_mesh_3.add( mesh );
+
+        var mesh_trans = new THREE.Mesh( geometry, material_transparent );
+        mesh_trans.scale.set( SCALE, SCALE, SCALE );
+        mesh_trans.userData = { transparent: true };
+
+        joint_mesh_3.add( mesh_trans );
+
+        box = center_object( joint_mesh_3 );
+        size = box.getSize( new THREE.Vector3() );
+
+        joint_mesh_3.position.x += size.x /2 - 7.5 * SCALE;
+	    joint_mesh_3.position.y -= 5.0 * SCALE;
+        joint_mesh_3.position.z += 2.5 * SCALE;
+
         finished_loading();
     });
 
@@ -259,8 +354,22 @@ function init() {
 
         mesh.castShadow = true;
         mesh.receiveShadow = true;
+        mesh.visible = false;
+        mesh.userData = { transparent: false };
 
         joint_mesh_2.add( mesh );
+
+        var mesh_trans = new THREE.Mesh( geometry, material_transparent );
+        mesh_trans.scale.set( SCALE, SCALE, SCALE );
+        mesh_trans.userData = { transparent: true };
+
+        joint_mesh_2.add( mesh_trans );
+
+        center_object( joint_mesh_2 );
+        joint_mesh_2.position.x += 15.0 * SCALE;
+        joint_mesh_2.position.y += 8.5 * SCALE;
+        joint_mesh_2.position.z += 0.8 * SCALE;
+
         finished_loading();
     });
 
@@ -276,8 +385,21 @@ function init() {
 
         mesh.castShadow = true;
         mesh.receiveShadow = true;
+        mesh.visible = false;
+        mesh.userData = { transparent: false };
 
         joint_mesh_1.add( mesh );
+        joint_mesh_1.obj_mesh = mesh_trans;
+
+        var mesh_trans = new THREE.Mesh( geometry, material_transparent );
+        mesh_trans.scale.set( SCALE, SCALE, SCALE );
+        mesh_trans.userData = { transparent: true };
+
+        joint_mesh_1.add( mesh_trans );
+
+        center_object( joint_mesh_1 );
+        joint_mesh_1.position.x += 6.2 * SCALE;
+
         finished_loading();
     });
 
