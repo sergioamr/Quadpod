@@ -40,7 +40,7 @@ var joint_mesh_3 = new THREE.Object3D();
 var joint_mesh_4 = new THREE.Object3D();
 var foot_mesh = new THREE.Object3D();
 
-class Robot extends THREE.Object3D {
+class Robot extends THREE.Group {
     constructor() {
         super();
         this.name = 'Spider';
@@ -50,6 +50,7 @@ class Robot extends THREE.Object3D {
         this.transparent = true;
         this.shell = null;
         this.legs = new Array();
+        this.add(create_pivot_geometry({color: 0xffffff}));
     }
 
     setOutline(value) {
@@ -79,26 +80,25 @@ class Robot extends THREE.Object3D {
         render();
     }
 
+    setTransparency(obj, value) {
+        for (var i in obj.children ) {
+            var mesh = obj.children[i];
+            if (mesh.userData.transparent != undefined) {
+                if (mesh.userData.transparent) {
+                    mesh.visible = value;
+                } else {
+                    mesh.visible = !value;
+                }
+
+            } else {
+                this.setTransparency(mesh, value);
+            }
+        }
+    }
+
     showTransparent(value) {
         this.transparent = value;
-        for (var i in this.shell.children ) {
-            var mesh = this.shell.children[i];
-            if (mesh.userData.transparent) {
-                mesh.visible = value;
-            } else {
-                mesh.visible = !value;
-            }
-        }
-
-        for (var i in this.legs) {
-            var leg = this.legs[i];
-            var next = leg.next_joint;
-
-            while (next != null) {
-                next.setTransparent(value);
-                next = next.next_joint;
-            }
-        }
+        this.setTransparency(this, value);
         render();
     }
 
@@ -135,6 +135,13 @@ class Robot extends THREE.Object3D {
                 }
             }
         }
+
+        robot.showTransparent(false);
+        var box = new THREE.Box3().setFromObject( robot );
+        //robot.position.z = -box.min.z;
+
+        //var helper = new THREE.BoxHelper(robot, 0x0000ff);
+        //scene.add(helper);
 
         render();
     }
@@ -232,8 +239,12 @@ function finished_loading() {
     console.log("--------------------------------------- ");
     console.log("- Create legs - " + loaded_meshes);
 
-    robot.add( shell );
-    robot.shell = shell;
+    var group = new THREE.Group();
+    robot.add( group );
+    robot.shell = group;
+
+    group.add(shell);
+
 	robot.position.z += 10 * SCALE;
 
     robot.legs[0] = create_leg(0);
@@ -242,7 +253,7 @@ function finished_loading() {
     robot.legs[3] = create_leg(270);
 
     for( x=0 ;x<4 ;x++ )
-        robot.add(robot.legs[x]);
+        robot.shell.add(robot.legs[x]);
 
     scene.add(robot);
 	robot.state = 'Loaded';
