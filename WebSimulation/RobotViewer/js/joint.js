@@ -3,8 +3,9 @@
 //####################################
 
 class Joint extends THREE.Object3D {
-    constructor(name, geometry) {
+    constructor(scene, name, geometry) {
         super();
+        this.scene = scene;
         this.name = name;
         this.next = new Array();
         this.init();
@@ -16,6 +17,42 @@ class Joint extends THREE.Object3D {
         this.next_joint = null;
 
         this.orientation = 'Y';
+        this.counter = 0;
+    }
+
+    create_text() {
+        var vector = new THREE.Vector3();
+        vector.setFromMatrixPosition( this.matrixWorld );
+
+        var mesh  = robot.create_text("("+vector.x.toFixed(2)
+                + "," + vector.y.toFixed(2)
+                + "," + vector.z.toFixed(2)+")", 0xeeeeee, 5, 1);
+
+        mesh.position.set(vector.x, vector.y + 1 * SCALE, vector.z);
+        this.text_vector = vector;
+        this.text_mesh = mesh;
+
+        mesh.follow = this;
+        this.scene.add(mesh);
+    }
+
+    update_text() {
+        var vector = new THREE.Vector3();
+        vector.setFromMatrixPosition( this.matrixWorld );
+
+        var old_vector = this.text_vector;
+
+        if (vector.x == old_vector.x && vector.y == old_vector.y && vector.y == old_vector.y) {
+            this.text_mesh.position.set(vector.x, vector.y + 1 * SCALE, vector.z);
+        } else {
+            this.text_mesh.geometry.dispose();
+            this.text_mesh.material.dispose();
+
+            this.scene.remove(this.text_mesh);
+            this.text_mesh = undefined;
+
+            this.create_text();
+        }
     }
 
     setOrientation(value) {
@@ -46,6 +83,7 @@ class Joint extends THREE.Object3D {
 
         this.pivot_next.visible = false;
         this.pivot_prev.visible = false;
+        this.create_text();
     }
 
     setNextPivotPosition(x, y, z) {
@@ -64,6 +102,10 @@ class Joint extends THREE.Object3D {
         next_joint.position.set(pivot.position.x, pivot.position.y, pivot.position.z);
         this.add(next_joint);
         this.next_joint = next_joint;
+    }
+
+    total_length() {
+
     }
 
     setTransparent(value) {

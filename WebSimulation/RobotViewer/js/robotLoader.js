@@ -9,6 +9,17 @@ function render() {
     renderer.render( scene, camera );
 }
 
+function animate() {
+    for (var i in robot.font_meshes) {
+        var font = robot.font_meshes[i];
+        font.follow.update_text();
+        font.quaternion.copy( camera.quaternion );
+    }
+
+    render();
+    requestAnimationFrame(animate);
+}
+
 // obj - your object (THREE.Object3D or derived)
 // point - the point of rotation (THREE.Vector3)
 // axis - the axis of rotation (normalized THREE.Vector3)
@@ -40,6 +51,9 @@ var joint_mesh_3 = new THREE.Object3D();
 var joint_mesh_4 = new THREE.Object3D();
 var foot_mesh = new THREE.Object3D();
 
+var loaded_meshes = 0;
+var total_meshes = 2;
+
 class Robot extends THREE.Group {
     constructor() {
         super();
@@ -50,7 +64,39 @@ class Robot extends THREE.Group {
         this.transparent = true;
         this.shell = null;
         this.legs = new Array();
+        this.font_meshes = new Array();
         this.add(create_pivot_geometry({color: 0xffffff}));
+        this.font_loader();
+    }
+
+    font_loader() {
+        var loader = new THREE.FontLoader();
+        loader.load( 'fonts/droid_sans_regular.typeface.json',
+            function ( font ) {
+                robot.font = font;
+                finished_loading();
+            }
+        );
+    }
+
+    create_text(text, color, size, height) {
+        var textGeometry = new THREE.TextGeometry( text, {
+            font: this.font,
+            size: size * SCALE,
+            height: height * SCALE,
+            curveSegments: 12,
+            bevelEnabled: false,
+            bevelThickness: 10 * SCALE,
+            bevelSize: 8 * SCALE,
+            bevelSegments: 5
+        } );
+
+        var textMaterial = new THREE.MeshPhongMaterial( { color: color, specular: 0xffffff } );
+
+        var mesh = new THREE.Mesh( textGeometry, textMaterial );
+
+        this.font_meshes.push(mesh);
+        return mesh;
     }
 
     setOutline(value) {
@@ -178,7 +224,7 @@ function create_leg(angle) {
     // mesh.rotateOnAxis( new THREE.Vector3( 0, 1, 0 ), 90 * ( Math.PI/180 ) );
     // https://stackoverflow.com/questions/42812861/three-js-pivot-point/42866733#42866733
 
-    var leg = new Joint("leg_root", empty_geometry);
+    var leg = new Joint(scene, "leg_root", empty_geometry);
 
     // The process to create a leg is to create the joints
     // The joints will always be centered on the first pivot
@@ -191,14 +237,14 @@ function create_leg(angle) {
     leg.setNextPivotPosition(42.3 * SCALE, 0,  3.8 * SCALE);
 
     //---------- Joint 1 -----------------
-    var joint_coxa = new Joint("leg_coxa", joint_mesh_1);
+    var joint_coxa = new Joint(scene, "leg_coxa", joint_mesh_1);
     joint_coxa.setPivotVisibility(false);
     joint_coxa.setNextPivotPosition(12.5 * SCALE, 0, 0);
     joint_coxa.setOrientation('Z');
     leg.attach(joint_coxa);
 
     //---------- Joint 2 -----------------
-    var joint_femur = new Joint("leg_femur", joint_mesh_2);
+    var joint_femur = new Joint(scene, "leg_femur", joint_mesh_2);
     joint_femur.setNextPivotPosition(30.3 * SCALE, 17.0 * SCALE, 0.5 * SCALE);
     joint_femur.setOrientation('Y');
 
@@ -206,7 +252,7 @@ function create_leg(angle) {
 
     //---------- Joint 3 -----------------
 
-    var joint_claws = new Joint("leg_claws", joint_mesh_3);
+    var joint_claws = new Joint(scene, "leg_claws", joint_mesh_3);
     joint_claws.setNextPivotPosition(92 * SCALE, -5.0 * SCALE, -3.5 * SCALE);
     joint_claws.setOrientation('Y');
 
@@ -221,11 +267,10 @@ function create_leg(angle) {
 
     leg.rotation.set( 0,0, angle * ( Math.PI/180 ));
 
+    leg.updateMatrixWorld();
+
     return leg;
 }
-
-var loaded_meshes = 0;
-var total_meshes = 1;
 
 function finished_loading() {
     console.log("- Mesh loaded - " + loaded_meshes);
@@ -258,7 +303,7 @@ function finished_loading() {
     scene.add(robot);
 	robot.state = 'Loaded';
 
-    render();
+    animate();
 }
 
 function init() {
