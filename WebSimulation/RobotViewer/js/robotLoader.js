@@ -1,11 +1,15 @@
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 var camera, scene, renderer;
+var world = new THREE.Group();
 
-var SCALE = 0.01
+var SCALE = 0.01;
+var PIVOT_SIZE = 2.5 * SCALE;
+
 var controls;
 
 function render() {
+    //manageRaycasterIntersections(scene, camera);
     renderer.render( scene, camera );
 }
 
@@ -91,11 +95,13 @@ class Robot extends THREE.Group {
             bevelSegments: 5
         } );
 
-        var textMaterial = new THREE.MeshPhongMaterial( { color: color, specular: 0xffffff } );
+        var textMaterial = new THREE.MeshPhongMaterial( { color: color, specular: 0xffffff, emissive: 0xffffff, shininess: 200  } );
 
         var mesh = new THREE.Mesh( textGeometry, textMaterial );
 
         this.font_meshes.push(mesh);
+        mesh.visible = false;
+
         return mesh;
     }
 
@@ -123,6 +129,12 @@ class Robot extends THREE.Group {
                 next = next.next_joint;
             }
         }
+
+        for (var i in this.font_meshes) {
+            var text = this.font_meshes[i];
+            text.visible = value;
+        }
+
         render();
     }
 
@@ -191,6 +203,29 @@ class Robot extends THREE.Group {
 
         render();
     }
+
+    check_legs(point) {
+        var closest = null;
+        var distance = 1000;
+        for (var i in this.legs) {
+            var leg = this.legs[i];
+            var dist = leg.calculateDistanceToPoint(point);
+            if (dist < distance) {
+                distance = dist;
+                closest = leg;
+            }
+        }
+
+        console.log("-------------------------------------------");
+        console.log(" SELECTED " + closest.name)
+        robot.setOutline(false);
+
+        for (var c in closest.outlines) {
+            var outline = closest.outlines[c];
+            outline.visible = true;
+        }
+    }
+
 };
 
 var robot = new Robot();
@@ -206,7 +241,7 @@ function center_object(obj3d) {
 
 function create_pivot_geometry(color) {
     //console.log("Pivot creation");
-    var geometry = new THREE.SphereGeometry( 2.5 * SCALE, 32, 32 );
+    var geometry = new THREE.SphereGeometry( PIVOT_SIZE, 16, 16 );
     var material = new THREE.MeshBasicMaterial( color );
     var sphere = new THREE.Mesh( geometry, material );
     return sphere;
@@ -224,7 +259,7 @@ function create_leg(angle) {
     // mesh.rotateOnAxis( new THREE.Vector3( 0, 1, 0 ), 90 * ( Math.PI/180 ) );
     // https://stackoverflow.com/questions/42812861/three-js-pivot-point/42866733#42866733
 
-    var leg = new Joint(scene, "leg_root", empty_geometry);
+    var leg = new Leg(scene, "leg_root_" + angle, empty_geometry);
 
     // The process to create a leg is to create the joints
     // The joints will always be centered on the first pivot
@@ -268,6 +303,9 @@ function create_leg(angle) {
     leg.rotation.set( 0,0, angle * ( Math.PI/180 ));
 
     leg.updateMatrixWorld();
+    leg.calculateTotalLegLength();
+
+    console.log(" TOTAL DISTANCE LEG " + leg.total_length);
 
     return leg;
 }
@@ -300,9 +338,20 @@ function finished_loading() {
     for( x=0 ;x<4 ;x++ )
         robot.shell.add(robot.legs[x]);
 
-    scene.add(robot);
+    world.add(robot);
+
 	robot.state = 'Loaded';
 
+    //------------- GROUND PLANE -----------------------------------
+    var geometry = new THREE.PlaneGeometry( 10, 10 );
+    var material = new THREE.MeshPhongMaterial( {color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.3} );
+    var plane = new THREE.Mesh( geometry, material );
+    plane.visible = false;
+
+    robot.ground_plane = plane;
+    world.add( plane );
+
+    scene.add(world);
     animate();
 }
 
@@ -330,6 +379,8 @@ function init() {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
+
+    //------------- STL LOADER  ------------------------------------
 
     var loader = new THREE.STLLoader();
 
@@ -476,4 +527,99 @@ function onWindowResize() {
     render();
 }
 
+//-------------------------------------------
+//---------- MOUSE FUNCTIONS ----------------
+//-------------------------------------------
+
+raycaster = new THREE.Raycaster();
+mouse = new THREE.Vector2();
+mouse_raw = new THREE.Vector2();
+mouse_down = new THREE.Vector2();
+INTERSECTED = new THREE.Object3D();
+mouse_intersect = create_pivot_geometry({color: 0xffff00});
+
+document.addEventListener('mousemove', onDocumentMouseMove, false);
+document.addEventListener('mousedown', onMouseDown, false);
+document.addEventListener('mouseup', onMouseUp, false);
+
+function onDocumentMouseMove(event) {
+    event.preventDefault();
+    mouse_raw.x = event.clientX;
+    mouse_raw.y = event.clientY;
+
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
+
+function onMouseDown(event){
+    if (event.button == 0) {
+        //console.log("Mouse DOWN position: (" + mouse.x + ", "+ mouse.y + ")");
+        mouse_down.x = mouse_raw.x;
+        mouse_down.y = mouse_raw.y;
+    }
+}
+
+function onMouseUp(event){
+    if (event.button == 0) {
+        var x = mouse_down.x - mouse_raw.x;
+        var y = mouse_down.y - mouse_raw.y;
+        dist = Math.sqrt(x*x + y*y);
+        //console.log("Mouse UP position: (" + mouse_raw.x + ", "+ mouse_raw.y + ")" + dist);
+        if (dist < 2) {
+            manageRaycasterIntersections(scene, camera);
+        }
+    }
+}
+
+function manageRaycasterIntersections(scene, camera) {
+    camera.updateMatrixWorld();
+
+    raycaster.setFromCamera(mouse, camera);
+    robot.ground_plane.visible = true;
+    var intersects = raycaster.intersectObjects(world.children, true); //
+    robot.ground_plane.visible = false;
+
+    if (intersects.length > 0) {
+
+        p = intersects[0].point;
+        //console.log(" IMPACT " + p.x + "," + p.y + "," + p.z);
+
+        mouse_intersect.position.set(p.x - PIVOT_SIZE, p.y + PIVOT_SIZE / 2, p.z + PIVOT_SIZE / 2);
+
+        if (INTERSECTED != intersects[ 0 ].object) {
+            if (INTERSECTED  && typeof INTERSECTED.material !== 'undefined')
+                if (typeof INTERSECTED.material.emissive !== 'undefined')
+                    INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+                else
+                    INTERSECTED.material.color.setHex(0x0000ff);
+
+            INTERSECTED = intersects[ 0 ].object;
+
+            if (typeof INTERSECTED.material.emissive !== 'undefined') {
+                INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+                INTERSECTED.material.emissive.setHex(0xff0000);
+            } else {
+                INTERSECTED.material.color.setHex(0xff0000);
+            }
+            //console.log(intersects.length);
+        }
+
+        robot.check_legs(p);
+
+    } else {
+        if (INTERSECTED && INTERSECTED.material) {
+            if (typeof INTERSECTED.material.emissive !== 'undefined') {
+                INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+            } else {
+                INTERSECTED.material.color.setHex(0xff0000);
+            }
+        }
+
+        INTERSECTED = null;
+    }
+}
+
 init();
+
+scene.add(mouse_intersect);
+

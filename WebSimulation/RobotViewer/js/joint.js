@@ -104,10 +104,6 @@ class Joint extends THREE.Object3D {
         this.next_joint = next_joint;
     }
 
-    total_length() {
-
-    }
-
     setTransparent(value) {
         this.transparent = value;
         for (var i in this.obj.children ) {
@@ -119,5 +115,50 @@ class Joint extends THREE.Object3D {
             }
         }
     }
+
+    calculateTotalDistance() {
+        var v1 = this.pivot_prev.position;
+        var v2 = this.pivot_next.position;
+        var joint_length = v1.distanceTo( v2 );
+        var length = joint_length;
+        if (this.next_joint)
+            length += this.next_joint.calculateTotalDistance()
+
+        console.log("Distance " + this.name + " = " + joint_length + " Total " + length );
+        return length;
+    }
+
 }
 
+//####################################
+//# Leg
+//####################################
+
+class Leg extends Joint {
+    constructor(scene, name, geometry) {
+        console.log("---- Leg load ----")
+        super(scene, name, geometry);
+    }
+
+    calculateTotalLegLength(self) {
+        this.total_length = this.next_joint.calculateTotalDistance();
+        return this.total_length;
+    }
+
+    calculateDistanceToPoint(v2) {
+        var v1 = this.pivot_next.position;
+        var vector = new THREE.Vector3();
+
+        //this.pivot_next.updateMatrixWorld();
+
+        vector.setFromMatrixPosition( this.pivot_next.matrixWorld );
+
+        var distance = vector.distanceTo( v2 );
+        console.log("Distance " + this.name + " = " + distance);
+        return distance;
+    }
+
+    calculatePosition(self, vector) {
+        var vector = new THREE.Vector3();
+    }
+}
