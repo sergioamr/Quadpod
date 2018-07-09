@@ -16,7 +16,10 @@ function render() {
 function animate() {
     for (var i in robot.font_meshes) {
         var font = robot.font_meshes[i];
-        font.follow.update_text();
+
+        if (font.follow)
+            font.follow.update_text();
+
         font.quaternion.copy( camera.quaternion );
     }
 
@@ -83,7 +86,7 @@ class Robot extends THREE.Group {
         );
     }
 
-    create_text(text, color, size, height) {
+    create_static(text, color, size, height) {
         var textGeometry = new THREE.TextGeometry( text, {
             font: this.font,
             size: size * SCALE,
@@ -96,12 +99,14 @@ class Robot extends THREE.Group {
         } );
 
         var textMaterial = new THREE.MeshPhongMaterial( { color: color, specular: 0xffffff, emissive: 0xffffff, shininess: 200  } );
-
         var mesh = new THREE.Mesh( textGeometry, textMaterial );
+        return mesh;
+    }
 
+    create_text(text, color, size, height) {
+        var mesh = this.create_static(text, color, size, height);
         this.font_meshes.push(mesh);
         mesh.visible = false;
-
         return mesh;
     }
 
@@ -217,13 +222,17 @@ class Robot extends THREE.Group {
         }
 
         console.log("-------------------------------------------");
-        console.log(" SELECTED " + closest.name)
+        console.log(" Selected " + closest.name)
         robot.setOutline(false);
 
         for (var c in closest.outlines) {
             var outline = closest.outlines[c];
             outline.visible = true;
         }
+
+        closest.calculateNewPosition(point);
+
+        return closest;
     }
 
 };
@@ -293,6 +302,10 @@ function create_leg(angle) {
 
     joint_femur.attach(joint_claws);
 
+    joint_femur.post_init();
+    joint_coxa.post_init();
+    joint_claws.post_init();
+
     //---------- Rotate leg -----------------
 
     leg.outlines = new Array();
@@ -305,7 +318,7 @@ function create_leg(angle) {
     leg.updateMatrixWorld();
     leg.calculateTotalLegLength();
 
-    console.log(" TOTAL DISTANCE LEG " + leg.total_length);
+    //console.log(" TOTAL DISTANCE LEG " + leg.total_length);
 
     return leg;
 }
@@ -393,7 +406,7 @@ function init() {
 
     total_meshes++;
     loader.load( 'models/body.STL', function ( geometry ) {
-        var mesh = new THREE.Mesh( geometry, material_blue );
+        var mesh = new THREE.Mesh( geometry, material_blue.clone() );
         mesh.position.set( 0, 0, 0 );
         mesh.rotation.set( 0, 0, 0 );
         mesh.scale.set( SCALE, SCALE, SCALE );
@@ -402,7 +415,7 @@ function init() {
         mesh.visible = false;
         mesh.userData = { transparent: false };
 
-        var mesh_trans = new THREE.Mesh( geometry, material_transparent );
+        var mesh_trans = new THREE.Mesh( geometry, material_transparent.clone() );
         mesh_trans.scale.set( SCALE, SCALE, SCALE );
         mesh_trans.userData = { transparent: true };
 
@@ -420,7 +433,7 @@ function init() {
 
     total_meshes++;
     loader.load( 'models/pata.STL', function ( geometry ) {
-        var mesh = new THREE.Mesh( geometry, material_blue );
+        var mesh = new THREE.Mesh( geometry, material_blue.clone() );
 
         mesh.position.set( 0, 0, 0 );
         mesh.rotation.set( 0, 0 * ( Math.PI/180 ), 0 );
@@ -433,7 +446,7 @@ function init() {
 
         joint_mesh_3.add( mesh );
 
-        var mesh_trans = new THREE.Mesh( geometry, material_transparent );
+        var mesh_trans = new THREE.Mesh( geometry, material_transparent.clone() );
         mesh_trans.scale.set( SCALE, SCALE, SCALE );
         mesh_trans.userData = { transparent: true };
 
@@ -453,7 +466,7 @@ function init() {
 
     total_meshes++;
     loader.load( 'models/brazo.STL', function ( geometry ) {
-        var mesh = new THREE.Mesh( geometry, material_blue );
+        var mesh = new THREE.Mesh( geometry, material_blue.clone() );
 
         mesh.position.set( 0, 0, 0 );
         mesh.rotation.set( 0 , 0, 0);
@@ -466,7 +479,7 @@ function init() {
 
         joint_mesh_2.add( mesh );
 
-        var mesh_trans = new THREE.Mesh( geometry, material_transparent );
+        var mesh_trans = new THREE.Mesh( geometry, material_transparent.clone() );
         mesh_trans.scale.set( SCALE, SCALE, SCALE );
         mesh_trans.userData = { transparent: true };
 
@@ -484,7 +497,7 @@ function init() {
 
     total_meshes++;
     loader.load( 'models/hombro.STL', function ( geometry ) {
-        var mesh = new THREE.Mesh( geometry, material_black );
+        var mesh = new THREE.Mesh( geometry, material_black.clone() );
 
         mesh.position.set( 0, 0, 0 );
         mesh.rotation.set( 0, 0 * ( Math.PI/180 ), 0 );
@@ -498,7 +511,7 @@ function init() {
         joint_mesh_1.add( mesh );
         joint_mesh_1.obj_mesh = mesh_trans;
 
-        var mesh_trans = new THREE.Mesh( geometry, material_transparent );
+        var mesh_trans = new THREE.Mesh( geometry, material_transparent.clone() );
         mesh_trans.scale.set( SCALE, SCALE, SCALE );
         mesh_trans.userData = { transparent: true };
 
@@ -571,6 +584,32 @@ function onMouseUp(event){
     }
 }
 
+function highlight(obj_mesh, value) {
+    if (!obj_mesh || obj_mesh.material === undefined) {
+        return;
+    }
+
+    if (value == true) {
+        if (obj_mesh.material.emissive !== undefined) {
+            obj_mesh.currentHex = obj_mesh.material.emissive.getHex();
+            obj_mesh.material.emissive.setHex( 0x00ffff );
+        }
+        else {
+            obj_mesh.currentHex = obj_mesh.material.color.getHex();
+            obj_mesh.material.color.setHex(0x00ffff);
+        }
+
+    } else {
+        if (obj_mesh.material.emissive !== undefined) {
+            obj_mesh.material.emissive.setHex( obj_mesh.currentHex );
+        }
+        else {
+            obj_mesh.material.color.setHex(obj_mesh.currentHex);
+        }
+    }
+
+}
+
 function manageRaycasterIntersections(scene, camera) {
     camera.updateMatrixWorld();
 
@@ -579,43 +618,28 @@ function manageRaycasterIntersections(scene, camera) {
     var intersects = raycaster.intersectObjects(world.children, true); //
     robot.ground_plane.visible = false;
 
+    highlight(INTERSECTED, false);
+
     if (intersects.length > 0) {
+        for (var x = 0; x < intersects.length; x++ ) {
+            var intrs_obj = intersects[ x ].object;
+            if (intrs_obj.ignore_collision === undefined) {
+                p = intersects[x].point;
+                console.log(" Impact " + p.x.toFixed(2) + "," + p.y.toFixed(2) + "," + p.z.toFixed(2));
 
-        p = intersects[0].point;
-        //console.log(" IMPACT " + p.x + "," + p.y + "," + p.z);
+                highlight(intrs_obj, true);
 
-        mouse_intersect.position.set(p.x - PIVOT_SIZE, p.y + PIVOT_SIZE / 2, p.z + PIVOT_SIZE / 2);
+                INTERSECTED = intrs_obj;
+                robot.check_legs(p);
 
-        if (INTERSECTED != intersects[ 0 ].object) {
-            if (INTERSECTED  && typeof INTERSECTED.material !== 'undefined')
-                if (typeof INTERSECTED.material.emissive !== 'undefined')
-                    INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-                else
-                    INTERSECTED.material.color.setHex(0x0000ff);
+                //mouse_intersect.position.set(p.x - PIVOT_SIZE /2 , p.y - PIVOT_SIZE / 2, p.z - PIVOT_SIZE / 2);
 
-            INTERSECTED = intersects[ 0 ].object;
-
-            if (typeof INTERSECTED.material.emissive !== 'undefined') {
-                INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-                INTERSECTED.material.emissive.setHex(0xff0000);
+                mouse_intersect.position.set(p.x, p.y, p.z);
+                break;
             } else {
-                INTERSECTED.material.color.setHex(0xff0000);
-            }
-            //console.log(intersects.length);
-        }
-
-        robot.check_legs(p);
-
-    } else {
-        if (INTERSECTED && INTERSECTED.material) {
-            if (typeof INTERSECTED.material.emissive !== 'undefined') {
-                INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-            } else {
-                INTERSECTED.material.color.setHex(0xff0000);
+                //console.log(" Ignored geometry ");
             }
         }
-
-        INTERSECTED = null;
     }
 }
 
