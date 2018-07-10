@@ -6,6 +6,8 @@ var STR_PAD_LEFT = 1;
 var STR_PAD_RIGHT = 2;
 var STR_PAD_BOTH = 3;
 
+var TEXT_PADDING = 30;
+
 function pad(str, len, pad, dir) {
 
     if (typeof(len) == "undefined") { var len = 0; }
@@ -37,16 +39,34 @@ function pad(str, len, pad, dir) {
     return str;
 }
 
+function print_h1(text) {
+    var high = pad("", TEXT_PADDING, '#', STR_PAD_BOTH);
+    console.log( high );
+    var str = pad(" " + text + " ", TEXT_PADDING, '#', STR_PAD_BOTH);
+    console.log( str );
+    console.log( high );
+}
+
+function print_h2(text) {
+    var str = pad(" " + text + " ", TEXT_PADDING, '-', STR_PAD_BOTH);
+    console.log( str );
+}
+
 function print_vector(name, v) {
-    str = pad(name, 16, ' ', STR_PAD_RIGHT);
+    str = pad(name, TEXT_PADDING, ' ', STR_PAD_RIGHT);
     console.log(" " + str + " "+
     "(" + v.x.toFixed(2)+ ","
         + v.y.toFixed(2) + ","
         + v.z.toFixed(2) + ")");
 }
 
+function print_text(name, text) {
+    str = pad(name, TEXT_PADDING, ' ', STR_PAD_RIGHT);
+    console.log(" " + str + " "+ "'" + text + "'");
+}
+
 function print_scalar(name, s) {
-    str = pad(name, 16, ' ', STR_PAD_RIGHT);
+    str = pad(name, TEXT_PADDING, ' ', STR_PAD_RIGHT);
     console.log(" " + str + " "+ "[" + s.toFixed(2)+ "]");
 }
 
@@ -62,8 +82,8 @@ function get_vector(p0, p1) {
 }
 
 function create_marker(group, text, position, color) {
-    var mesh  = robot.create_text(text, 0xeeeeee, 5, 1);
-    mesh.position.set(0, 5 * SCALE, 0);
+    var mesh  = robot.create_text(text, color.color, 2, 0.5);
+    mesh.position.set(- 0.5 * SCALE, 0, 2.5 * SCALE);
     mesh.visible = true;
 
     var marker = create_pivot_geometry(color);
@@ -282,21 +302,146 @@ class Joint extends THREE.Object3D {
         if (this.next_joint)
             length += this.next_joint.calculateTotalDistance()
 
-        console.log("Distance " + this.name + " = " + this.joint_length + " Total " + length );
+        //console.log("Distance " + this.name + " = " + this.joint_length + " Total " + length );
         return length;
     }
 
     print() {
-        console.log("---------- " + this.name + " ---------------");
+        print_h2(this.name);
+
         if (this.is_end_effector) {
-            console.log("- End effector -");
+            console.log(" End effector");
         } else {
-            console.log("- Joint -");
+            console.log(" Joint");
         }
 
         print_scalar("Length", this.joint_length)
-        print_vector("Attachment", get_world_position(this.link_prev))
-        print_vector("Next", get_world_position(this.link_next))
+
+        var name;
+
+        if (this.parent_joint)
+            name = "[" + this.parent_joint.name + "]"; else name = "NULL";
+
+        print_vector("Attachment " + name, get_world_position(this.link_prev))
+
+        if (this.next_joint)
+            name = "[" + this.next_joint.name + "]"; else name = "NULL";
+
+        print_vector("Next " + name, get_world_position(this.link_next))
+    }
+
+    // We have to step until we find all the end_effectors on the other side.
+    // We should have a tree for the joints instead of an array or just past the next value and previous value
+
+    ik_backward_step(P, P_, n) {
+        //[TODO] Next step is to propagate to the array of joints attached to the body.
+        if (n == 0)
+            return;
+
+        var joint = this;
+
+        joint.print();
+        var point = P_[n];
+
+        var color = { color: 0xffff + n * 63 }
+        if (this.ik_group)
+            scene.remove(this.ik_group);
+
+        this.ik_group = new THREE.Group();
+
+        this.vect_joint = get_vector(P[n-1], P[n]);
+
+        create_help_arrow(this.ik_group, this.vect_up, P[n-1], 25 * SCALE, 0xff0000);
+        create_help_arrow(this.ik_group, this.vect_rotation, P[n-1], 25 * SCALE, 0xffff00);
+        create_help_arrow(this.ik_group, this.vect_joint, P[n-1], 25 * SCALE, 0xffffff);
+
+        // We define the point P(n) as our end_effector position
+        // target position, from now on: P(n)'
+        //
+        // We have to trace a line with P(n-1) to P(n)'
+
+        // Position of the attachment of the previous joint
+        var pAttachment = get_world_position(this.link_prev);
+        var p = pAttachment.clone();
+
+        create_help_line(this.ik_group, point, pAttachment, color );
+
+        //------------------------------------------------------------------
+        // This line will define our new vector in which the new position backward will lie
+        // Position without a constraint
+        // *------- P(n-1) <------- P(n)'
+
+        p.sub(point);
+        print_vector("P(" + (n-1) + ") - P("+ n +")' =", p);
+        p.normalize();
+        p.multiplyScalar(this.joint_length);
+
+        // We position the new line in the vector
+        // New position is |P(n) - P(n - 1)| * newline_vector + P(n)'
+
+        // Add the position of the target end
+        p.add(point);
+        create_marker(this.ik_group, "* P" + (n - 1) + "'", p, color);
+        P_[n - 1] = p.clone();
+
+        create_help_line(this.ik_group, p, pAttachment, color );
+
+        scene.add(this.ik_group);
+
+        if (joint.parent_joint) {
+            joint.parent_joint.ik_backward_step(P, P_, n - 1);
+        } else {
+            console.log("End backward");
+        }
+
+    }
+
+    //-----------------------------------------------------------
+    // FABRIK Backward propagation implementation
+    //-----------------------------------------------------------
+
+    fabrik_backward(point) {
+        if (this.ik_group)
+            scene.remove(this.ik_group);
+
+        this.ik_group = new THREE.Group();
+
+        // P array with real joint precalculated values of world coordinates per joint attachment
+        var P = new Array();
+
+        // P' array for backward pass
+        var P_ = new Array();
+        var n = 0;
+
+        // First pass to populate our array of points
+        var next = this.next_joint;
+        P[n] = get_world_position(next.link_prev);
+        create_marker(this.ik_group, "P" + n, P[n], {color: 0x111111});
+        n++;
+
+        while (!next.is_end_effector) {
+            next = next.next_joint;
+            P[n] = get_world_position(next.link_prev);
+            create_marker(this.ik_group, "P" + n, P[n], {color: 0x111111});
+            n++;
+        };
+
+        // The last link is our end effector from which we will back propagate
+        var end_effector = next;
+
+        // The last joint position is the next link
+        P[n] = get_world_position(end_effector.link_next);
+        create_marker(this.ik_group, "P" + n, P[n], {color: 0x111111});
+
+        // Our P' will be backward propagate from here
+        P_[n] = point.clone();
+        create_marker(this.ik_group, "P" + (n) + "'", P_[n], {color: 0x111111});
+
+        // Recursive step backward.
+        end_effector.ik_backward_step(P, P_, n);
+
+        scene.add(this.ik_group);
+        render();
     }
 
 }
@@ -309,6 +454,22 @@ class Leg extends Joint {
     constructor(scene, name, geometry) {
         console.log("---- Leg load ----")
         super(scene, name, geometry);
+    }
+
+    solve_ik(point) {
+        var new_point = point.clone();
+
+        var distance = this.calculateDistanceToPoint(new_point);
+
+        print_h1("IK Solver");
+
+        if (distance > this.total_length) {
+            console.log(" Outside reach " + this.name + " = " + distance.toFixed(2));
+        } else {
+            console.log(" Distance " + this.name + " = " + distance.toFixed(2));
+        }
+
+        this.fabrik_backward(new_point);
     }
 
     calculateTotalLegLength(self) {
@@ -329,94 +490,7 @@ class Leg extends Joint {
         return distance;
     }
 
-    fabrik_backward_step(joint, P, P_, n) {
-
-    }
-
-    //-----------------------------------------------------------
-    // FABRIK Backward propagation implementation
-    //-----------------------------------------------------------
-
-    fabrik_backward(point) {
-        var fabrik_group = new THREE.Group();
-
-        if (this.fabrik_group) {
-            scene.remove(this.fabrik_group);
-        }
-
-        this.fabrik_group = fabrik_group;
-
-        // P' array for backward pass
-
-        var P = new Array();
-        var P_ = new Array();
-        var n = 0;
-        var next = this.next_joint;
-        P[n] = get_world_position(next.link_prev);
-        create_marker(fabrik_group, "P" + n, P[n], {color: 0xffaaff});
-        n++;
-
-        while (!next.is_end_effector) {
-            next = next.next_joint;
-            P[n] = get_world_position(next.link_prev);
-            create_marker(fabrik_group, "P" + n, P[n], {color: 0xaaaaff});
-            n++;
-        };
-
-        P[n] = get_world_position(next.link_next);
-        create_marker(fabrik_group, "P" + n, P[n], {color: 0xffaaff});
-
-        if (this.orientation == 'Y') {
-
-        }
-
-        //fabrik_backward_step(next, P, P_, n)
-
-        next.vect_joint = get_vector(P[n-1], P[n]);
-
-        create_help_arrow(fabrik_group, next.vect_up, P[n-1], 25 * SCALE, 0xff0000);
-        create_help_arrow(fabrik_group, next.vect_rotation, P[n-1], 25 * SCALE, 0xffff00);
-        create_help_arrow(fabrik_group, next.vect_joint, P[n-1], 25 * SCALE, 0xffffff);
-
-        var end_effector = next;
-        end_effector.print();
-
-        create_marker(fabrik_group, "P" + (n) + "'", point, {color: 0xaaaaff});
-
-        // We define the point P(n) as our end_effector position
-        // target position, from now on: P(n)'
-        //
-        // We have to trace a line with P(n-1) to P(n)'
-
-        // Position of the attachment of the previous joint
-        var pAttachment = get_world_position(end_effector.link_prev);
-        var p = pAttachment.clone();
-
-        // End effector position
-        //var p_EF = get_world_position(end_effector.link_next);
-        //create_marker(fabrik_group, "EF", p_EF, {color: 0xaaaaff});
-
-        print_vector("[EF attachment]", p);
-
-        create_help_line(fabrik_group, point, pAttachment, { color: 0xffff00 } );
-
-        //------------------------------------------------------------------
-        // This line will define our new vector in which the new position backward will lie
-        // Position without a constraint
-        // *------- P(n-1) <------- P(n)'
-
-        p.sub(point);
-        print_vector("P(" + (n-1) + ") - P("+ n +")' =", p);
-        p.normalize();
-        p.multiplyScalar(end_effector.joint_length);
-
-        // We position the new line in the vector
-        // New position is |P(n) - P(n - 1)| * newline_vector + P(n)'
-
-        // Add the position of the target end
-        p.add(point);
-        create_marker(fabrik_group, "* P" + (n - 1) + "'", p, {color: 0xaaaaff});
-
+    /*
         //------------------------------------------------------------------
         // JOINTS RESTRICTED
         // Create the vector defined by the project point and the previous point
@@ -464,23 +538,5 @@ class Leg extends Joint {
 
         create_marker(fabrik_group, "P" + (n - 1) + "'", p, {color: 0xaaaaff});
         create_help_line(fabrik_group, projected_p, p, { color: 0xffff00 } );
-
-        scene.add(fabrik_group);
-
-        render();
-    }
-
-    calculateNewPosition(point) {
-        var new_point = point.clone();
-
-        var distance = this.calculateDistanceToPoint(new_point);
-
-        if (distance > this.total_length) {
-            console.log(" Outside reach " + this.name + " = " + distance.toFixed(2));
-        } else {
-            console.log(" Distance " + this.name + " = " + distance.toFixed(2));
-        }
-
-        this.fabrik_backward(new_point);
-    }
+    */
 }

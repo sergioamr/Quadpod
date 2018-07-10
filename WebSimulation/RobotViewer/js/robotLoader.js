@@ -230,7 +230,7 @@ class Robot extends THREE.Group {
             outline.visible = true;
         }
 
-        closest.calculateNewPosition(point);
+        closest.solve_ik(point);
 
         return closest;
     }
