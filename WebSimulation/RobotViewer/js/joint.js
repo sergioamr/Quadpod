@@ -546,7 +546,7 @@ class Joint extends THREE.Object3D {
             end_effector.ik_backward_step(this.root_ik, P, P_, n, (i * 2) + 1);
             P = P_;
             P_ = new Array();
-            P_[n] = P[n];
+            P_[n] = point.clone();
         }
 
         scene.add(this.root_ik);
