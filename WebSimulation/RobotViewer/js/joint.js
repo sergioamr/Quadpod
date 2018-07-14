@@ -8,6 +8,14 @@ var STR_PAD_BOTH = 3;
 
 var TEXT_PADDING = 30;
 
+function s_prime(iterations, marker = "'") {
+    var str = '';
+    for (var c=0; c < iterations; c++)
+        str = str + marker;
+
+    return str;
+}
+
 function pad(str, len, pad, dir) {
 
     if (typeof(len) == "undefined") { var len = 0; }
@@ -60,7 +68,7 @@ function print_vector(name, v) {
         + v.z.toFixed(2) + ")");
 }
 
-function print_text(name, text) {
+function print_text(name, text = '') {
     str = pad(name, TEXT_PADDING, ' ', STR_PAD_RIGHT);
     console.log(" " + str + " "+ "'" + text + "'");
 }
@@ -81,12 +89,12 @@ function get_vector(p0, p1) {
     return pout;
 }
 
-function create_marker(group, text, position, color) {
-    var mesh  = robot.create_text(text, color.color, 2, 0.5);
+function create_marker(group, text, position, color, maker_scale = 0.4) {
+    var mesh  = robot.create_text(text, color.color, 2 , 0.5 * maker_scale * 2);
     mesh.position.set(- 0.5 * SCALE, 0, 2.5 * SCALE);
     mesh.visible = true;
 
-    var marker = create_pivot_geometry(color);
+    var marker = create_pivot_geometry(color, maker_scale);
     marker.add(mesh);
     marker.position.set(position.x, position.y, position.z);
     group.add(marker);
@@ -94,7 +102,7 @@ function create_marker(group, text, position, color) {
 }
 
 function create_help_arrow(group, dir, origin, length, color_hex) {
-    var arrowHelper = new THREE.ArrowHelper( dir, origin, length, color_hex );
+    var arrowHelper = new THREE.ArrowHelper( dir, origin.clone(), length, color_hex );
     group.add( arrowHelper );
 }
 
@@ -119,6 +127,27 @@ function get_world_position(obj) {
     var vector = new THREE.Vector3();
     vector.setFromMatrixPosition( obj.matrixWorld );
     return vector;
+}
+
+// |A·B| = |A| |B| COS(θ)
+// |A×B| = |A| |B| SIN(θ)
+// return Math.Atan2(Cross(A,B), Dot(A,B));
+
+function get_angle(A, B) {
+    var angle = A.angleTo(B);
+    return angle;
+}
+
+function get_angleX(A, B) {
+    var vector = new THREE.Vector3();
+    vector.set(A.x, 0, 0);
+    return vecto.angleTo(B);
+}
+
+function get_angleY(A, B) {
+    var vector = new THREE.Vector3();
+    vector.set(0, A.y, 0);
+    return vecto.angleTo(B);
 }
 
 //####################################
@@ -158,7 +187,6 @@ class Joint extends THREE.Object3D {
         super();
         this.scene = scene;
         this.name = name;
-        this.next = new Array();
         this.init();
 
         var geo = geometry.clone();
@@ -177,9 +205,14 @@ class Joint extends THREE.Object3D {
         var vector = new THREE.Vector3();
         vector.setFromMatrixPosition( this.matrixWorld );
 
-        var mesh  = robot.create_text("("+vector.x.toFixed(2)
-                + "," + vector.y.toFixed(2)
-                + "," + vector.z.toFixed(2)+")", 0xeeeeee, 5, 1);
+        var mesh  = robot.create_text(this.name, 0xeeeeee, 1.5, 1);
+        mesh.position.set(vector.x, vector.y, vector.z + 5 * SCALE);
+
+        this.scene.add(mesh);
+
+        var mesh  = robot.create_text("("+vector.x.toFixed(1)
+                + "," + vector.y.toFixed(1)
+                + "," + vector.z.toFixed(1)+")", 0xeeeeee, 3, 1);
 
         mesh.position.set(vector.x, vector.y + 1 * SCALE, vector.z);
         this.text_vector = vector;
@@ -267,12 +300,16 @@ class Joint extends THREE.Object3D {
     }
 
     attach(next_joint) {
+        if (this.isRoot) {
+            print_text("ROOT");
+        }
+
         var pivot = this.link_next;
         next_joint.position.set(pivot.position.x, pivot.position.y, pivot.position.z);
         this.add(next_joint);
         this.next_joint = next_joint;
-        this.next_joint.parent_joint = this;
 
+        next_joint.parent_joint = this;
         this.is_end_effector = false;
     }
 
@@ -333,27 +370,78 @@ class Joint extends THREE.Object3D {
     // We have to step until we find all the end_effectors on the other side.
     // We should have a tree for the joints instead of an array or just past the next value and previous value
 
-    ik_backward_step(P, P_, n) {
+    ik_create_helpers(ik_group, P, n) {
+        this.print();
+        this.vect_joint = get_vector(P[n-1], P[n]);
+
+        //create_help_arrow(ik_group, this.vect_up, P[n-1], 25 * SCALE, 0xff0000);
+        //create_help_arrow(ik_group, this.vect_rotation, P[n-1], 25 * SCALE, 0xffff00);
+        //create_help_arrow(ik_group, this.vect_joint, P[n-1], 25 * SCALE, 0xffffff);
+    }
+
+    ik_forward_point(ik_group, P, P_, n) {
+        var color = { color: 0xffffff };
+
+        var point = P_[n]; //.clone();
+        var pAttachment = P_[n - 1].clone();
+        create_help_line(ik_group, point, pAttachment, color );
+
+        // Find next P(n) ''
+        var vect = new THREE.Vector3();
+        vect.set(point.x, point.y, point.z);
+
+        vect.sub(pAttachment);
+        vect.normalize();
+        create_help_arrow(ik_group, vect, pAttachment, 25 * SCALE, 0x0000ff);
+
+        vect.multiplyScalar(this.joint_length);
+
+        vect.add(pAttachment);
+
+        return vect;
+    }
+
+    ik_forward_step(ik_group, P, P_, n, iterations) {
+        var joint = this;
+        var point = P_[n]; //.clone();
+
+        print_text("Ik_forward " + iterations ,  "["+n+"]");
+
+        //var color = { color: 0xff + (n * 63 << 8) }
+        var color = { color: 0xff0000 };
+
+        P_[n] = this.ik_forward_point(ik_group, P, P_, n);
+        create_marker(ik_group, "P" + (n) + s_prime(iterations), P_[n], color, 0.25);
+
+        if (this.next_joint) {
+            print_vector("Line P"+ s_prime(iterations) + (n - 1) ,  P_[n - 1]);
+            print_vector("Line P"+ s_prime(iterations) + (n) ,  P_[n]);
+
+            create_help_line(ik_group, P_[n], P_[n - 1],  { color: 0xffff00 } );
+            this.next_joint.ik_forward_step(ik_group, P, P_, n + 1, iterations);
+        } else {
+            print_h2("End effector " + iterations);
+            P_[n] = this.ik_forward_point(ik_group, P, P_, n);
+
+            print_h2("Finished " + iterations);
+            create_help_arrow(ik_group, P_[n], P_[n-1], 25 * SCALE, 0xffffff);
+            create_marker(ik_group, "P" + (n) +  s_prime(iterations), P_[n], {color: 0xffffff}, 0.3);
+        }
+    }
+
+    ik_backward_step(ik_group, P, P_, n, iterations = 1) {
         //[TODO] Next step is to propagate to the array of joints attached to the body.
-        if (n == 0)
+        if (n == 0) {
+            console.log("Reached end of IK")
             return;
+        }
 
         var joint = this;
-
-        joint.print();
         var point = P_[n];
 
         var color = { color: 0xffff + n * 63 }
-        if (this.ik_group)
-            scene.remove(this.ik_group);
 
-        this.ik_group = new THREE.Group();
-
-        this.vect_joint = get_vector(P[n-1], P[n]);
-
-        create_help_arrow(this.ik_group, this.vect_up, P[n-1], 25 * SCALE, 0xff0000);
-        create_help_arrow(this.ik_group, this.vect_rotation, P[n-1], 25 * SCALE, 0xffff00);
-        create_help_arrow(this.ik_group, this.vect_joint, P[n-1], 25 * SCALE, 0xffffff);
+        this.ik_create_helpers(ik_group, P, n);
 
         // We define the point P(n) as our end_effector position
         // target position, from now on: P(n)'
@@ -364,7 +452,7 @@ class Joint extends THREE.Object3D {
         var pAttachment = get_world_position(this.link_prev);
         var p = pAttachment.clone();
 
-        create_help_line(this.ik_group, point, pAttachment, color );
+        create_help_line(ik_group, point, pAttachment, color );
 
         //------------------------------------------------------------------
         // This line will define our new vector in which the new position backward will lie
@@ -372,7 +460,6 @@ class Joint extends THREE.Object3D {
         // *------- P(n-1) <------- P(n)'
 
         p.sub(point);
-        print_vector("P(" + (n-1) + ") - P("+ n +")' =", p);
         p.normalize();
         p.multiplyScalar(this.joint_length);
 
@@ -381,19 +468,30 @@ class Joint extends THREE.Object3D {
 
         // Add the position of the target end
         p.add(point);
-        create_marker(this.ik_group, "* P" + (n - 1) + "'", p, color);
+        create_marker(ik_group, "P" + (n - 1) + s_prime(iterations), p, color, 0.2);
         P_[n - 1] = p.clone();
 
-        create_help_line(this.ik_group, p, pAttachment, color );
+        //TODO: Apply new angle for this joint and check limits
 
-        scene.add(this.ik_group);
+        //TODO: Apply constraints
+
+        create_help_line(ik_group, p, pAttachment, color );
 
         if (joint.parent_joint) {
-            joint.parent_joint.ik_backward_step(P, P_, n - 1);
+            joint.parent_joint.ik_backward_step(ik_group, P, P_, n - 1, iterations);
         } else {
             console.log("End backward");
+
+            //--------------------------------------
+            // Forward IK
+            print_h2("FORWARD");
+            iterations++;
+
+            P_[0] = P[0];
+            this.ik_forward_step(ik_group, P, P_, n, iterations);
         }
 
+        return ik_group;
     }
 
     //-----------------------------------------------------------
@@ -401,10 +499,10 @@ class Joint extends THREE.Object3D {
     //-----------------------------------------------------------
 
     fabrik_backward(point) {
-        if (this.ik_group)
-            scene.remove(this.ik_group);
+        if (this.root_ik)
+            scene.remove(this.root_ik);
 
-        this.ik_group = new THREE.Group();
+        this.root_ik = new THREE.Group();
 
         // P array with real joint precalculated values of world coordinates per joint attachment
         var P = new Array();
@@ -414,15 +512,15 @@ class Joint extends THREE.Object3D {
         var n = 0;
 
         // First pass to populate our array of points
-        var next = this.next_joint;
+        var next = this;
         P[n] = get_world_position(next.link_prev);
-        create_marker(this.ik_group, "P" + n, P[n], {color: 0x111111});
+        create_marker(this.root_ik, "P" + n, P[n], {color: 0x00ff00}, 0.2);
         n++;
 
         while (!next.is_end_effector) {
             next = next.next_joint;
             P[n] = get_world_position(next.link_prev);
-            create_marker(this.ik_group, "P" + n, P[n], {color: 0x111111});
+            create_marker(this.root_ik, "P" + n, P[n], {color: 0x00ff00}, 0.2);
             n++;
         };
 
@@ -431,16 +529,27 @@ class Joint extends THREE.Object3D {
 
         // The last joint position is the next link
         P[n] = get_world_position(end_effector.link_next);
-        create_marker(this.ik_group, "P" + n, P[n], {color: 0x111111});
+        create_marker(this.root_ik, "P" + n, P[n], {color: 0x00ff00}, 0.2);
 
         // Our P' will be backward propagate from here
         P_[n] = point.clone();
-        create_marker(this.ik_group, "P" + (n) + "'", P_[n], {color: 0x111111});
+        create_marker(this.root_ik, "P" + (n) + "'", P_[n], {color: 0x00ff00}, 0.2);
 
-        // Recursive step backward.
-        end_effector.ik_backward_step(P, P_, n);
+        //--------------------------------------
+        // Backward IK
 
-        scene.add(this.ik_group);
+        // TODO: Loop until happy with IK
+
+        // Recursive step backward
+
+        for (var i = 0; i < 3; i++) {
+            end_effector.ik_backward_step(this.root_ik, P, P_, n, (i * 2) + 1);
+            P = P_;
+            P_ = new Array();
+            P_[n] = P[n];
+        }
+
+        scene.add(this.root_ik);
         render();
     }
 
@@ -454,6 +563,8 @@ class Leg extends Joint {
     constructor(scene, name, geometry) {
         console.log("---- Leg load ----")
         super(scene, name, geometry);
+        this.isRoot = true;
+        this.attachments = new Array();
     }
 
     solve_ik(point) {
@@ -488,6 +599,14 @@ class Leg extends Joint {
 
         var distance = vector.distanceTo( v2 );
         return distance;
+    }
+
+    // We have an array of legs in which we are attached so we can backpropagate the IK
+    attach_root(leg) {
+        this.attachments.push(leg);
+        for (var i = 0; i < this.attachments.length; i++) {
+            //console.log(this.attachments[i]);
+        }
     }
 
     /*

@@ -72,7 +72,7 @@ class Robot extends THREE.Group {
         this.shell = null;
         this.legs = new Array();
         this.font_meshes = new Array();
-        this.add(create_pivot_geometry({color: 0xffffff}));
+        this.add(create_pivot_geometry({color: 0xffffff}, 0.1));
         this.font_loader();
     }
 
@@ -248,11 +248,12 @@ function center_object(obj3d) {
     return box;
 }
 
-function create_pivot_geometry(color) {
+function create_pivot_geometry(color, scale = 0.1) {
     //console.log("Pivot creation");
-    var geometry = new THREE.SphereGeometry( PIVOT_SIZE, 16, 16 );
+    var geometry = new THREE.SphereGeometry( PIVOT_SIZE, 8, 8 );
     var material = new THREE.MeshBasicMaterial( color );
     var sphere = new THREE.Mesh( geometry, material );
+    sphere.scale.set(scale, scale, scale);
     return sphere;
 }
 
@@ -348,8 +349,15 @@ function finished_loading() {
     robot.legs[2] = create_leg(180);
     robot.legs[3] = create_leg(270);
 
-    for( x=0 ;x<4 ;x++ )
+    for( x=0 ;x<4 ;x++ ) {
         robot.shell.add(robot.legs[x]);
+
+        // Attach all the other legs to each other
+        for( c=0 ;c<4 ;c++ ) {
+            if (x != c)
+                robot.legs[x].attach_root(robot.legs[c]);
+        }
+    }
 
     world.add(robot);
 
@@ -372,7 +380,7 @@ function init() {
     scene = new THREE.Scene();
     scene.add( new THREE.AmbientLight( 0x999999 ) );
 
-    camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 1, 500 );
+    camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 0.1, 100 );
 
     // Z is up for objects intended to be 3D printed.
 
