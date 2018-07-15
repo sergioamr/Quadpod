@@ -1,3 +1,6 @@
+var IK_MAX_ITERATIONS = 3;
+var IK_DISABLE_FORWARD = false;
+
 //####################################
 //# Utils
 //####################################
@@ -82,6 +85,8 @@ function print_scalar(name, s) {
 //# ThreeJS & Maths Help
 //####################################
 
+//####################################
+
 function get_vector(p0, p1) {
     var pout = p1.clone();
     pout.sub(p0);
@@ -99,6 +104,46 @@ function create_marker(group, text, position, color, maker_scale = 0.4) {
     marker.position.set(position.x, position.y, position.z);
     group.add(marker);
     return marker;
+}
+
+// Creates a line circle orientated with the current orientation of the world and rotated around an axis
+function create_circle(group, center, vect_orientation, orientation, world_quaternion, scale, color_hex) {
+    var resolution = 20;
+    var amplitude = 25 * SCALE * scale;
+    var size = 360 / resolution;
+
+    var geometry = new THREE.Geometry();
+    var material = new THREE.LineBasicMaterial( { color: color_hex, opacity: 1.0} );
+    for(var i = 0; i <= resolution; i++) {
+        var segment = ( i * size ) * Math.PI / 180;
+        var vect = new THREE.Vector3();
+        var cx = Math.cos( segment ) * amplitude;
+        var cy = Math.sin( segment ) * amplitude;
+
+        if (orientation == 'Y') {
+            vect.set(cx, 0, cy);
+        } else
+        if (orientation == 'Z') {
+            vect.set(cx, cy, 0);
+        } else {
+            vect.set(0, cx, cy);
+        }
+
+        geometry.vertices.push( vect );
+    }
+
+    print_vector("Orientation", vect_orientation);
+    print_text("Orientation_text", orientation);
+
+    var line = new THREE.Line( geometry, material );
+    line.position.set(center.x, center.y, center.z);
+
+    //var angleOfRotation = THREE.Math.degToRad( 90 );
+    //var quaternion = new THREE.Quaternion().setFromAxisAngle( vect_orientation, angleOfRotation );
+    //quaternion.multiply(world_quaternion);
+    line.rotation.setFromQuaternion( world_quaternion );
+
+    group.add(line);
 }
 
 function create_help_arrow(group, dir, origin, length, color_hex) {
@@ -199,6 +244,12 @@ class Joint extends THREE.Object3D {
         this.setOrientation('Y');
         this.counter = 0;
         this.is_end_effector = true;
+
+        // Local joint rotation
+        this.j_rotation = { x:0, y:0, z:0 };
+
+        // World joint rotation
+        this.w_rotation = { x:0, y:0, z:0 };
     }
 
     create_text() {
@@ -352,6 +403,8 @@ class Joint extends THREE.Object3D {
             console.log(" Joint");
         }
 
+        print_text("Orientation", this.orientation);
+
         print_scalar("Length", this.joint_length)
 
         var name;
@@ -374,9 +427,26 @@ class Joint extends THREE.Object3D {
         this.print();
         this.vect_joint = get_vector(P[n-1], P[n]);
 
-        //create_help_arrow(ik_group, this.vect_up, P[n-1], 25 * SCALE, 0xff0000);
-        //create_help_arrow(ik_group, this.vect_rotation, P[n-1], 25 * SCALE, 0xffff00);
-        //create_help_arrow(ik_group, this.vect_joint, P[n-1], 25 * SCALE, 0xffffff);
+        var w_quaternion = new THREE.Quaternion();
+        this.getWorldQuaternion(w_quaternion);
+
+        //create_help_arrow(ik_group, this.vect_up, P[n-1], 5 * SCALE, 0x0000ff);
+        //create_help_arrow(ik_group, this.vect_rotation, P[n-1], 5 * SCALE, 0xffffff);
+
+        this.vect_rotation.applyQuaternion(w_quaternion);
+        this.vect_up.applyQuaternion(w_quaternion);
+
+        create_circle(ik_group, P[n - 1], this.vect_up, this.orientation, w_quaternion, 15 * SCALE, 0xffffff);
+
+        var text = "Q[ " + w_quaternion.x.toFixed(1) + ", " + w_quaternion.y.toFixed(1) + ", " + w_quaternion.z.toFixed(1) + ", " + w_quaternion.w.toFixed(1) + " ]";
+        var mesh  = robot.create_text(text, 0x00ff00, 1.5 , 1);
+        mesh.position.set(P[n].x - 0.5 * SCALE, P[n].y, P[n].z + 2.5 * SCALE);
+        mesh.visible = true;
+        ik_group.add(mesh);
+
+        create_help_arrow(ik_group, this.vect_up, P[n-1], 5 * SCALE, 0x0000ff);
+        create_help_arrow(ik_group, this.vect_rotation, P[n-1], 7 * SCALE, 0x00ff00);
+        create_help_arrow(ik_group, this.vect_joint, P[n-1], 3 * SCALE, 0xffffff);
     }
 
     ik_forward_point(ik_group, P, P_, n) {
@@ -392,7 +462,9 @@ class Joint extends THREE.Object3D {
 
         vect.sub(pAttachment);
         vect.normalize();
-        create_help_arrow(ik_group, vect, pAttachment, 25 * SCALE, 0x0000ff);
+
+        // Current vector of the joint
+        //create_help_arrow(ik_group, vect, pAttachment, 25 * SCALE, 0x0000ff);
 
         vect.multiplyScalar(this.joint_length);
 
@@ -417,14 +489,19 @@ class Joint extends THREE.Object3D {
             print_vector("Line P"+ s_prime(iterations) + (n - 1) ,  P_[n - 1]);
             print_vector("Line P"+ s_prime(iterations) + (n) ,  P_[n]);
 
-            create_help_line(ik_group, P_[n], P_[n - 1],  { color: 0xffff00 } );
+            create_help_line(ik_group, P_[n], P_[n - 1], { color: 0xffff00 } );
+
+            // Propagate into the next joints, our joints will be a tree structure.
             this.next_joint.ik_forward_step(ik_group, P, P_, n + 1, iterations);
         } else {
             print_h2("End effector " + iterations);
+
+            // We don't have a next joint, so we calculate here since there is not going to be propagation
             P_[n] = this.ik_forward_point(ik_group, P, P_, n);
 
             print_h2("Finished " + iterations);
-            create_help_arrow(ik_group, P_[n], P_[n-1], 25 * SCALE, 0xffffff);
+
+            create_help_line(ik_group, P_[n], P_[n - 1], { color: 0xffffff } );
             create_marker(ik_group, "P" + (n) +  s_prime(iterations), P_[n], {color: 0xffffff}, 0.3);
         }
     }
@@ -488,7 +565,8 @@ class Joint extends THREE.Object3D {
             iterations++;
 
             P_[0] = P[0];
-            this.ik_forward_step(ik_group, P, P_, n, iterations);
+            if (! IK_DISABLE_FORWARD )
+                this.ik_forward_step(ik_group, P, P_, n, iterations);
         }
 
         return ik_group;
@@ -542,15 +620,31 @@ class Joint extends THREE.Object3D {
 
         // Recursive step backward
 
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < IK_MAX_ITERATIONS; i++) {
             end_effector.ik_backward_step(this.root_ik, P, P_, n, (i * 2) + 1);
             P = P_;
             P_ = new Array();
             P_[n] = point.clone();
+
+            // Check angles and adapt angles to positions
         }
 
         scene.add(this.root_ik);
         render();
+    }
+
+
+    //-----------------------------------------------------------
+    // Rotate joins Euler, propagate transformation
+    //-----------------------------------------------------------
+
+    rotate_joint_euler(x, y, z) {
+        this.rotation.set( x, y, z );
+
+        // Local joint rotation
+        this.j_rotation.x = x;
+        this.j_rotation.y = y;
+        this.j_rotation.z = z;
     }
 
 }

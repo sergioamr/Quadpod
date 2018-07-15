@@ -314,7 +314,7 @@ function create_leg(angle) {
     leg.outlines.push(joint_femur.outline);
     leg.outlines.push(joint_claws.outline);
 
-    leg.rotation.set( 0,0, angle * ( Math.PI/180 ));
+    leg.rotate_joint_euler( 0,0, angle * ( Math.PI/180 ));
 
     leg.updateMatrixWorld();
     leg.calculateTotalLegLength();
