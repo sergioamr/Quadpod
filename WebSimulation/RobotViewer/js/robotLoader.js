@@ -271,6 +271,9 @@ function create_leg(angle) {
 
     var leg = new Leg(scene, "leg_root_" + angle, empty_geometry);
 
+    // Root will only have 1 degree of freedom termporarily but it should rotate too.
+    leg.setOrientation('Y');
+
     // The process to create a leg is to create the joints
     // The joints will always be centered on the first pivot
 

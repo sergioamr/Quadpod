@@ -1,5 +1,5 @@
-var IK_MAX_ITERATIONS = 3;
-var IK_DISABLE_BACKWARD = false;
+var IK_MAX_ITERATIONS = 1;
+var IK_DISABLE_BACKWARD = true;
 
 //####################################
 //# Utils
@@ -74,6 +74,10 @@ function print_vector(name, v) {
 function print_text(name, text = '') {
     str = pad(name, TEXT_PADDING, ' ', STR_PAD_RIGHT);
     console.log(" " + str + " "+ "'" + text + "'");
+}
+
+function print(name, text = '') {
+    print_text(name, text);
 }
 
 function print_scalar(name, s) {
@@ -182,26 +186,30 @@ function get_world_position(obj) {
     return vector;
 }
 
-// |A·B| = |A| |B| COS(θ)
-// |A×B| = |A| |B| SIN(θ)
-// return Math.Atan2(Cross(A,B), Dot(A,B));
+// V1*V2=x1*x2 + y1*y2 + z1*z2
+function vect_dot(v1, v2) {
+    dot = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z ;
+    return (dot);
+}
 
-function get_angle(A, B) {
-    var angle = A.angleTo(B);
+// V1xV2=(y1*z2-z1*y2)i+(z1*x2-x1*z2)j+(x1*y2-y1*x2)k
+function vect_cross(v1, v2) {
+    var dest = new THREE.Vector3();
+    dest.x = (v1.y*v2.z) - (v1.z*v2.y);
+    dest.y = (v1.z*v2.x) - (v1.x*v2.z);
+    dest.z = (v1.x*v2.y) - (v1.y*v2.x);
+    return dest;
+}
+
+function vect_mod(v) {
+    return (Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z));
+}
+
+function vect_get_angle(A, B) {
+    angle = Math.acos( vect_dot(A,B) / (vect_mod(A) * vect_mod(B)));
     return angle;
 }
 
-function get_angleX(A, B) {
-    var vector = new THREE.Vector3();
-    vector.set(A.x, 0, 0);
-    return vecto.angleTo(B);
-}
-
-function get_angleY(A, B) {
-    var vector = new THREE.Vector3();
-    vector.set(0, A.y, 0);
-    return vecto.angleTo(B);
-}
 
 //####################################
 //# Plane
@@ -302,19 +310,20 @@ class Joint extends THREE.Object3D {
         this.orientation = value;
 
         if (this.orientation == 'Y') {
-            this.vect_rotation = new THREE.Vector3(0,1,0);
-            this.vect_up = new THREE.Vector3(0,0,1);
+            this.obj_rotation = new THREE.Vector3(0,1,0);
+            this.obj_up = new THREE.Vector3(0,0,1);
         } else
         if (this.orientation == 'Z') {
-            this.vect_rotation = new THREE.Vector3(0,0,1);
-            this.vect_up = new THREE.Vector3(1,0,0);
+            this.obj_rotation = new THREE.Vector3(0,0,1);
+            this.obj_up = new THREE.Vector3(1,0,0);
         } else {
-            this.vect_rotation = new THREE.Vector3(1,0,0);
-            this.vect_up = new THREE.Vector3(0,1,0);
+            this.obj_rotation = new THREE.Vector3(1,0,0);
+            this.obj_up = new THREE.Vector3(0,1,0);
         }
     }
 
     setAngle(value) {
+        this.angle = value;
         if (this.orientation == 'Y') {
             this.rotation.set( 0, value * ( Math.PI/180 ),  0);
         } else {
@@ -360,7 +369,7 @@ class Joint extends THREE.Object3D {
 
     attach(next_joint) {
         if (this.isRoot) {
-            print_text("ROOT");
+            //print_text("ROOT");
         }
 
         var pivot = this.link_next;
@@ -432,16 +441,21 @@ class Joint extends THREE.Object3D {
     // We should have a tree for the joints instead of an array or just past the next value and previous value
 
     ik_create_helpers(ik_group, P, n) {
-        this.print();
+        //this.print();
         this.vect_joint = get_vector(P[n-1], P[n]);
 
         var w_quaternion = new THREE.Quaternion();
         this.getWorldQuaternion(w_quaternion);
 
-        //create_help_arrow(ik_group, this.vect_up, P[n-1], 5 * SCALE, 0x0000ff);
-        //create_help_arrow(ik_group, this.vect_rotation, P[n-1], 5 * SCALE, 0xffffff);
+        // Original object transformation before rotation and world orientation
+        // create_help_arrow(ik_group, this.obj_up, P[n-1], 5 * SCALE, 0x0000ff);
+        // create_help_arrow(ik_group, this.obj_rotation, P[n-1], 5 * SCALE, 0xffffff);
 
+        // Clone
+        this.vect_rotation = this.obj_rotation.clone();
         this.vect_rotation.applyQuaternion(w_quaternion);
+
+        this.vect_up = this.obj_up.clone();
         this.vect_up.applyQuaternion(w_quaternion);
 
         create_circle(ik_group, P[n - 1], this.vect_up, this.orientation, w_quaternion, 15 * SCALE, 0xffffff);
@@ -472,16 +486,18 @@ class Joint extends THREE.Object3D {
         // Apply rotation constraints
 
         // We project our new point into our possible rotational plane
-        /*
-        var plane = new Plane();
-        plane.create_from_normal(this.vect_rotation,  pAttachment);
 
-        var projected_p = plane.project(point);
-        create_marker(ik_group, "Pj " + n, projected_p, {color: 0xffffff}, 0.3);
+        if (n > 0) {
+            var plane = new Plane();
+            plane.create_from_normal(this.vect_rotation,  pAttachment);
 
-        // Replace the point with the constrained point.
-        point = projected_p;
-        */
+            var projected_p = plane.project(point);
+            create_marker(ik_group, "Pj " + n, projected_p, {color: 0xffffff}, 0.3);
+
+            // Replace the point with the constrained point.
+            point = projected_p;
+        }
+
         //------------------------------------------------------------
 
         // Find next P(n) ''
@@ -534,6 +550,57 @@ class Joint extends THREE.Object3D {
         }
     }
 
+    ik_orientation_step(ik_group, target, P, n, iterations = 1) {
+        if (n > 0)
+            this.ik_create_helpers(ik_group, P, n);
+
+        if (this.is_end_effector) {
+            print_h2("Found end_effector");
+            return;
+        }
+
+        // TODO Check if the index is OK, we should use the data from the joint and not the index.
+
+        // Calculate rotation
+        if (this.orientation == 'Z') {
+
+            // 1. Find plane defined by the normal vector to the joint
+            // 2. Project the target point into this plane
+            // 3. Find the angle between the target and the joint vector on this plane
+
+            var plane = new Plane();
+            plane.create_from_normal(this.vect_rotation,  P[n - 1]);
+
+            var projected_p = plane.project(target);
+            create_marker(ik_group, "Pj " + n, projected_p, {color: 0xffffff}, 0.3);
+            print_vector("Projected ", projected_p);
+
+            var vect_proj_target = get_vector(P[n - 1], projected_p);
+
+            create_help_line(ik_group, P[n - 1], projected_p, { color: 0xffffff } );
+            create_help_arrow(ik_group, vect_proj_target, P[n - 1], 25 * SCALE, 0x00ffff);
+
+            var angle = vect_get_angle(this.vect_joint, vect_proj_target);
+
+            // Check sign of the rotation, use cross product of the two vectors to get the normal of the plane formed by the two vectors.
+            // Then check the dotproduct between that and the original plane normal to see if they are facing the same direction.
+
+            var cross = vect_cross(this.vect_joint, vect_proj_target);
+            var dot = vect_dot(this.vect_rotation, cross);
+            if (dot < 0) {
+                angle = -angle;
+            }
+
+            print_scalar("Angle", THREE.Math.radToDeg(angle));
+
+            this.setAngle(THREE.Math.radToDeg(angle));
+        }
+
+        var next = this.next_joint;
+        next.ik_orientation_step(ik_group, target, P, n + 1, iterations);
+        P[n] = get_world_position(this);
+    }
+
     ik_forward_step(ik_group, P, P_, n, iterations = 1) {
         //[TODO] Next step is to propagate to the array of joints attached to the body.
         if (n == 0) {
@@ -578,7 +645,7 @@ class Joint extends THREE.Object3D {
         //TODO: Apply new angle for this joint and check limits
 
         //------------------------------------------------------------
-        //TODO: Apply constraints
+
         // Apply rotation constraints
         // We project our new point into our possible rotational plane
         /*
@@ -619,7 +686,7 @@ class Joint extends THREE.Object3D {
     // FABRIK forward propagation implementation
     //-----------------------------------------------------------
 
-    fabrik_forward(point) {
+    fabrik_forward(target) {
         if (this.root_ik)
             scene.remove(this.root_ik);
 
@@ -653,7 +720,7 @@ class Joint extends THREE.Object3D {
         create_marker(this.root_ik, "P" + n, P[n], {color: 0x00ff00}, 0.2);
 
         // Our P' will be forward propagate from here
-        P_[n] = point.clone();
+        P_[n] = target.clone();
         create_marker(this.root_ik, "P" + (n) + "'", P_[n], {color: 0x00ff00}, 0.2);
 
         //--------------------------------------
@@ -661,16 +728,21 @@ class Joint extends THREE.Object3D {
 
         // TODO: Loop until happy with IK
 
+        this.ik_orientation_step(this.root_ik, target, P, 1, 1);
+
         // Recursive step forward from the root
 
+        /*
         for (var i = 0; i < IK_MAX_ITERATIONS; i++) {
+            // From the end effector recursively calculate to the root and back
             end_effector.ik_forward_step(this.root_ik, P, P_, n, (i * 2) + 1);
             P = P_;
             P_ = new Array();
-            P_[n] = point.clone();
+            P_[n] = target.clone();
 
             // Check angles and adapt angles to positions
         }
+        */
 
         scene.add(this.root_ik);
         render();
