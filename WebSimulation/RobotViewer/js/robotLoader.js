@@ -282,18 +282,18 @@ function create_leg(angle) {
 
     // Add the geometry centered on the joint attachment
 
-    leg.setNextPivotPosition(42.3 * SCALE, 0,  3.8 * SCALE);
+    leg.setNextPivotPosition(32.0 * SCALE, 0,  -3.5 * SCALE);
 
     //---------- Joint 1 -----------------
     var joint_coxa = new Joint(scene, "leg_coxa", joint_mesh_1);
     joint_coxa.setPivotVisibility(false);
-    joint_coxa.setNextPivotPosition(12.5 * SCALE, 0, 0);
+    joint_coxa.setNextPivotPosition(22.3 * SCALE, 0, -21.7 * SCALE);
     joint_coxa.setOrientation('Z');
     leg.attach(joint_coxa);
 
     //---------- Joint 2 -----------------
     var joint_femur = new Joint(scene, "leg_femur", joint_mesh_2);
-    joint_femur.setNextPivotPosition(30.3 * SCALE, 17.0 * SCALE, 0.5 * SCALE);
+    joint_femur.setNextPivotPosition(51.0 * SCALE, 0 * SCALE, 0 * SCALE);
     joint_femur.setOrientation('Y');
 
     joint_coxa.attach(joint_femur);
@@ -301,7 +301,7 @@ function create_leg(angle) {
     //---------- Joint 3 -----------------
 
     var joint_claws = new Joint(scene, "leg_claws", joint_mesh_3);
-    joint_claws.setNextPivotPosition(92 * SCALE, -5.0 * SCALE, -3.5 * SCALE);
+    joint_claws.setNextPivotPosition(87 * SCALE, 0.0 * SCALE, 0.0 * SCALE);
     joint_claws.setOrientation('Y');
 
     joint_femur.attach(joint_claws);
@@ -434,7 +434,7 @@ function init() {
         box = center_object( mesh_trans );
 
         shell.add( mesh );
-        shell.rotation.set(  90 * ( Math.PI/180 ), 45 * ( Math.PI/180 ), 0 );
+        //shell.rotation.set(  90 * ( Math.PI/180 ), 0, 0 );
 
         shell.add( mesh_trans );
         finished_loading();
@@ -443,7 +443,7 @@ function init() {
     //---------------- JOINT 3 ------------------------
 
     total_meshes++;
-    loader.load( 'models/pata.STL', function ( geometry ) {
+    loader.load( 'models/leg.STL', function ( geometry ) {
         var mesh = new THREE.Mesh( geometry, material_blue.clone() );
 
         mesh.position.set( 0, 0, 0 );
@@ -466,9 +466,9 @@ function init() {
         box = center_object( joint_mesh_3 );
         size = box.getSize( new THREE.Vector3() );
 
-        joint_mesh_3.position.x += size.x /2 - 7.5 * SCALE;
-	    joint_mesh_3.position.y -= 5.0 * SCALE;
-        joint_mesh_3.position.z += 2.5 * SCALE;
+        joint_mesh_3.position.x += size.x /2;
+	    //joint_mesh_3.position.y -= 5.0 * SCALE;
+        //joint_mesh_3.position.z += 10.5 * SCALE;
 
         finished_loading();
     });
@@ -476,11 +476,11 @@ function init() {
     //---------------- JOINT 2 ------------------------
 
     total_meshes++;
-    loader.load( 'models/brazo.STL', function ( geometry ) {
+    loader.load( 'models/arm.STL', function ( geometry ) {
         var mesh = new THREE.Mesh( geometry, material_blue.clone() );
 
         mesh.position.set( 0, 0, 0 );
-        mesh.rotation.set( 0 , 0, 0);
+        mesh.rotation.set( 0, 0, 0);
         mesh.scale.set( SCALE, SCALE, SCALE );
 
         mesh.castShadow = true;
@@ -497,9 +497,9 @@ function init() {
         joint_mesh_2.add( mesh_trans );
 
         center_object( joint_mesh_2 );
-        joint_mesh_2.position.x += 15.0 * SCALE;
-        joint_mesh_2.position.y += 8.5 * SCALE;
-        joint_mesh_2.position.z += 0.8 * SCALE;
+        joint_mesh_2.position.x += 24.0 * SCALE;
+        joint_mesh_2.position.y += 1.3 * SCALE;
+        //joint_mesh_2.position.z += 0.8 * SCALE;
 
         finished_loading();
     });
@@ -507,11 +507,11 @@ function init() {
     //---------------- JOINT 1 ------------------------
 
     total_meshes++;
-    loader.load( 'models/hombro.STL', function ( geometry ) {
+    loader.load( 'models/shaft.STL', function ( geometry ) {
         var mesh = new THREE.Mesh( geometry, material_black.clone() );
 
         mesh.position.set( 0, 0, 0 );
-        mesh.rotation.set( 0, 0 * ( Math.PI/180 ), 0 );
+        //mesh.rotation.set( 0, 0, 90 * ( Math.PI/180 ) );
         mesh.scale.set( SCALE, SCALE, SCALE );
 
         mesh.castShadow = true;
@@ -529,7 +529,9 @@ function init() {
         joint_mesh_1.add( mesh_trans );
 
         center_object( joint_mesh_1 );
-        joint_mesh_1.position.x += 6.2 * SCALE;
+        joint_mesh_1.position.x += 4.2 * SCALE;
+        joint_mesh_1.position.y += 1.2 * SCALE;
+        joint_mesh_1.position.z -= 13.5 * SCALE;
 
         finished_loading();
     });

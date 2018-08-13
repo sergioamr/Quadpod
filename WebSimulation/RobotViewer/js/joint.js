@@ -246,6 +246,7 @@ class Plane extends THREE.Plane {
 class Joint extends THREE.Object3D {
     constructor(scene, name, geometry) {
         super();
+        this.angle = 0;
         this.scene = scene;
         this.name = name;
         this.init();
@@ -322,13 +323,14 @@ class Joint extends THREE.Object3D {
         }
     }
 
-    setAngle(value) {
-        this.angle = value;
-        if (this.orientation == 'Y') {
-            this.rotation.set( 0, value * ( Math.PI/180 ),  0);
-        } else {
-            this.rotation.set( 0,0, value * ( Math.PI/180 ));
-        }
+    setAngle(rad) {
+        this.angle += rad;
+        this.rotateOnAxis(this.vect_rotation, rad);
+        this.scene.updateMatrixWorld();
+
+        // TODO propagate rotation to the rest of the chain
+        // We need to keep the rotations up to date
+        // this.vect_rotation
     }
 
     createOutline() {
@@ -441,7 +443,11 @@ class Joint extends THREE.Object3D {
     // We should have a tree for the joints instead of an array or just past the next value and previous value
 
     ik_create_helpers(ik_group, P, n) {
-        //this.print();
+        if (n < 1 || n > P.length - 1) {
+            this.print();
+            return;
+        }
+
         this.vect_joint = get_vector(P[n-1], P[n]);
 
         var w_quaternion = new THREE.Quaternion();
@@ -592,8 +598,7 @@ class Joint extends THREE.Object3D {
             }
 
             print_scalar("Angle", THREE.Math.radToDeg(angle));
-
-            this.setAngle(THREE.Math.radToDeg(angle));
+            this.setAngle(angle);
         }
 
         var next = this.next_joint;
@@ -602,6 +607,7 @@ class Joint extends THREE.Object3D {
     }
 
     ik_forward_step(ik_group, P, P_, n, iterations = 1) {
+
         //[TODO] Next step is to propagate to the array of joints attached to the body.
         if (n == 0) {
             console.log("Reached end of IK")
@@ -648,7 +654,7 @@ class Joint extends THREE.Object3D {
 
         // Apply rotation constraints
         // We project our new point into our possible rotational plane
-        /*
+/*
         var plane = new Plane();
         plane.create_from_normal(this.vect_rotation,  pAttachment);
 
@@ -657,8 +663,7 @@ class Joint extends THREE.Object3D {
 
         // Replace the point with the constrained point.
         p = projected_p;
-        */
-
+*/
         //------------------------------------------------------------
         P_[n - 1] = p.clone();
 
@@ -686,6 +691,28 @@ class Joint extends THREE.Object3D {
     // FABRIK forward propagation implementation
     //-----------------------------------------------------------
 
+    generate_world_positions(ik_group, P, P_, n) {
+        // First pass to populate our array of points
+        var next = this;
+
+        P[n] = get_world_position(next.link_prev);
+        create_marker(ik_group, "P" + n, P[n], {color: 0x00ff00}, 0.2);
+        n++;
+
+        while (!next.is_end_effector) {
+            next = next.next_joint;
+            P[n] = get_world_position(next.link_prev);
+            create_marker(ik_group, "P" + n, P[n], {color: 0x00ff00}, 0.2);
+            n++;
+        };
+
+        // The last joint position is the next link
+        P[n] = get_world_position(next.link_next);
+        create_marker(this.root_ik, "P" + n, P[n], {color: 0x00ff00}, 0.2);
+
+        return next;
+    }
+
     fabrik_forward(target) {
         if (this.root_ik)
             scene.remove(this.root_ik);
@@ -697,29 +724,13 @@ class Joint extends THREE.Object3D {
 
         // P' array for forward pass
         var P_ = new Array();
-        var n = 0;
-
-        // First pass to populate our array of points
-        var next = this;
-        P[n] = get_world_position(next.link_prev);
-        create_marker(this.root_ik, "P" + n, P[n], {color: 0x00ff00}, 0.2);
-        n++;
-
-        while (!next.is_end_effector) {
-            next = next.next_joint;
-            P[n] = get_world_position(next.link_prev);
-            create_marker(this.root_ik, "P" + n, P[n], {color: 0x00ff00}, 0.2);
-            n++;
-        };
 
         // The last link is our end effector from which we will back propagate
-        var end_effector = next;
-
-        // The last joint position is the next link
-        P[n] = get_world_position(end_effector.link_next);
-        create_marker(this.root_ik, "P" + n, P[n], {color: 0x00ff00}, 0.2);
+        var end_effector = this.generate_world_positions(this.root_ik, P, P_, 0);
 
         // Our P' will be forward propagate from here
+
+        var n = P.length - 1;
         P_[n] = target.clone();
         create_marker(this.root_ik, "P" + (n) + "'", P_[n], {color: 0x00ff00}, 0.2);
 
@@ -728,12 +739,14 @@ class Joint extends THREE.Object3D {
 
         // TODO: Loop until happy with IK
 
+        return;
+
         this.ik_orientation_step(this.root_ik, target, P, 1, 1);
 
         // Recursive step forward from the root
-
-        /*
         for (var i = 0; i < IK_MAX_ITERATIONS; i++) {
+            this.generate_world_positions(this.root_ik, P, P_, 0);
+
             // From the end effector recursively calculate to the root and back
             end_effector.ik_forward_step(this.root_ik, P, P_, n, (i * 2) + 1);
             P = P_;
@@ -742,12 +755,10 @@ class Joint extends THREE.Object3D {
 
             // Check angles and adapt angles to positions
         }
-        */
 
         scene.add(this.root_ik);
         render();
     }
-
 
     //-----------------------------------------------------------
     // Rotate joins Euler, propagate transformation
