@@ -301,7 +301,7 @@ function create_leg(angle) {
     //---------- Joint 3 -----------------
 
     var joint_claws = new Joint(scene, "leg_claws", joint_mesh_3);
-    joint_claws.setNextPivotPosition(87 * SCALE, 0.0 * SCALE, 0.0 * SCALE);
+    joint_claws.setNextPivotPosition(81 * SCALE, 0.0 * SCALE, -5.0 * SCALE);
     joint_claws.setOrientation('Y');
 
     joint_femur.attach(joint_claws);
@@ -466,9 +466,9 @@ function init() {
         box = center_object( joint_mesh_3 );
         size = box.getSize( new THREE.Vector3() );
 
-        joint_mesh_3.position.x += size.x /2;
-	    //joint_mesh_3.position.y -= 5.0 * SCALE;
-        //joint_mesh_3.position.z += 10.5 * SCALE;
+        joint_mesh_3.position.x += size.x /2 - 6.0 * SCALE;
+	    joint_mesh_3.position.y += 2.0 * SCALE;
+        joint_mesh_3.position.z += 5.5 * SCALE;
 
         finished_loading();
     });
