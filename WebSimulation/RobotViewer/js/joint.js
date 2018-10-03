@@ -325,12 +325,18 @@ class Joint extends THREE.Object3D {
 
     setAngle(rad) {
         this.angle += rad;
+        if (!this.vect_rotation) {
+            var w_quaternion = new THREE.Quaternion();
+            this.getWorldQuaternion(w_quaternion);
+            this.vect_rotation = this.obj_rotation.clone();
+            this.vect_rotation.applyQuaternion(w_quaternion);
+        }
+
         this.rotateOnAxis(this.vect_rotation, rad);
         this.scene.updateMatrixWorld();
 
         // TODO propagate rotation to the rest of the chain
         // We need to keep the rotations up to date
-        // this.vect_rotation
     }
 
     createOutline() {
