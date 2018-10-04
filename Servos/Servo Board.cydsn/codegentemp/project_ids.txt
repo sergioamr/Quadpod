@@ -1,0 +1,6 @@
+S:\SpiderBot\Servos\Servo Board.cydsn\Servo Board.cyprj|f7020c23-c2c4-491b-89e8-d3562af2afa6
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|4991c734-eccd-4ef0-ab77-03cc30fa37fa
+H:\OneDrive\Documents\PSoC Creator\4.2\Downloads ( 4.2).cylib\Downloads ( 4.2).cyprj|a1b4b0a4-9661-4d40-9d29-dae94dc68b35
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|bfcf5eef-bd9b-446a-a258-8c1432a88e9b
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|50918dc7-539b-4cc7-b305-2ce0f14ec9c6
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|ceac64fc-d4e1-4d66-a707-c0d53b305511

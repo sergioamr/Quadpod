@@ -1,0 +1,1 @@
+'S:\SpiderBot\Servos\Servo Board.cydsn\main.c' -o .o -T SOURCE_C__ARM_GCC_GENERIC -I 'S:\SpiderBot\Servos\Servo Board.cydsn' -I 'S:\SpiderBot\Servos\Servo Board.cydsn\Generated_Source\PSoC5' -f 'S:\SpiderBot\Servos\Servo Board.cydsn\CortexM3\ARM_GCC_541\Debug\.deps\SOURCE_C__ARM_GCC_GENERIC.d'

@@ -1,0 +1,1597 @@
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	__aeabi_i2d
+  20              		.global	__aeabi_dmul
+  21              		.global	__aeabi_dadd
+  22              		.global	__aeabi_d2iz
+  23              		.section	.text.degtopwm,"ax",%progbits
+  24              		.align	2
+  25              		.global	degtopwm
+  26              		.thumb
+  27              		.thumb_func
+  28              		.type	degtopwm, %function
+  29              	degtopwm:
+  30              	.LFB64:
+  31              		.file 1 "main.c"
+   1:main.c        **** 
+   2:main.c        **** #include <project.h>
+   3:main.c        **** #include <stdlib.h> 
+   4:main.c        **** #include <stdio.h>
+   5:main.c        **** #include <math.h>
+   6:main.c        **** 
+   7:main.c        **** #define USBUART_BUFFER_SIZE 64
+   8:main.c        **** 
+   9:main.c        **** char msg[USBUART_BUFFER_SIZE];    
+  10:main.c        ****    
+  11:main.c        **** //variables UART
+  12:main.c        **** char8* parity[] = {"None", "Odd", "Even", "Mark", "Space"};
+  13:main.c        **** char8* stopm[]   = {"1", "1.5", "2"};
+  14:main.c        **** uint16 count;
+  15:main.c        **** uint8 buffer[USBUART_BUFFER_SIZE];
+  16:main.c        **** void UARTconfig ();
+  17:main.c        **** //Servo Signal param//20ms - 64000 COUNTS
+  18:main.c        **** //Potentiometer Angle 265  Servo Range (200Deg Right Angle),(265 Straight) 
+  19:main.c        **** //PWM COMPARE VALUES
+  20:main.c        **** #define PWMMIN 3250 //1ms
+  21:main.c        **** #define PWMMID 4800 //1.5ms
+  22:main.c        **** #define PWMMAX 6350 //2ms
+  23:main.c        **** 
+  24:main.c        **** //--- anglelimit for joint type
+  25:main.c        **** //angle limits
+  26:main.c        **** #define Servo_MIN -100
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 2
+
+
+  27:main.c        **** #define Servo_MAX 100
+  28:main.c        **** #define ang_lim(x) (x<Servo_MIN ? Servo_MIN : (x>Servo_MAX ? Servo_MAX : x))
+  29:main.c        **** 
+  30:main.c        **** ///----LEGS
+  31:main.c        **** #define servo1(x) PWMA_WriteCompare1(x); //Front Left
+  32:main.c        **** #define servo2(x) PWMA_WriteCompare2(x); //Front Right
+  33:main.c        **** //#define servo3(x) PWMB_WriteCompare1(x); //Back Left
+  34:main.c        **** //#define servo4(x) PWMB_WriteCompare2(x); //Back Right
+  35:main.c        **** 
+  36:main.c        **** int anglegs[] ={0,0,0,0},a=1,pwmlegs[] ={0,0,0,0};
+  37:main.c        **** ///----SHOULDER
+  38:main.c        **** 
+  39:main.c        **** 
+  40:main.c        **** ///----ARMS
+  41:main.c        **** 
+  42:main.c        **** 
+  43:main.c        **** void degtopwm() {
+  32              		.loc 1 43 0
+  33              		.cfi_startproc
+  34              		@ args = 0, pretend = 0, frame = 0
+  35              		@ frame_needed = 0, uses_anonymous_args = 0
+  36 0000 10B5     		push	{r4, lr}
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 4, -8
+  39              		.cfi_offset 14, -4
+  40              	.LVL0:
+  44:main.c        ****    int i;
+  45:main.c        ****     //for(i=0;i<4;i++){
+  46:main.c        ****     i=0;
+  47:main.c        ****         anglegs[i]=ang_lim(anglegs[i]);
+  41              		.loc 1 47 0
+  42 0002 154B     		ldr	r3, .L5+16
+  43 0004 1868     		ldr	r0, [r3]
+  44 0006 10F1640F 		cmn	r0, #100
+  45 000a 03DB     		blt	.L3
+  46              		.loc 1 47 0 is_stmt 0 discriminator 1
+  47 000c 6428     		cmp	r0, #100
+  48 000e A8BF     		it	ge
+  49 0010 6420     		movge	r0, #100
+  50 0012 01E0     		b	.L2
+  51              	.L3:
+  52              		.loc 1 47 0
+  53 0014 6FF06300 		mvn	r0, #99
+  54              	.L2:
+  55              		.loc 1 47 0 discriminator 4
+  56 0018 0F4C     		ldr	r4, .L5+16
+  57 001a 2060     		str	r0, [r4]
+  48:main.c        ****         pwmlegs[i]=(anglegs[i]*0.01)*1550+PWMMID;
+  58              		.loc 1 48 0 is_stmt 1 discriminator 4
+  59 001c FFF7FEFF 		bl	__aeabi_i2d
+  60              	.LVL1:
+  61 0020 09A3     		adr	r3, .L5
+  62 0022 D3E90023 		ldrd	r2, [r3]
+  63 0026 FFF7FEFF 		bl	__aeabi_dmul
+  64              	.LVL2:
+  65 002a 09A3     		adr	r3, .L5+8
+  66 002c D3E90023 		ldrd	r2, [r3]
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 3
+
+
+  67 0030 FFF7FEFF 		bl	__aeabi_dmul
+  68              	.LVL3:
+  69 0034 0022     		movs	r2, #0
+  70 0036 094B     		ldr	r3, .L5+20
+  71 0038 FFF7FEFF 		bl	__aeabi_dadd
+  72              	.LVL4:
+  73 003c FFF7FEFF 		bl	__aeabi_d2iz
+  74              	.LVL5:
+  75 0040 2061     		str	r0, [r4, #16]
+  76 0042 10BD     		pop	{r4, pc}
+  77              	.L6:
+  78 0044 AFF30080 		.align	3
+  79              	.L5:
+  80 0048 7B14AE47 		.word	1202590843
+  81 004c E17A843F 		.word	1065646817
+  82 0050 00000000 		.word	0
+  83 0054 00389840 		.word	1083717632
+  84 0058 00000000 		.word	.LANCHOR0
+  85 005c 00C0B240 		.word	1085456384
+  86              		.cfi_endproc
+  87              	.LFE64:
+  88              		.size	degtopwm, .-degtopwm
+  89              		.section	.text.servooutput,"ax",%progbits
+  90              		.align	2
+  91              		.global	servooutput
+  92              		.thumb
+  93              		.thumb_func
+  94              		.type	servooutput, %function
+  95              	servooutput:
+  96              	.LFB65:
+  49:main.c        ****     //}
+  50:main.c        ****     
+  51:main.c        **** }
+  52:main.c        **** void servooutput(){
+  97              		.loc 1 52 0
+  98              		.cfi_startproc
+  99              		@ args = 0, pretend = 0, frame = 0
+ 100              		@ frame_needed = 0, uses_anonymous_args = 0
+ 101 0000 10B5     		push	{r4, lr}
+ 102              		.cfi_def_cfa_offset 8
+ 103              		.cfi_offset 4, -8
+ 104              		.cfi_offset 14, -4
+  53:main.c        ****     degtopwm();
+ 105              		.loc 1 53 0
+ 106 0002 FFF7FEFF 		bl	degtopwm
+ 107              	.LVL6:
+  54:main.c        ****     servo1(pwmlegs[0]);
+ 108              		.loc 1 54 0
+ 109 0006 044C     		ldr	r4, .L9
+ 110 0008 208A     		ldrh	r0, [r4, #16]
+ 111 000a FFF7FEFF 		bl	PWMA_WriteCompare1
+ 112              	.LVL7:
+  55:main.c        ****     servo2(pwmlegs[1]);
+ 113              		.loc 1 55 0
+ 114 000e A08A     		ldrh	r0, [r4, #20]
+ 115 0010 FFF7FEFF 		bl	PWMA_WriteCompare2
+ 116              	.LVL8:
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 4
+
+
+ 117 0014 10BD     		pop	{r4, pc}
+ 118              	.L10:
+ 119 0016 00BF     		.align	2
+ 120              	.L9:
+ 121 0018 00000000 		.word	.LANCHOR0
+ 122              		.cfi_endproc
+ 123              	.LFE65:
+ 124              		.size	servooutput, .-servooutput
+ 125              		.section	.text.UARTconfig,"ax",%progbits
+ 126              		.align	2
+ 127              		.global	UARTconfig
+ 128              		.thumb
+ 129              		.thumb_func
+ 130              		.type	UARTconfig, %function
+ 131              	UARTconfig:
+ 132              	.LFB67:
+  56:main.c        ****     //servo3(anglegs[1]);
+  57:main.c        ****    // servo4(anglegs[1]);
+  58:main.c        **** }
+  59:main.c        **** int main(){  
+  60:main.c        ****     CyGlobalIntEnable;/* Enable global interrupts */
+  61:main.c        ****     UARTconfig();
+  62:main.c        ****     USBUART_PutString("Spider");  
+  63:main.c        ****     PWMA_Start();  
+  64:main.c        ****     for(;;)
+  65:main.c        ****     {
+  66:main.c        ****         if(anglegs[0]>95) a=-1; 
+  67:main.c        ****         else if(anglegs[0]<-95)a=1;
+  68:main.c        ****         anglegs[0]=anglegs[0]+a*5;  
+  69:main.c        ****         sprintf(msg,"%i\r\n",pwmlegs[0]);
+  70:main.c        ****         USBUART_PutString(msg); 
+  71:main.c        ****         servooutput();
+  72:main.c        ****         CyDelay(50);
+  73:main.c        ****     }
+  74:main.c        **** }
+  75:main.c        **** 
+  76:main.c        **** void UARTconfig (){
+ 133              		.loc 1 76 0
+ 134              		.cfi_startproc
+ 135              		@ args = 0, pretend = 0, frame = 0
+ 136              		@ frame_needed = 0, uses_anonymous_args = 0
+ 137 0000 08B5     		push	{r3, lr}
+ 138              		.cfi_def_cfa_offset 8
+ 139              		.cfi_offset 3, -8
+ 140              		.cfi_offset 14, -4
+  77:main.c        ****     if (0u != USBUART_IsConfigurationChanged()) {//Initialize IN endpoints when device is configure
+ 141              		.loc 1 77 0
+ 142 0002 FFF7FEFF 		bl	USBUART_IsConfigurationChanged
+ 143              	.LVL9:
+ 144 0006 20B1     		cbz	r0, .L12
+  78:main.c        ****         if (0u != USBUART_GetConfiguration()) {// Enumeration is done, enable OUT endpoint to recei
+ 145              		.loc 1 78 0
+ 146 0008 FFF7FEFF 		bl	USBUART_GetConfiguration
+ 147              	.LVL10:
+ 148 000c 08B1     		cbz	r0, .L12
+  79:main.c        ****             USBUART_CDC_Init();
+ 149              		.loc 1 79 0
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 5
+
+
+ 150 000e FFF7FEFF 		bl	USBUART_CDC_Init
+ 151              	.LVL11:
+ 152              	.L12:
+  80:main.c        ****         }
+  81:main.c        ****     }
+  82:main.c        **** 
+  83:main.c        ****        //Service USB CDC when device is configured. 
+  84:main.c        ****         if (0u != USBUART_GetConfiguration()){ // Check for input data from host. 
+ 153              		.loc 1 84 0
+ 154 0012 FFF7FEFF 		bl	USBUART_GetConfiguration
+ 155              	.LVL12:
+ 156 0016 E8B1     		cbz	r0, .L11
+  85:main.c        ****            
+  86:main.c        ****             if (0u != USBUART_DataIsReady()){// Read received data and re-enable OUT endpoint. 
+ 157              		.loc 1 86 0
+ 158 0018 FFF7FEFF 		bl	USBUART_DataIsReady
+ 159              	.LVL13:
+ 160 001c D0B1     		cbz	r0, .L11
+  87:main.c        ****                 count = USBUART_GetAll(buffer);
+ 161              		.loc 1 87 0
+ 162 001e 0E48     		ldr	r0, .L17
+ 163 0020 FFF7FEFF 		bl	USBUART_GetAll
+ 164              	.LVL14:
+ 165 0024 0D4B     		ldr	r3, .L17+4
+ 166 0026 1880     		strh	r0, [r3]	@ movhi
+  88:main.c        ****                 if (0u != count){//Wait until component is ready to send data to host.
+ 167              		.loc 1 88 0
+ 168 0028 A0B1     		cbz	r0, .L11
+ 169              	.L14:
+  89:main.c        ****                     while (0u == USBUART_CDCIsReady()){}
+ 170              		.loc 1 89 0 discriminator 1
+ 171 002a FFF7FEFF 		bl	USBUART_CDCIsReady
+ 172              	.LVL15:
+ 173 002e 0028     		cmp	r0, #0
+ 174 0030 FBD0     		beq	.L14
+  90:main.c        ****                     //Send data back to host.
+  91:main.c        ****                     USBUART_PutString("and");                   
+ 175              		.loc 1 91 0
+ 176 0032 0B48     		ldr	r0, .L17+8
+ 177 0034 FFF7FEFF 		bl	USBUART_PutString
+ 178              	.LVL16:
+  92:main.c        ****                     if (USBUART_BUFFER_SIZE == count){// Wait until component is ready to send data
+ 179              		.loc 1 92 0
+ 180 0038 084B     		ldr	r3, .L17+4
+ 181 003a 1B88     		ldrh	r3, [r3]
+ 182 003c 402B     		cmp	r3, #64
+ 183 003e 09D1     		bne	.L11
+ 184              	.L15:
+  93:main.c        ****                         while (0u == USBUART_CDCIsReady()){}                        
+ 185              		.loc 1 93 0 discriminator 1
+ 186 0040 FFF7FEFF 		bl	USBUART_CDCIsReady
+ 187              	.LVL17:
+ 188 0044 0028     		cmp	r0, #0
+ 189 0046 FBD0     		beq	.L15
+  94:main.c        ****                         USBUART_PutChar('\r');  
+ 190              		.loc 1 94 0
+ 191 0048 0D20     		movs	r0, #13
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 6
+
+
+ 192 004a FFF7FEFF 		bl	USBUART_PutChar
+ 193              	.LVL18:
+  95:main.c        ****                         USBUART_PutChar('\n');  
+ 194              		.loc 1 95 0
+ 195 004e 0A20     		movs	r0, #10
+ 196 0050 FFF7FEFF 		bl	USBUART_PutChar
+ 197              	.LVL19:
+ 198              	.L11:
+ 199 0054 08BD     		pop	{r3, pc}
+ 200              	.L18:
+ 201 0056 00BF     		.align	2
+ 202              	.L17:
+ 203 0058 00000000 		.word	buffer
+ 204 005c 00000000 		.word	count
+ 205 0060 00000000 		.word	.LC0
+ 206              		.cfi_endproc
+ 207              	.LFE67:
+ 208              		.size	UARTconfig, .-UARTconfig
+ 209              		.section	.text.main,"ax",%progbits
+ 210              		.align	2
+ 211              		.global	main
+ 212              		.thumb
+ 213              		.thumb_func
+ 214              		.type	main, %function
+ 215              	main:
+ 216              	.LFB66:
+  59:main.c        ****     CyGlobalIntEnable;/* Enable global interrupts */
+ 217              		.loc 1 59 0
+ 218              		.cfi_startproc
+ 219              		@ Volatile: function does not return.
+ 220              		@ args = 0, pretend = 0, frame = 0
+ 221              		@ frame_needed = 0, uses_anonymous_args = 0
+ 222 0000 08B5     		push	{r3, lr}
+ 223              		.cfi_def_cfa_offset 8
+ 224              		.cfi_offset 3, -8
+ 225              		.cfi_offset 14, -4
+  60:main.c        ****     UARTconfig();
+ 226              		.loc 1 60 0
+ 227              		.syntax unified
+ 228              	@ 60 "main.c" 1
+ 229 0002 62B6     		CPSIE   i
+ 230              	@ 0 "" 2
+  61:main.c        ****     USBUART_PutString("Spider");  
+ 231              		.loc 1 61 0
+ 232              		.thumb
+ 233              		.syntax unified
+ 234 0004 FFF7FEFF 		bl	UARTconfig
+ 235              	.LVL20:
+  62:main.c        ****     PWMA_Start();  
+ 236              		.loc 1 62 0
+ 237 0008 1448     		ldr	r0, .L24
+ 238 000a FFF7FEFF 		bl	USBUART_PutString
+ 239              	.LVL21:
+  63:main.c        ****     for(;;)
+ 240              		.loc 1 63 0
+ 241 000e FFF7FEFF 		bl	PWMA_Start
+ 242              	.LVL22:
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 7
+
+
+ 243              	.L22:
+  66:main.c        ****         else if(anglegs[0]<-95)a=1;
+ 244              		.loc 1 66 0
+ 245 0012 134B     		ldr	r3, .L24+4
+ 246 0014 1A68     		ldr	r2, [r3]
+ 247 0016 5F2A     		cmp	r2, #95
+ 248 0018 04DD     		ble	.L20
+  66:main.c        ****         else if(anglegs[0]<-95)a=1;
+ 249              		.loc 1 66 0 is_stmt 0 discriminator 1
+ 250 001a 4FF0FF31 		mov	r1, #-1
+ 251 001e 114B     		ldr	r3, .L24+8
+ 252 0020 1960     		str	r1, [r3]
+ 253 0022 05E0     		b	.L21
+ 254              	.L20:
+  67:main.c        ****         anglegs[0]=anglegs[0]+a*5;  
+ 255              		.loc 1 67 0 is_stmt 1
+ 256 0024 12F15F0F 		cmn	r2, #95
+ 257 0028 02DA     		bge	.L21
+  67:main.c        ****         anglegs[0]=anglegs[0]+a*5;  
+ 258              		.loc 1 67 0 is_stmt 0 discriminator 1
+ 259 002a 0121     		movs	r1, #1
+ 260 002c 0D4B     		ldr	r3, .L24+8
+ 261 002e 1960     		str	r1, [r3]
+ 262              	.L21:
+  68:main.c        ****         sprintf(msg,"%i\r\n",pwmlegs[0]);
+ 263              		.loc 1 68 0 is_stmt 1
+ 264 0030 0C4B     		ldr	r3, .L24+8
+ 265 0032 1B68     		ldr	r3, [r3]
+ 266 0034 03EB8303 		add	r3, r3, r3, lsl #2
+ 267 0038 1344     		add	r3, r3, r2
+ 268 003a 094A     		ldr	r2, .L24+4
+ 269 003c 1360     		str	r3, [r2]
+  69:main.c        ****         USBUART_PutString(msg); 
+ 270              		.loc 1 69 0
+ 271 003e 0A4C     		ldr	r4, .L24+12
+ 272 0040 1269     		ldr	r2, [r2, #16]
+ 273 0042 0A49     		ldr	r1, .L24+16
+ 274 0044 2046     		mov	r0, r4
+ 275 0046 FFF7FEFF 		bl	sprintf
+ 276              	.LVL23:
+  70:main.c        ****         servooutput();
+ 277              		.loc 1 70 0
+ 278 004a 2046     		mov	r0, r4
+ 279 004c FFF7FEFF 		bl	USBUART_PutString
+ 280              	.LVL24:
+  71:main.c        ****         CyDelay(50);
+ 281              		.loc 1 71 0
+ 282 0050 FFF7FEFF 		bl	servooutput
+ 283              	.LVL25:
+  72:main.c        ****     }
+ 284              		.loc 1 72 0
+ 285 0054 3220     		movs	r0, #50
+ 286 0056 FFF7FEFF 		bl	CyDelay
+ 287              	.LVL26:
+  73:main.c        **** }
+ 288              		.loc 1 73 0
+ 289 005a DAE7     		b	.L22
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 8
+
+
+ 290              	.L25:
+ 291              		.align	2
+ 292              	.L24:
+ 293 005c 04000000 		.word	.LC1
+ 294 0060 00000000 		.word	.LANCHOR0
+ 295 0064 00000000 		.word	.LANCHOR1
+ 296 0068 00000000 		.word	msg
+ 297 006c 0C000000 		.word	.LC2
+ 298              		.cfi_endproc
+ 299              	.LFE66:
+ 300              		.size	main, .-main
+ 301              		.global	pwmlegs
+ 302              		.global	a
+ 303              		.global	anglegs
+ 304              		.comm	buffer,64,4
+ 305              		.comm	count,2,2
+ 306              		.global	stopm
+ 307              		.global	parity
+ 308              		.comm	msg,64,4
+ 309              		.data
+ 310              		.align	2
+ 311              		.set	.LANCHOR1,. + 0
+ 312              		.type	a, %object
+ 313              		.size	a, 4
+ 314              	a:
+ 315 0000 01000000 		.word	1
+ 316              		.type	stopm, %object
+ 317              		.size	stopm, 12
+ 318              	stopm:
+ 319 0004 14000000 		.word	.LC3
+ 320 0008 18000000 		.word	.LC4
+ 321 000c 1C000000 		.word	.LC5
+ 322              		.type	parity, %object
+ 323              		.size	parity, 20
+ 324              	parity:
+ 325 0010 20000000 		.word	.LC6
+ 326 0014 28000000 		.word	.LC7
+ 327 0018 2C000000 		.word	.LC8
+ 328 001c 34000000 		.word	.LC9
+ 329 0020 3C000000 		.word	.LC10
+ 330              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 331              		.align	2
+ 332              	.LC0:
+ 333 0000 616E6400 		.ascii	"and\000"
+ 334              	.LC1:
+ 335 0004 53706964 		.ascii	"Spider\000"
+ 335      657200
+ 336 000b 00       		.space	1
+ 337              	.LC2:
+ 338 000c 25690D0A 		.ascii	"%i\015\012\000"
+ 338      00
+ 339 0011 000000   		.space	3
+ 340              	.LC3:
+ 341 0014 3100     		.ascii	"1\000"
+ 342 0016 0000     		.space	2
+ 343              	.LC4:
+ 344 0018 312E3500 		.ascii	"1.5\000"
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 9
+
+
+ 345              	.LC5:
+ 346 001c 3200     		.ascii	"2\000"
+ 347 001e 0000     		.space	2
+ 348              	.LC6:
+ 349 0020 4E6F6E65 		.ascii	"None\000"
+ 349      00
+ 350 0025 000000   		.space	3
+ 351              	.LC7:
+ 352 0028 4F646400 		.ascii	"Odd\000"
+ 353              	.LC8:
+ 354 002c 4576656E 		.ascii	"Even\000"
+ 354      00
+ 355 0031 000000   		.space	3
+ 356              	.LC9:
+ 357 0034 4D61726B 		.ascii	"Mark\000"
+ 357      00
+ 358 0039 000000   		.space	3
+ 359              	.LC10:
+ 360 003c 53706163 		.ascii	"Space\000"
+ 360      6500
+ 361              		.bss
+ 362              		.align	2
+ 363              		.set	.LANCHOR0,. + 0
+ 364              		.type	anglegs, %object
+ 365              		.size	anglegs, 16
+ 366              	anglegs:
+ 367 0000 00000000 		.space	16
+ 367      00000000 
+ 367      00000000 
+ 367      00000000 
+ 368              		.type	pwmlegs, %object
+ 369              		.size	pwmlegs, 16
+ 370              	pwmlegs:
+ 371 0010 00000000 		.space	16
+ 371      00000000 
+ 371      00000000 
+ 371      00000000 
+ 372              		.text
+ 373              	.Letext0:
+ 374              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 375              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 376              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
+ 377              		.file 5 "Generated_Source\\PSoC5/core_cm3.h"
+ 378              		.file 6 "Generated_Source\\PSoC5/PWMA.h"
+ 379              		.file 7 "Generated_Source\\PSoC5/USBUART.h"
+ 380              		.file 8 "Generated_Source\\PSoC5/USBUART_cdc.h"
+ 381              		.file 9 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 382              		.file 10 "Generated_Source\\PSoC5/CyLib.h"
+ 383              		.section	.debug_info,"",%progbits
+ 384              	.Ldebug_info0:
+ 385 0000 C6030000 		.4byte	0x3c6
+ 386 0004 0400     		.2byte	0x4
+ 387 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 388 000a 04       		.byte	0x4
+ 389 000b 01       		.uleb128 0x1
+ 390 000c 82000000 		.4byte	.LASF42
+ 391 0010 0C       		.byte	0xc
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 10
+
+
+ 392 0011 58020000 		.4byte	.LASF43
+ 393 0015 32020000 		.4byte	.LASF44
+ 394 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 395 001d 00000000 		.4byte	0
+ 396 0021 00000000 		.4byte	.Ldebug_line0
+ 397 0025 02       		.uleb128 0x2
+ 398 0026 01       		.byte	0x1
+ 399 0027 06       		.byte	0x6
+ 400 0028 9B020000 		.4byte	.LASF0
+ 401 002c 02       		.uleb128 0x2
+ 402 002d 01       		.byte	0x1
+ 403 002e 08       		.byte	0x8
+ 404 002f 74000000 		.4byte	.LASF1
+ 405 0033 02       		.uleb128 0x2
+ 406 0034 02       		.byte	0x2
+ 407 0035 05       		.byte	0x5
+ 408 0036 72020000 		.4byte	.LASF2
+ 409 003a 02       		.uleb128 0x2
+ 410 003b 02       		.byte	0x2
+ 411 003c 07       		.byte	0x7
+ 412 003d 28010000 		.4byte	.LASF3
+ 413 0041 03       		.uleb128 0x3
+ 414 0042 0B000000 		.4byte	.LASF9
+ 415 0046 02       		.byte	0x2
+ 416 0047 3F       		.byte	0x3f
+ 417 0048 4C000000 		.4byte	0x4c
+ 418 004c 02       		.uleb128 0x2
+ 419 004d 04       		.byte	0x4
+ 420 004e 05       		.byte	0x5
+ 421 004f 3B010000 		.4byte	.LASF4
+ 422 0053 02       		.uleb128 0x2
+ 423 0054 04       		.byte	0x4
+ 424 0055 07       		.byte	0x7
+ 425 0056 16010000 		.4byte	.LASF5
+ 426 005a 02       		.uleb128 0x2
+ 427 005b 08       		.byte	0x8
+ 428 005c 05       		.byte	0x5
+ 429 005d 24020000 		.4byte	.LASF6
+ 430 0061 02       		.uleb128 0x2
+ 431 0062 08       		.byte	0x8
+ 432 0063 07       		.byte	0x7
+ 433 0064 D5010000 		.4byte	.LASF7
+ 434 0068 04       		.uleb128 0x4
+ 435 0069 04       		.byte	0x4
+ 436 006a 05       		.byte	0x5
+ 437 006b 696E7400 		.ascii	"int\000"
+ 438 006f 02       		.uleb128 0x2
+ 439 0070 04       		.byte	0x4
+ 440 0071 07       		.byte	0x7
+ 441 0072 B7010000 		.4byte	.LASF8
+ 442 0076 03       		.uleb128 0x3
+ 443 0077 00020000 		.4byte	.LASF10
+ 444 007b 03       		.byte	0x3
+ 445 007c 2C       		.byte	0x2c
+ 446 007d 41000000 		.4byte	0x41
+ 447 0081 05       		.uleb128 0x5
+ 448 0082 83020000 		.4byte	.LASF11
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 11
+
+
+ 449 0086 04       		.byte	0x4
+ 450 0087 E401     		.2byte	0x1e4
+ 451 0089 2C000000 		.4byte	0x2c
+ 452 008d 05       		.uleb128 0x5
+ 453 008e 9B010000 		.4byte	.LASF12
+ 454 0092 04       		.byte	0x4
+ 455 0093 E501     		.2byte	0x1e5
+ 456 0095 3A000000 		.4byte	0x3a
+ 457 0099 02       		.uleb128 0x2
+ 458 009a 04       		.byte	0x4
+ 459 009b 04       		.byte	0x4
+ 460 009c 6E000000 		.4byte	.LASF13
+ 461 00a0 02       		.uleb128 0x2
+ 462 00a1 08       		.byte	0x8
+ 463 00a2 04       		.byte	0x4
+ 464 00a3 62010000 		.4byte	.LASF14
+ 465 00a7 05       		.uleb128 0x5
+ 466 00a8 10010000 		.4byte	.LASF15
+ 467 00ac 04       		.byte	0x4
+ 468 00ad F501     		.2byte	0x1f5
+ 469 00af B3000000 		.4byte	0xb3
+ 470 00b3 02       		.uleb128 0x2
+ 471 00b4 01       		.byte	0x1
+ 472 00b5 08       		.byte	0x8
+ 473 00b6 5F020000 		.4byte	.LASF16
+ 474 00ba 02       		.uleb128 0x2
+ 475 00bb 08       		.byte	0x8
+ 476 00bc 04       		.byte	0x4
+ 477 00bd 8F020000 		.4byte	.LASF17
+ 478 00c1 02       		.uleb128 0x2
+ 479 00c2 04       		.byte	0x4
+ 480 00c3 07       		.byte	0x7
+ 481 00c4 08020000 		.4byte	.LASF18
+ 482 00c8 06       		.uleb128 0x6
+ 483 00c9 51010000 		.4byte	.LASF19
+ 484 00cd 01       		.byte	0x1
+ 485 00ce 2B       		.byte	0x2b
+ 486 00cf 00000000 		.4byte	.LFB64
+ 487 00d3 60000000 		.4byte	.LFE64-.LFB64
+ 488 00d7 01       		.uleb128 0x1
+ 489 00d8 9C       		.byte	0x9c
+ 490 00d9 E8000000 		.4byte	0xe8
+ 491 00dd 07       		.uleb128 0x7
+ 492 00de 6900     		.ascii	"i\000"
+ 493 00e0 01       		.byte	0x1
+ 494 00e1 2C       		.byte	0x2c
+ 495 00e2 68000000 		.4byte	0x68
+ 496 00e6 00       		.byte	0
+ 497 00e7 00       		.byte	0
+ 498 00e8 08       		.uleb128 0x8
+ 499 00e9 24000000 		.4byte	.LASF20
+ 500 00ed 01       		.byte	0x1
+ 501 00ee 34       		.byte	0x34
+ 502 00ef 00000000 		.4byte	.LFB65
+ 503 00f3 1C000000 		.4byte	.LFE65-.LFB65
+ 504 00f7 01       		.uleb128 0x1
+ 505 00f8 9C       		.byte	0x9c
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 12
+
+
+ 506 00f9 19010000 		.4byte	0x119
+ 507 00fd 09       		.uleb128 0x9
+ 508 00fe 06000000 		.4byte	.LVL6
+ 509 0102 C8000000 		.4byte	0xc8
+ 510 0106 09       		.uleb128 0x9
+ 511 0107 0E000000 		.4byte	.LVL7
+ 512 010b 38030000 		.4byte	0x338
+ 513 010f 09       		.uleb128 0x9
+ 514 0110 14000000 		.4byte	.LVL8
+ 515 0114 43030000 		.4byte	0x343
+ 516 0118 00       		.byte	0
+ 517 0119 08       		.uleb128 0x8
+ 518 011a 00000000 		.4byte	.LASF21
+ 519 011e 01       		.byte	0x1
+ 520 011f 4C       		.byte	0x4c
+ 521 0120 00000000 		.4byte	.LFB67
+ 522 0124 64000000 		.4byte	.LFE67-.LFB67
+ 523 0128 01       		.uleb128 0x1
+ 524 0129 9C       		.byte	0x9c
+ 525 012a BE010000 		.4byte	0x1be
+ 526 012e 09       		.uleb128 0x9
+ 527 012f 06000000 		.4byte	.LVL9
+ 528 0133 4E030000 		.4byte	0x34e
+ 529 0137 09       		.uleb128 0x9
+ 530 0138 0C000000 		.4byte	.LVL10
+ 531 013c 5A030000 		.4byte	0x35a
+ 532 0140 09       		.uleb128 0x9
+ 533 0141 12000000 		.4byte	.LVL11
+ 534 0145 66030000 		.4byte	0x366
+ 535 0149 09       		.uleb128 0x9
+ 536 014a 16000000 		.4byte	.LVL12
+ 537 014e 5A030000 		.4byte	0x35a
+ 538 0152 09       		.uleb128 0x9
+ 539 0153 1C000000 		.4byte	.LVL13
+ 540 0157 71030000 		.4byte	0x371
+ 541 015b 0A       		.uleb128 0xa
+ 542 015c 24000000 		.4byte	.LVL14
+ 543 0160 7C030000 		.4byte	0x37c
+ 544 0164 72010000 		.4byte	0x172
+ 545 0168 0B       		.uleb128 0xb
+ 546 0169 01       		.uleb128 0x1
+ 547 016a 50       		.byte	0x50
+ 548 016b 05       		.uleb128 0x5
+ 549 016c 03       		.byte	0x3
+ 550 016d 00000000 		.4byte	buffer
+ 551 0171 00       		.byte	0
+ 552 0172 09       		.uleb128 0x9
+ 553 0173 2E000000 		.4byte	.LVL15
+ 554 0177 87030000 		.4byte	0x387
+ 555 017b 0A       		.uleb128 0xa
+ 556 017c 38000000 		.4byte	.LVL16
+ 557 0180 92030000 		.4byte	0x392
+ 558 0184 92010000 		.4byte	0x192
+ 559 0188 0B       		.uleb128 0xb
+ 560 0189 01       		.uleb128 0x1
+ 561 018a 50       		.byte	0x50
+ 562 018b 05       		.uleb128 0x5
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 13
+
+
+ 563 018c 03       		.byte	0x3
+ 564 018d 00000000 		.4byte	.LC0
+ 565 0191 00       		.byte	0
+ 566 0192 09       		.uleb128 0x9
+ 567 0193 44000000 		.4byte	.LVL17
+ 568 0197 87030000 		.4byte	0x387
+ 569 019b 0A       		.uleb128 0xa
+ 570 019c 4E000000 		.4byte	.LVL18
+ 571 01a0 9D030000 		.4byte	0x39d
+ 572 01a4 AE010000 		.4byte	0x1ae
+ 573 01a8 0B       		.uleb128 0xb
+ 574 01a9 01       		.uleb128 0x1
+ 575 01aa 50       		.byte	0x50
+ 576 01ab 01       		.uleb128 0x1
+ 577 01ac 3D       		.byte	0x3d
+ 578 01ad 00       		.byte	0
+ 579 01ae 0C       		.uleb128 0xc
+ 580 01af 54000000 		.4byte	.LVL19
+ 581 01b3 9D030000 		.4byte	0x39d
+ 582 01b7 0B       		.uleb128 0xb
+ 583 01b8 01       		.uleb128 0x1
+ 584 01b9 50       		.byte	0x50
+ 585 01ba 01       		.uleb128 0x1
+ 586 01bb 3A       		.byte	0x3a
+ 587 01bc 00       		.byte	0
+ 588 01bd 00       		.byte	0
+ 589 01be 0D       		.uleb128 0xd
+ 590 01bf B2010000 		.4byte	.LASF45
+ 591 01c3 01       		.byte	0x1
+ 592 01c4 3B       		.byte	0x3b
+ 593 01c5 68000000 		.4byte	0x68
+ 594 01c9 00000000 		.4byte	.LFB66
+ 595 01cd 70000000 		.4byte	.LFE66-.LFB66
+ 596 01d1 01       		.uleb128 0x1
+ 597 01d2 9C       		.byte	0x9c
+ 598 01d3 4B020000 		.4byte	0x24b
+ 599 01d7 09       		.uleb128 0x9
+ 600 01d8 08000000 		.4byte	.LVL20
+ 601 01dc 19010000 		.4byte	0x119
+ 602 01e0 0A       		.uleb128 0xa
+ 603 01e1 0E000000 		.4byte	.LVL21
+ 604 01e5 92030000 		.4byte	0x392
+ 605 01e9 F7010000 		.4byte	0x1f7
+ 606 01ed 0B       		.uleb128 0xb
+ 607 01ee 01       		.uleb128 0x1
+ 608 01ef 50       		.byte	0x50
+ 609 01f0 05       		.uleb128 0x5
+ 610 01f1 03       		.byte	0x3
+ 611 01f2 04000000 		.4byte	.LC1
+ 612 01f6 00       		.byte	0
+ 613 01f7 09       		.uleb128 0x9
+ 614 01f8 12000000 		.4byte	.LVL22
+ 615 01fc A8030000 		.4byte	0x3a8
+ 616 0200 0A       		.uleb128 0xa
+ 617 0201 4A000000 		.4byte	.LVL23
+ 618 0205 B3030000 		.4byte	0x3b3
+ 619 0209 1D020000 		.4byte	0x21d
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 14
+
+
+ 620 020d 0B       		.uleb128 0xb
+ 621 020e 01       		.uleb128 0x1
+ 622 020f 50       		.byte	0x50
+ 623 0210 02       		.uleb128 0x2
+ 624 0211 74       		.byte	0x74
+ 625 0212 00       		.sleb128 0
+ 626 0213 0B       		.uleb128 0xb
+ 627 0214 01       		.uleb128 0x1
+ 628 0215 51       		.byte	0x51
+ 629 0216 05       		.uleb128 0x5
+ 630 0217 03       		.byte	0x3
+ 631 0218 0C000000 		.4byte	.LC2
+ 632 021c 00       		.byte	0
+ 633 021d 0A       		.uleb128 0xa
+ 634 021e 50000000 		.4byte	.LVL24
+ 635 0222 92030000 		.4byte	0x392
+ 636 0226 31020000 		.4byte	0x231
+ 637 022a 0B       		.uleb128 0xb
+ 638 022b 01       		.uleb128 0x1
+ 639 022c 50       		.byte	0x50
+ 640 022d 02       		.uleb128 0x2
+ 641 022e 74       		.byte	0x74
+ 642 022f 00       		.sleb128 0
+ 643 0230 00       		.byte	0
+ 644 0231 09       		.uleb128 0x9
+ 645 0232 54000000 		.4byte	.LVL25
+ 646 0236 E8000000 		.4byte	0xe8
+ 647 023a 0C       		.uleb128 0xc
+ 648 023b 5A000000 		.4byte	.LVL26
+ 649 023f BE030000 		.4byte	0x3be
+ 650 0243 0B       		.uleb128 0xb
+ 651 0244 01       		.uleb128 0x1
+ 652 0245 50       		.byte	0x50
+ 653 0246 02       		.uleb128 0x2
+ 654 0247 08       		.byte	0x8
+ 655 0248 32       		.byte	0x32
+ 656 0249 00       		.byte	0
+ 657 024a 00       		.byte	0
+ 658 024b 0E       		.uleb128 0xe
+ 659 024c 44010000 		.4byte	.LASF22
+ 660 0250 05       		.byte	0x5
+ 661 0251 1207     		.2byte	0x712
+ 662 0253 57020000 		.4byte	0x257
+ 663 0257 0F       		.uleb128 0xf
+ 664 0258 76000000 		.4byte	0x76
+ 665 025c 10       		.uleb128 0x10
+ 666 025d B3000000 		.4byte	0xb3
+ 667 0261 6C020000 		.4byte	0x26c
+ 668 0265 11       		.uleb128 0x11
+ 669 0266 C1000000 		.4byte	0xc1
+ 670 026a 3F       		.byte	0x3f
+ 671 026b 00       		.byte	0
+ 672 026c 12       		.uleb128 0x12
+ 673 026d 6D736700 		.ascii	"msg\000"
+ 674 0271 01       		.byte	0x1
+ 675 0272 09       		.byte	0x9
+ 676 0273 5C020000 		.4byte	0x25c
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 15
+
+
+ 677 0277 05       		.uleb128 0x5
+ 678 0278 03       		.byte	0x3
+ 679 0279 00000000 		.4byte	msg
+ 680 027d 10       		.uleb128 0x10
+ 681 027e 8D020000 		.4byte	0x28d
+ 682 0282 8D020000 		.4byte	0x28d
+ 683 0286 11       		.uleb128 0x11
+ 684 0287 C1000000 		.4byte	0xc1
+ 685 028b 04       		.byte	0x4
+ 686 028c 00       		.byte	0
+ 687 028d 13       		.uleb128 0x13
+ 688 028e 04       		.byte	0x4
+ 689 028f A7000000 		.4byte	0xa7
+ 690 0293 14       		.uleb128 0x14
+ 691 0294 B2020000 		.4byte	.LASF23
+ 692 0298 01       		.byte	0x1
+ 693 0299 0C       		.byte	0xc
+ 694 029a 7D020000 		.4byte	0x27d
+ 695 029e 05       		.uleb128 0x5
+ 696 029f 03       		.byte	0x3
+ 697 02a0 00000000 		.4byte	parity
+ 698 02a4 10       		.uleb128 0x10
+ 699 02a5 8D020000 		.4byte	0x28d
+ 700 02a9 B4020000 		.4byte	0x2b4
+ 701 02ad 11       		.uleb128 0x11
+ 702 02ae C1000000 		.4byte	0xc1
+ 703 02b2 02       		.byte	0x2
+ 704 02b3 00       		.byte	0
+ 705 02b4 14       		.uleb128 0x14
+ 706 02b5 89020000 		.4byte	.LASF24
+ 707 02b9 01       		.byte	0x1
+ 708 02ba 0D       		.byte	0xd
+ 709 02bb A4020000 		.4byte	0x2a4
+ 710 02bf 05       		.uleb128 0x5
+ 711 02c0 03       		.byte	0x3
+ 712 02c1 00000000 		.4byte	stopm
+ 713 02c5 14       		.uleb128 0x14
+ 714 02c6 6C020000 		.4byte	.LASF25
+ 715 02ca 01       		.byte	0x1
+ 716 02cb 0E       		.byte	0xe
+ 717 02cc 8D000000 		.4byte	0x8d
+ 718 02d0 05       		.uleb128 0x5
+ 719 02d1 03       		.byte	0x3
+ 720 02d2 00000000 		.4byte	count
+ 721 02d6 10       		.uleb128 0x10
+ 722 02d7 81000000 		.4byte	0x81
+ 723 02db E6020000 		.4byte	0x2e6
+ 724 02df 11       		.uleb128 0x11
+ 725 02e0 C1000000 		.4byte	0xc1
+ 726 02e4 3F       		.byte	0x3f
+ 727 02e5 00       		.byte	0
+ 728 02e6 14       		.uleb128 0x14
+ 729 02e7 7C020000 		.4byte	.LASF26
+ 730 02eb 01       		.byte	0x1
+ 731 02ec 0F       		.byte	0xf
+ 732 02ed D6020000 		.4byte	0x2d6
+ 733 02f1 05       		.uleb128 0x5
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 16
+
+
+ 734 02f2 03       		.byte	0x3
+ 735 02f3 00000000 		.4byte	buffer
+ 736 02f7 10       		.uleb128 0x10
+ 737 02f8 68000000 		.4byte	0x68
+ 738 02fc 07030000 		.4byte	0x307
+ 739 0300 11       		.uleb128 0x11
+ 740 0301 C1000000 		.4byte	0xc1
+ 741 0305 03       		.byte	0x3
+ 742 0306 00       		.byte	0
+ 743 0307 14       		.uleb128 0x14
+ 744 0308 64020000 		.4byte	.LASF27
+ 745 030c 01       		.byte	0x1
+ 746 030d 24       		.byte	0x24
+ 747 030e F7020000 		.4byte	0x2f7
+ 748 0312 05       		.uleb128 0x5
+ 749 0313 03       		.byte	0x3
+ 750 0314 00000000 		.4byte	anglegs
+ 751 0318 12       		.uleb128 0x12
+ 752 0319 6100     		.ascii	"a\000"
+ 753 031b 01       		.byte	0x1
+ 754 031c 24       		.byte	0x24
+ 755 031d 68000000 		.4byte	0x68
+ 756 0321 05       		.uleb128 0x5
+ 757 0322 03       		.byte	0x3
+ 758 0323 00000000 		.4byte	a
+ 759 0327 14       		.uleb128 0x14
+ 760 0328 5A010000 		.4byte	.LASF28
+ 761 032c 01       		.byte	0x1
+ 762 032d 24       		.byte	0x24
+ 763 032e F7020000 		.4byte	0x2f7
+ 764 0332 05       		.uleb128 0x5
+ 765 0333 03       		.byte	0x3
+ 766 0334 00000000 		.4byte	pwmlegs
+ 767 0338 15       		.uleb128 0x15
+ 768 0339 11020000 		.4byte	.LASF29
+ 769 033d 11020000 		.4byte	.LASF29
+ 770 0341 06       		.byte	0x6
+ 771 0342 C7       		.byte	0xc7
+ 772 0343 15       		.uleb128 0x15
+ 773 0344 69010000 		.4byte	.LASF30
+ 774 0348 69010000 		.4byte	.LASF30
+ 775 034c 06       		.byte	0x6
+ 776 034d CA       		.byte	0xca
+ 777 034e 16       		.uleb128 0x16
+ 778 034f 7C010000 		.4byte	.LASF31
+ 779 0353 7C010000 		.4byte	.LASF31
+ 780 0357 07       		.byte	0x7
+ 781 0358 3201     		.2byte	0x132
+ 782 035a 16       		.uleb128 0x16
+ 783 035b 42000000 		.4byte	.LASF32
+ 784 035f 42000000 		.4byte	.LASF32
+ 785 0363 07       		.byte	0x7
+ 786 0364 3101     		.2byte	0x131
+ 787 0366 15       		.uleb128 0x15
+ 788 0367 C4010000 		.4byte	.LASF33
+ 789 036b C4010000 		.4byte	.LASF33
+ 790 036f 08       		.byte	0x8
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 17
+
+
+ 791 0370 22       		.byte	0x22
+ 792 0371 15       		.uleb128 0x15
+ 793 0372 EC010000 		.4byte	.LASF34
+ 794 0376 EC010000 		.4byte	.LASF34
+ 795 037a 08       		.byte	0x8
+ 796 037b 29       		.byte	0x29
+ 797 037c 15       		.uleb128 0x15
+ 798 037d 15000000 		.4byte	.LASF35
+ 799 0381 15000000 		.4byte	.LASF35
+ 800 0385 08       		.byte	0x8
+ 801 0386 2B       		.byte	0x2b
+ 802 0387 15       		.uleb128 0x15
+ 803 0388 5B000000 		.4byte	.LASF36
+ 804 038c 5B000000 		.4byte	.LASF36
+ 805 0390 08       		.byte	0x8
+ 806 0391 28       		.byte	0x28
+ 807 0392 15       		.uleb128 0x15
+ 808 0393 30000000 		.4byte	.LASF37
+ 809 0397 30000000 		.4byte	.LASF37
+ 810 039b 08       		.byte	0x8
+ 811 039c 24       		.byte	0x24
+ 812 039d 15       		.uleb128 0x15
+ 813 039e A2010000 		.4byte	.LASF38
+ 814 03a2 A2010000 		.4byte	.LASF38
+ 815 03a6 08       		.byte	0x8
+ 816 03a7 25       		.byte	0x25
+ 817 03a8 15       		.uleb128 0x15
+ 818 03a9 A7020000 		.4byte	.LASF39
+ 819 03ad A7020000 		.4byte	.LASF39
+ 820 03b1 06       		.byte	0x6
+ 821 03b2 92       		.byte	0x92
+ 822 03b3 15       		.uleb128 0x15
+ 823 03b4 B9020000 		.4byte	.LASF40
+ 824 03b8 B9020000 		.4byte	.LASF40
+ 825 03bc 09       		.byte	0x9
+ 826 03bd E7       		.byte	0xe7
+ 827 03be 15       		.uleb128 0x15
+ 828 03bf C1020000 		.4byte	.LASF41
+ 829 03c3 C1020000 		.4byte	.LASF41
+ 830 03c7 0A       		.byte	0xa
+ 831 03c8 76       		.byte	0x76
+ 832 03c9 00       		.byte	0
+ 833              		.section	.debug_abbrev,"",%progbits
+ 834              	.Ldebug_abbrev0:
+ 835 0000 01       		.uleb128 0x1
+ 836 0001 11       		.uleb128 0x11
+ 837 0002 01       		.byte	0x1
+ 838 0003 25       		.uleb128 0x25
+ 839 0004 0E       		.uleb128 0xe
+ 840 0005 13       		.uleb128 0x13
+ 841 0006 0B       		.uleb128 0xb
+ 842 0007 03       		.uleb128 0x3
+ 843 0008 0E       		.uleb128 0xe
+ 844 0009 1B       		.uleb128 0x1b
+ 845 000a 0E       		.uleb128 0xe
+ 846 000b 55       		.uleb128 0x55
+ 847 000c 17       		.uleb128 0x17
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 18
+
+
+ 848 000d 11       		.uleb128 0x11
+ 849 000e 01       		.uleb128 0x1
+ 850 000f 10       		.uleb128 0x10
+ 851 0010 17       		.uleb128 0x17
+ 852 0011 00       		.byte	0
+ 853 0012 00       		.byte	0
+ 854 0013 02       		.uleb128 0x2
+ 855 0014 24       		.uleb128 0x24
+ 856 0015 00       		.byte	0
+ 857 0016 0B       		.uleb128 0xb
+ 858 0017 0B       		.uleb128 0xb
+ 859 0018 3E       		.uleb128 0x3e
+ 860 0019 0B       		.uleb128 0xb
+ 861 001a 03       		.uleb128 0x3
+ 862 001b 0E       		.uleb128 0xe
+ 863 001c 00       		.byte	0
+ 864 001d 00       		.byte	0
+ 865 001e 03       		.uleb128 0x3
+ 866 001f 16       		.uleb128 0x16
+ 867 0020 00       		.byte	0
+ 868 0021 03       		.uleb128 0x3
+ 869 0022 0E       		.uleb128 0xe
+ 870 0023 3A       		.uleb128 0x3a
+ 871 0024 0B       		.uleb128 0xb
+ 872 0025 3B       		.uleb128 0x3b
+ 873 0026 0B       		.uleb128 0xb
+ 874 0027 49       		.uleb128 0x49
+ 875 0028 13       		.uleb128 0x13
+ 876 0029 00       		.byte	0
+ 877 002a 00       		.byte	0
+ 878 002b 04       		.uleb128 0x4
+ 879 002c 24       		.uleb128 0x24
+ 880 002d 00       		.byte	0
+ 881 002e 0B       		.uleb128 0xb
+ 882 002f 0B       		.uleb128 0xb
+ 883 0030 3E       		.uleb128 0x3e
+ 884 0031 0B       		.uleb128 0xb
+ 885 0032 03       		.uleb128 0x3
+ 886 0033 08       		.uleb128 0x8
+ 887 0034 00       		.byte	0
+ 888 0035 00       		.byte	0
+ 889 0036 05       		.uleb128 0x5
+ 890 0037 16       		.uleb128 0x16
+ 891 0038 00       		.byte	0
+ 892 0039 03       		.uleb128 0x3
+ 893 003a 0E       		.uleb128 0xe
+ 894 003b 3A       		.uleb128 0x3a
+ 895 003c 0B       		.uleb128 0xb
+ 896 003d 3B       		.uleb128 0x3b
+ 897 003e 05       		.uleb128 0x5
+ 898 003f 49       		.uleb128 0x49
+ 899 0040 13       		.uleb128 0x13
+ 900 0041 00       		.byte	0
+ 901 0042 00       		.byte	0
+ 902 0043 06       		.uleb128 0x6
+ 903 0044 2E       		.uleb128 0x2e
+ 904 0045 01       		.byte	0x1
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 19
+
+
+ 905 0046 3F       		.uleb128 0x3f
+ 906 0047 19       		.uleb128 0x19
+ 907 0048 03       		.uleb128 0x3
+ 908 0049 0E       		.uleb128 0xe
+ 909 004a 3A       		.uleb128 0x3a
+ 910 004b 0B       		.uleb128 0xb
+ 911 004c 3B       		.uleb128 0x3b
+ 912 004d 0B       		.uleb128 0xb
+ 913 004e 11       		.uleb128 0x11
+ 914 004f 01       		.uleb128 0x1
+ 915 0050 12       		.uleb128 0x12
+ 916 0051 06       		.uleb128 0x6
+ 917 0052 40       		.uleb128 0x40
+ 918 0053 18       		.uleb128 0x18
+ 919 0054 9642     		.uleb128 0x2116
+ 920 0056 19       		.uleb128 0x19
+ 921 0057 01       		.uleb128 0x1
+ 922 0058 13       		.uleb128 0x13
+ 923 0059 00       		.byte	0
+ 924 005a 00       		.byte	0
+ 925 005b 07       		.uleb128 0x7
+ 926 005c 34       		.uleb128 0x34
+ 927 005d 00       		.byte	0
+ 928 005e 03       		.uleb128 0x3
+ 929 005f 08       		.uleb128 0x8
+ 930 0060 3A       		.uleb128 0x3a
+ 931 0061 0B       		.uleb128 0xb
+ 932 0062 3B       		.uleb128 0x3b
+ 933 0063 0B       		.uleb128 0xb
+ 934 0064 49       		.uleb128 0x49
+ 935 0065 13       		.uleb128 0x13
+ 936 0066 1C       		.uleb128 0x1c
+ 937 0067 0B       		.uleb128 0xb
+ 938 0068 00       		.byte	0
+ 939 0069 00       		.byte	0
+ 940 006a 08       		.uleb128 0x8
+ 941 006b 2E       		.uleb128 0x2e
+ 942 006c 01       		.byte	0x1
+ 943 006d 3F       		.uleb128 0x3f
+ 944 006e 19       		.uleb128 0x19
+ 945 006f 03       		.uleb128 0x3
+ 946 0070 0E       		.uleb128 0xe
+ 947 0071 3A       		.uleb128 0x3a
+ 948 0072 0B       		.uleb128 0xb
+ 949 0073 3B       		.uleb128 0x3b
+ 950 0074 0B       		.uleb128 0xb
+ 951 0075 11       		.uleb128 0x11
+ 952 0076 01       		.uleb128 0x1
+ 953 0077 12       		.uleb128 0x12
+ 954 0078 06       		.uleb128 0x6
+ 955 0079 40       		.uleb128 0x40
+ 956 007a 18       		.uleb128 0x18
+ 957 007b 9742     		.uleb128 0x2117
+ 958 007d 19       		.uleb128 0x19
+ 959 007e 01       		.uleb128 0x1
+ 960 007f 13       		.uleb128 0x13
+ 961 0080 00       		.byte	0
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 20
+
+
+ 962 0081 00       		.byte	0
+ 963 0082 09       		.uleb128 0x9
+ 964 0083 898201   		.uleb128 0x4109
+ 965 0086 00       		.byte	0
+ 966 0087 11       		.uleb128 0x11
+ 967 0088 01       		.uleb128 0x1
+ 968 0089 31       		.uleb128 0x31
+ 969 008a 13       		.uleb128 0x13
+ 970 008b 00       		.byte	0
+ 971 008c 00       		.byte	0
+ 972 008d 0A       		.uleb128 0xa
+ 973 008e 898201   		.uleb128 0x4109
+ 974 0091 01       		.byte	0x1
+ 975 0092 11       		.uleb128 0x11
+ 976 0093 01       		.uleb128 0x1
+ 977 0094 31       		.uleb128 0x31
+ 978 0095 13       		.uleb128 0x13
+ 979 0096 01       		.uleb128 0x1
+ 980 0097 13       		.uleb128 0x13
+ 981 0098 00       		.byte	0
+ 982 0099 00       		.byte	0
+ 983 009a 0B       		.uleb128 0xb
+ 984 009b 8A8201   		.uleb128 0x410a
+ 985 009e 00       		.byte	0
+ 986 009f 02       		.uleb128 0x2
+ 987 00a0 18       		.uleb128 0x18
+ 988 00a1 9142     		.uleb128 0x2111
+ 989 00a3 18       		.uleb128 0x18
+ 990 00a4 00       		.byte	0
+ 991 00a5 00       		.byte	0
+ 992 00a6 0C       		.uleb128 0xc
+ 993 00a7 898201   		.uleb128 0x4109
+ 994 00aa 01       		.byte	0x1
+ 995 00ab 11       		.uleb128 0x11
+ 996 00ac 01       		.uleb128 0x1
+ 997 00ad 31       		.uleb128 0x31
+ 998 00ae 13       		.uleb128 0x13
+ 999 00af 00       		.byte	0
+ 1000 00b0 00       		.byte	0
+ 1001 00b1 0D       		.uleb128 0xd
+ 1002 00b2 2E       		.uleb128 0x2e
+ 1003 00b3 01       		.byte	0x1
+ 1004 00b4 3F       		.uleb128 0x3f
+ 1005 00b5 19       		.uleb128 0x19
+ 1006 00b6 03       		.uleb128 0x3
+ 1007 00b7 0E       		.uleb128 0xe
+ 1008 00b8 3A       		.uleb128 0x3a
+ 1009 00b9 0B       		.uleb128 0xb
+ 1010 00ba 3B       		.uleb128 0x3b
+ 1011 00bb 0B       		.uleb128 0xb
+ 1012 00bc 49       		.uleb128 0x49
+ 1013 00bd 13       		.uleb128 0x13
+ 1014 00be 8701     		.uleb128 0x87
+ 1015 00c0 19       		.uleb128 0x19
+ 1016 00c1 11       		.uleb128 0x11
+ 1017 00c2 01       		.uleb128 0x1
+ 1018 00c3 12       		.uleb128 0x12
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 21
+
+
+ 1019 00c4 06       		.uleb128 0x6
+ 1020 00c5 40       		.uleb128 0x40
+ 1021 00c6 18       		.uleb128 0x18
+ 1022 00c7 9742     		.uleb128 0x2117
+ 1023 00c9 19       		.uleb128 0x19
+ 1024 00ca 01       		.uleb128 0x1
+ 1025 00cb 13       		.uleb128 0x13
+ 1026 00cc 00       		.byte	0
+ 1027 00cd 00       		.byte	0
+ 1028 00ce 0E       		.uleb128 0xe
+ 1029 00cf 34       		.uleb128 0x34
+ 1030 00d0 00       		.byte	0
+ 1031 00d1 03       		.uleb128 0x3
+ 1032 00d2 0E       		.uleb128 0xe
+ 1033 00d3 3A       		.uleb128 0x3a
+ 1034 00d4 0B       		.uleb128 0xb
+ 1035 00d5 3B       		.uleb128 0x3b
+ 1036 00d6 05       		.uleb128 0x5
+ 1037 00d7 49       		.uleb128 0x49
+ 1038 00d8 13       		.uleb128 0x13
+ 1039 00d9 3F       		.uleb128 0x3f
+ 1040 00da 19       		.uleb128 0x19
+ 1041 00db 3C       		.uleb128 0x3c
+ 1042 00dc 19       		.uleb128 0x19
+ 1043 00dd 00       		.byte	0
+ 1044 00de 00       		.byte	0
+ 1045 00df 0F       		.uleb128 0xf
+ 1046 00e0 35       		.uleb128 0x35
+ 1047 00e1 00       		.byte	0
+ 1048 00e2 49       		.uleb128 0x49
+ 1049 00e3 13       		.uleb128 0x13
+ 1050 00e4 00       		.byte	0
+ 1051 00e5 00       		.byte	0
+ 1052 00e6 10       		.uleb128 0x10
+ 1053 00e7 01       		.uleb128 0x1
+ 1054 00e8 01       		.byte	0x1
+ 1055 00e9 49       		.uleb128 0x49
+ 1056 00ea 13       		.uleb128 0x13
+ 1057 00eb 01       		.uleb128 0x1
+ 1058 00ec 13       		.uleb128 0x13
+ 1059 00ed 00       		.byte	0
+ 1060 00ee 00       		.byte	0
+ 1061 00ef 11       		.uleb128 0x11
+ 1062 00f0 21       		.uleb128 0x21
+ 1063 00f1 00       		.byte	0
+ 1064 00f2 49       		.uleb128 0x49
+ 1065 00f3 13       		.uleb128 0x13
+ 1066 00f4 2F       		.uleb128 0x2f
+ 1067 00f5 0B       		.uleb128 0xb
+ 1068 00f6 00       		.byte	0
+ 1069 00f7 00       		.byte	0
+ 1070 00f8 12       		.uleb128 0x12
+ 1071 00f9 34       		.uleb128 0x34
+ 1072 00fa 00       		.byte	0
+ 1073 00fb 03       		.uleb128 0x3
+ 1074 00fc 08       		.uleb128 0x8
+ 1075 00fd 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 22
+
+
+ 1076 00fe 0B       		.uleb128 0xb
+ 1077 00ff 3B       		.uleb128 0x3b
+ 1078 0100 0B       		.uleb128 0xb
+ 1079 0101 49       		.uleb128 0x49
+ 1080 0102 13       		.uleb128 0x13
+ 1081 0103 3F       		.uleb128 0x3f
+ 1082 0104 19       		.uleb128 0x19
+ 1083 0105 02       		.uleb128 0x2
+ 1084 0106 18       		.uleb128 0x18
+ 1085 0107 00       		.byte	0
+ 1086 0108 00       		.byte	0
+ 1087 0109 13       		.uleb128 0x13
+ 1088 010a 0F       		.uleb128 0xf
+ 1089 010b 00       		.byte	0
+ 1090 010c 0B       		.uleb128 0xb
+ 1091 010d 0B       		.uleb128 0xb
+ 1092 010e 49       		.uleb128 0x49
+ 1093 010f 13       		.uleb128 0x13
+ 1094 0110 00       		.byte	0
+ 1095 0111 00       		.byte	0
+ 1096 0112 14       		.uleb128 0x14
+ 1097 0113 34       		.uleb128 0x34
+ 1098 0114 00       		.byte	0
+ 1099 0115 03       		.uleb128 0x3
+ 1100 0116 0E       		.uleb128 0xe
+ 1101 0117 3A       		.uleb128 0x3a
+ 1102 0118 0B       		.uleb128 0xb
+ 1103 0119 3B       		.uleb128 0x3b
+ 1104 011a 0B       		.uleb128 0xb
+ 1105 011b 49       		.uleb128 0x49
+ 1106 011c 13       		.uleb128 0x13
+ 1107 011d 3F       		.uleb128 0x3f
+ 1108 011e 19       		.uleb128 0x19
+ 1109 011f 02       		.uleb128 0x2
+ 1110 0120 18       		.uleb128 0x18
+ 1111 0121 00       		.byte	0
+ 1112 0122 00       		.byte	0
+ 1113 0123 15       		.uleb128 0x15
+ 1114 0124 2E       		.uleb128 0x2e
+ 1115 0125 00       		.byte	0
+ 1116 0126 3F       		.uleb128 0x3f
+ 1117 0127 19       		.uleb128 0x19
+ 1118 0128 3C       		.uleb128 0x3c
+ 1119 0129 19       		.uleb128 0x19
+ 1120 012a 6E       		.uleb128 0x6e
+ 1121 012b 0E       		.uleb128 0xe
+ 1122 012c 03       		.uleb128 0x3
+ 1123 012d 0E       		.uleb128 0xe
+ 1124 012e 3A       		.uleb128 0x3a
+ 1125 012f 0B       		.uleb128 0xb
+ 1126 0130 3B       		.uleb128 0x3b
+ 1127 0131 0B       		.uleb128 0xb
+ 1128 0132 00       		.byte	0
+ 1129 0133 00       		.byte	0
+ 1130 0134 16       		.uleb128 0x16
+ 1131 0135 2E       		.uleb128 0x2e
+ 1132 0136 00       		.byte	0
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 23
+
+
+ 1133 0137 3F       		.uleb128 0x3f
+ 1134 0138 19       		.uleb128 0x19
+ 1135 0139 3C       		.uleb128 0x3c
+ 1136 013a 19       		.uleb128 0x19
+ 1137 013b 6E       		.uleb128 0x6e
+ 1138 013c 0E       		.uleb128 0xe
+ 1139 013d 03       		.uleb128 0x3
+ 1140 013e 0E       		.uleb128 0xe
+ 1141 013f 3A       		.uleb128 0x3a
+ 1142 0140 0B       		.uleb128 0xb
+ 1143 0141 3B       		.uleb128 0x3b
+ 1144 0142 05       		.uleb128 0x5
+ 1145 0143 00       		.byte	0
+ 1146 0144 00       		.byte	0
+ 1147 0145 00       		.byte	0
+ 1148              		.section	.debug_aranges,"",%progbits
+ 1149 0000 34000000 		.4byte	0x34
+ 1150 0004 0200     		.2byte	0x2
+ 1151 0006 00000000 		.4byte	.Ldebug_info0
+ 1152 000a 04       		.byte	0x4
+ 1153 000b 00       		.byte	0
+ 1154 000c 0000     		.2byte	0
+ 1155 000e 0000     		.2byte	0
+ 1156 0010 00000000 		.4byte	.LFB64
+ 1157 0014 60000000 		.4byte	.LFE64-.LFB64
+ 1158 0018 00000000 		.4byte	.LFB65
+ 1159 001c 1C000000 		.4byte	.LFE65-.LFB65
+ 1160 0020 00000000 		.4byte	.LFB67
+ 1161 0024 64000000 		.4byte	.LFE67-.LFB67
+ 1162 0028 00000000 		.4byte	.LFB66
+ 1163 002c 70000000 		.4byte	.LFE66-.LFB66
+ 1164 0030 00000000 		.4byte	0
+ 1165 0034 00000000 		.4byte	0
+ 1166              		.section	.debug_ranges,"",%progbits
+ 1167              	.Ldebug_ranges0:
+ 1168 0000 00000000 		.4byte	.LFB64
+ 1169 0004 60000000 		.4byte	.LFE64
+ 1170 0008 00000000 		.4byte	.LFB65
+ 1171 000c 1C000000 		.4byte	.LFE65
+ 1172 0010 00000000 		.4byte	.LFB67
+ 1173 0014 64000000 		.4byte	.LFE67
+ 1174 0018 00000000 		.4byte	.LFB66
+ 1175 001c 70000000 		.4byte	.LFE66
+ 1176 0020 00000000 		.4byte	0
+ 1177 0024 00000000 		.4byte	0
+ 1178              		.section	.debug_line,"",%progbits
+ 1179              	.Ldebug_line0:
+ 1180 0000 7A020000 		.section	.debug_str,"MS",%progbits,1
+ 1180      0200F201 
+ 1180      00000201 
+ 1180      FB0E0D00 
+ 1180      01010101 
+ 1181              	.LASF21:
+ 1182 0000 55415254 		.ascii	"UARTconfig\000"
+ 1182      636F6E66 
+ 1182      696700
+ 1183              	.LASF9:
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 24
+
+
+ 1184 000b 5F5F696E 		.ascii	"__int32_t\000"
+ 1184      7433325F 
+ 1184      7400
+ 1185              	.LASF35:
+ 1186 0015 55534255 		.ascii	"USBUART_GetAll\000"
+ 1186      4152545F 
+ 1186      47657441 
+ 1186      6C6C00
+ 1187              	.LASF20:
+ 1188 0024 73657276 		.ascii	"servooutput\000"
+ 1188      6F6F7574 
+ 1188      70757400 
+ 1189              	.LASF37:
+ 1190 0030 55534255 		.ascii	"USBUART_PutString\000"
+ 1190      4152545F 
+ 1190      50757453 
+ 1190      7472696E 
+ 1190      6700
+ 1191              	.LASF32:
+ 1192 0042 55534255 		.ascii	"USBUART_GetConfiguration\000"
+ 1192      4152545F 
+ 1192      47657443 
+ 1192      6F6E6669 
+ 1192      67757261 
+ 1193              	.LASF36:
+ 1194 005b 55534255 		.ascii	"USBUART_CDCIsReady\000"
+ 1194      4152545F 
+ 1194      43444349 
+ 1194      73526561 
+ 1194      647900
+ 1195              	.LASF13:
+ 1196 006e 666C6F61 		.ascii	"float\000"
+ 1196      7400
+ 1197              	.LASF1:
+ 1198 0074 756E7369 		.ascii	"unsigned char\000"
+ 1198      676E6564 
+ 1198      20636861 
+ 1198      7200
+ 1199              	.LASF42:
+ 1200 0082 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1200      43313120 
+ 1200      352E342E 
+ 1200      31203230 
+ 1200      31363036 
+ 1201 00b5 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1201      20726576 
+ 1201      6973696F 
+ 1201      6E203233 
+ 1201      37373135 
+ 1202 00e8 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1202      66756E63 
+ 1202      74696F6E 
+ 1202      2D736563 
+ 1202      74696F6E 
+ 1203              	.LASF15:
+ 1204 0110 63686172 		.ascii	"char8\000"
+ 1204      3800
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 25
+
+
+ 1205              	.LASF5:
+ 1206 0116 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1206      20756E73 
+ 1206      69676E65 
+ 1206      6420696E 
+ 1206      7400
+ 1207              	.LASF3:
+ 1208 0128 73686F72 		.ascii	"short unsigned int\000"
+ 1208      7420756E 
+ 1208      7369676E 
+ 1208      65642069 
+ 1208      6E7400
+ 1209              	.LASF4:
+ 1210 013b 6C6F6E67 		.ascii	"long int\000"
+ 1210      20696E74 
+ 1210      00
+ 1211              	.LASF22:
+ 1212 0144 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1212      52784275 
+ 1212      66666572 
+ 1212      00
+ 1213              	.LASF19:
+ 1214 0151 64656774 		.ascii	"degtopwm\000"
+ 1214      6F70776D 
+ 1214      00
+ 1215              	.LASF28:
+ 1216 015a 70776D6C 		.ascii	"pwmlegs\000"
+ 1216      65677300 
+ 1217              	.LASF14:
+ 1218 0162 646F7562 		.ascii	"double\000"
+ 1218      6C6500
+ 1219              	.LASF30:
+ 1220 0169 50574D41 		.ascii	"PWMA_WriteCompare2\000"
+ 1220      5F577269 
+ 1220      7465436F 
+ 1220      6D706172 
+ 1220      653200
+ 1221              	.LASF31:
+ 1222 017c 55534255 		.ascii	"USBUART_IsConfigurationChanged\000"
+ 1222      4152545F 
+ 1222      4973436F 
+ 1222      6E666967 
+ 1222      75726174 
+ 1223              	.LASF12:
+ 1224 019b 75696E74 		.ascii	"uint16\000"
+ 1224      313600
+ 1225              	.LASF38:
+ 1226 01a2 55534255 		.ascii	"USBUART_PutChar\000"
+ 1226      4152545F 
+ 1226      50757443 
+ 1226      68617200 
+ 1227              	.LASF45:
+ 1228 01b2 6D61696E 		.ascii	"main\000"
+ 1228      00
+ 1229              	.LASF8:
+ 1230 01b7 756E7369 		.ascii	"unsigned int\000"
+ 1230      676E6564 
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 26
+
+
+ 1230      20696E74 
+ 1230      00
+ 1231              	.LASF33:
+ 1232 01c4 55534255 		.ascii	"USBUART_CDC_Init\000"
+ 1232      4152545F 
+ 1232      4344435F 
+ 1232      496E6974 
+ 1232      00
+ 1233              	.LASF7:
+ 1234 01d5 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1234      206C6F6E 
+ 1234      6720756E 
+ 1234      7369676E 
+ 1234      65642069 
+ 1235              	.LASF34:
+ 1236 01ec 55534255 		.ascii	"USBUART_DataIsReady\000"
+ 1236      4152545F 
+ 1236      44617461 
+ 1236      49735265 
+ 1236      61647900 
+ 1237              	.LASF10:
+ 1238 0200 696E7433 		.ascii	"int32_t\000"
+ 1238      325F7400 
+ 1239              	.LASF18:
+ 1240 0208 73697A65 		.ascii	"sizetype\000"
+ 1240      74797065 
+ 1240      00
+ 1241              	.LASF29:
+ 1242 0211 50574D41 		.ascii	"PWMA_WriteCompare1\000"
+ 1242      5F577269 
+ 1242      7465436F 
+ 1242      6D706172 
+ 1242      653100
+ 1243              	.LASF6:
+ 1244 0224 6C6F6E67 		.ascii	"long long int\000"
+ 1244      206C6F6E 
+ 1244      6720696E 
+ 1244      7400
+ 1245              	.LASF44:
+ 1246 0232 533A5C53 		.ascii	"S:\\SpiderBot\\Servos\\Servo Board.cydsn\000"
+ 1246      70696465 
+ 1246      72426F74 
+ 1246      5C536572 
+ 1246      766F735C 
+ 1247              	.LASF43:
+ 1248 0258 6D61696E 		.ascii	"main.c\000"
+ 1248      2E6300
+ 1249              	.LASF16:
+ 1250 025f 63686172 		.ascii	"char\000"
+ 1250      00
+ 1251              	.LASF27:
+ 1252 0264 616E676C 		.ascii	"anglegs\000"
+ 1252      65677300 
+ 1253              	.LASF25:
+ 1254 026c 636F756E 		.ascii	"count\000"
+ 1254      7400
+ 1255              	.LASF2:
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccKEprBM.s 			page 27
+
+
+ 1256 0272 73686F72 		.ascii	"short int\000"
+ 1256      7420696E 
+ 1256      7400
+ 1257              	.LASF26:
+ 1258 027c 62756666 		.ascii	"buffer\000"
+ 1258      657200
+ 1259              	.LASF11:
+ 1260 0283 75696E74 		.ascii	"uint8\000"
+ 1260      3800
+ 1261              	.LASF24:
+ 1262 0289 73746F70 		.ascii	"stopm\000"
+ 1262      6D00
+ 1263              	.LASF17:
+ 1264 028f 6C6F6E67 		.ascii	"long double\000"
+ 1264      20646F75 
+ 1264      626C6500 
+ 1265              	.LASF0:
+ 1266 029b 7369676E 		.ascii	"signed char\000"
+ 1266      65642063 
+ 1266      68617200 
+ 1267              	.LASF39:
+ 1268 02a7 50574D41 		.ascii	"PWMA_Start\000"
+ 1268      5F537461 
+ 1268      727400
+ 1269              	.LASF23:
+ 1270 02b2 70617269 		.ascii	"parity\000"
+ 1270      747900
+ 1271              	.LASF40:
+ 1272 02b9 73707269 		.ascii	"sprintf\000"
+ 1272      6E746600 
+ 1273              	.LASF41:
+ 1274 02c1 43794465 		.ascii	"CyDelay\000"
+ 1274      6C617900 
+ 1275              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
