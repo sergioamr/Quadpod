@@ -1,0 +1,1602 @@
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"cymetadata.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	cy_metadata
+  20              		.global	cy_meta_flashprotect
+  21              		.global	cy_meta_wonvl
+  22              		.global	cy_meta_custnvl
+  23              		.global	cy_meta_configecc
+  24              		.section	.cyconfigecc,"a",%progbits
+  25              		.align	2
+  26              		.type	cy_meta_configecc, %object
+  27              		.size	cy_meta_configecc, 1064
+  28              	cy_meta_configecc:
+  29 0000 01       		.byte	1
+  30 0001 45       		.byte	69
+  31 0002 00       		.byte	0
+  32 0003 40       		.byte	64
+  33 0004 03       		.byte	3
+  34 0005 52       		.byte	82
+  35 0006 00       		.byte	0
+  36 0007 40       		.byte	64
+  37 0008 02       		.byte	2
+  38 0009 64       		.byte	100
+  39 000a 00       		.byte	0
+  40 000b 40       		.byte	64
+  41 000c 46       		.byte	70
+  42 000d 00       		.byte	0
+  43 000e 01       		.byte	1
+  44 000f 40       		.byte	64
+  45 0010 2C       		.byte	44
+  46 0011 01       		.byte	1
+  47 0012 01       		.byte	1
+  48 0013 40       		.byte	64
+  49 0014 5D       		.byte	93
+  50 0015 02       		.byte	2
+  51 0016 01       		.byte	1
+  52 0017 40       		.byte	64
+  53 0018 40       		.byte	64
+  54 0019 03       		.byte	3
+  55 001a 01       		.byte	1
+  56 001b 40       		.byte	64
+  57 001c 5B       		.byte	91
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 2
+
+
+  58 001d 04       		.byte	4
+  59 001e 01       		.byte	1
+  60 001f 40       		.byte	64
+  61 0020 36       		.byte	54
+  62 0021 05       		.byte	5
+  63 0022 01       		.byte	1
+  64 0023 40       		.byte	64
+  65 0024 01       		.byte	1
+  66 0025 07       		.byte	7
+  67 0026 01       		.byte	1
+  68 0027 40       		.byte	64
+  69 0028 01       		.byte	1
+  70 0029 0D       		.byte	13
+  71 002a 01       		.byte	1
+  72 002b 40       		.byte	64
+  73 002c 02       		.byte	2
+  74 002d 17       		.byte	23
+  75 002e 01       		.byte	1
+  76 002f 40       		.byte	64
+  77 0030 02       		.byte	2
+  78 0031 19       		.byte	25
+  79 0032 01       		.byte	1
+  80 0033 40       		.byte	64
+  81 0034 04       		.byte	4
+  82 0035 40       		.byte	64
+  83 0036 01       		.byte	1
+  84 0037 40       		.byte	64
+  85 0038 0C       		.byte	12
+  86 0039 41       		.byte	65
+  87 003a 01       		.byte	1
+  88 003b 40       		.byte	64
+  89 003c 05       		.byte	5
+  90 003d 42       		.byte	66
+  91 003e 01       		.byte	1
+  92 003f 40       		.byte	64
+  93 0040 04       		.byte	4
+  94 0041 43       		.byte	67
+  95 0042 01       		.byte	1
+  96 0043 40       		.byte	64
+  97 0044 01       		.byte	1
+  98 0045 45       		.byte	69
+  99 0046 01       		.byte	1
+ 100 0047 40       		.byte	64
+ 101 0048 01       		.byte	1
+ 102 0049 46       		.byte	70
+ 103 004a 01       		.byte	1
+ 104 004b 40       		.byte	64
+ 105 004c 04       		.byte	4
+ 106 004d 47       		.byte	71
+ 107 004e 01       		.byte	1
+ 108 004f 40       		.byte	64
+ 109 0050 04       		.byte	4
+ 110 0051 48       		.byte	72
+ 111 0052 01       		.byte	1
+ 112 0053 40       		.byte	64
+ 113 0054 01       		.byte	1
+ 114 0055 4C       		.byte	76
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 3
+
+
+ 115 0056 01       		.byte	1
+ 116 0057 40       		.byte	64
+ 117 0058 03       		.byte	3
+ 118 0059 50       		.byte	80
+ 119 005a 01       		.byte	1
+ 120 005b 40       		.byte	64
+ 121 005c 01       		.byte	1
+ 122 005d 51       		.byte	81
+ 123 005e 01       		.byte	1
+ 124 005f 40       		.byte	64
+ 125 0060 7E       		.byte	126
+ 126 0061 02       		.byte	2
+ 127 0062 00       		.byte	0
+ 128 0063 0A       		.byte	10
+ 129 0064 01       		.byte	1
+ 130 0065 03       		.byte	3
+ 131 0066 7C       		.byte	124
+ 132 0067 40       		.byte	64
+ 133 0068 83       		.byte	-125
+ 134 0069 0F       		.byte	15
+ 135 006a 85       		.byte	-123
+ 136 006b 0F       		.byte	15
+ 137 006c 01       		.byte	1
+ 138 006d 3F       		.byte	63
+ 139 006e 04       		.byte	4
+ 140 006f 01       		.byte	1
+ 141 0070 05       		.byte	5
+ 142 0071 33       		.byte	51
+ 143 0072 06       		.byte	6
+ 144 0073 02       		.byte	2
+ 145 0074 07       		.byte	7
+ 146 0075 0C       		.byte	12
+ 147 0076 08       		.byte	8
+ 148 0077 05       		.byte	5
+ 149 0078 0A       		.byte	10
+ 150 0079 02       		.byte	2
+ 151 007a 0C       		.byte	12
+ 152 007b 07       		.byte	7
+ 153 007c 0D       		.byte	13
+ 154 007d 40       		.byte	64
+ 155 007e 0F       		.byte	15
+ 156 007f 2A       		.byte	42
+ 157 0080 10       		.byte	16
+ 158 0081 08       		.byte	8
+ 159 0082 11       		.byte	17
+ 160 0083 40       		.byte	64
+ 161 0084 12       		.byte	18
+ 162 0085 17       		.byte	23
+ 163 0086 14       		.byte	20
+ 164 0087 04       		.byte	4
+ 165 0088 15       		.byte	21
+ 166 0089 30       		.byte	48
+ 167 008a 16       		.byte	22
+ 168 008b 02       		.byte	2
+ 169 008c 17       		.byte	23
+ 170 008d 0C       		.byte	12
+ 171 008e 1C       		.byte	28
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 4
+
+
+ 172 008f 08       		.byte	8
+ 173 0090 1D       		.byte	29
+ 174 0091 40       		.byte	64
+ 175 0092 1E       		.byte	30
+ 176 0093 10       		.byte	16
+ 177 0094 1F       		.byte	31
+ 178 0095 15       		.byte	21
+ 179 0096 25       		.byte	37
+ 180 0097 03       		.byte	3
+ 181 0098 27       		.byte	39
+ 182 0099 0C       		.byte	12
+ 183 009a 2A       		.byte	42
+ 184 009b 08       		.byte	8
+ 185 009c 2C       		.byte	44
+ 186 009d 07       		.byte	7
+ 187 009e 2D       		.byte	45
+ 188 009f 3F       		.byte	63
+ 189 00a0 30       		.byte	48
+ 190 00a1 1F       		.byte	31
+ 191 00a2 31       		.byte	49
+ 192 00a3 7F       		.byte	127
+ 193 00a4 3B       		.byte	59
+ 194 00a5 03       		.byte	3
+ 195 00a6 52       		.byte	82
+ 196 00a7 03       		.byte	3
+ 197 00a8 58       		.byte	88
+ 198 00a9 04       		.byte	4
+ 199 00aa 59       		.byte	89
+ 200 00ab 04       		.byte	4
+ 201 00ac 5B       		.byte	91
+ 202 00ad 04       		.byte	4
+ 203 00ae 5F       		.byte	95
+ 204 00af 01       		.byte	1
+ 205 00b0 81       		.byte	-127
+ 206 00b1 03       		.byte	3
+ 207 00b2 83       		.byte	-125
+ 208 00b3 0C       		.byte	12
+ 209 00b4 84       		.byte	-124
+ 210 00b5 07       		.byte	7
+ 211 00b6 85       		.byte	-123
+ 212 00b7 40       		.byte	64
+ 213 00b8 87       		.byte	-121
+ 214 00b9 2A       		.byte	42
+ 215 00ba 88       		.byte	-120
+ 216 00bb 04       		.byte	4
+ 217 00bc 8A       		.byte	-118
+ 218 00bd 02       		.byte	2
+ 219 00be 8D       		.byte	-115
+ 220 00bf 3F       		.byte	63
+ 221 00c0 91       		.byte	-111
+ 222 00c1 40       		.byte	64
+ 223 00c2 94       		.byte	-108
+ 224 00c3 05       		.byte	5
+ 225 00c4 95       		.byte	-107
+ 226 00c5 40       		.byte	64
+ 227 00c6 96       		.byte	-106
+ 228 00c7 02       		.byte	2
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 5
+
+
+ 229 00c8 97       		.byte	-105
+ 230 00c9 15       		.byte	21
+ 231 00ca 98       		.byte	-104
+ 232 00cb 08       		.byte	8
+ 233 00cc 99       		.byte	-103
+ 234 00cd 33       		.byte	51
+ 235 00ce 9A       		.byte	-102
+ 236 00cf 17       		.byte	23
+ 237 00d0 9B       		.byte	-101
+ 238 00d1 0C       		.byte	12
+ 239 00d2 9C       		.byte	-100
+ 240 00d3 01       		.byte	1
+ 241 00d4 9E       		.byte	-98
+ 242 00d5 02       		.byte	2
+ 243 00d6 A5       		.byte	-91
+ 244 00d7 30       		.byte	48
+ 245 00d8 A6       		.byte	-90
+ 246 00d9 08       		.byte	8
+ 247 00da A7       		.byte	-89
+ 248 00db 0C       		.byte	12
+ 249 00dc A8       		.byte	-88
+ 250 00dd 08       		.byte	8
+ 251 00de A9       		.byte	-87
+ 252 00df 3F       		.byte	63
+ 253 00e0 AA       		.byte	-86
+ 254 00e1 10       		.byte	16
+ 255 00e2 AC       		.byte	-84
+ 256 00e3 07       		.byte	7
+ 257 00e4 B3       		.byte	-77
+ 258 00e5 7F       		.byte	127
+ 259 00e6 B4       		.byte	-76
+ 260 00e7 1F       		.byte	31
+ 261 00e8 BB       		.byte	-69
+ 262 00e9 0C       		.byte	12
+ 263 00ea D2       		.byte	-46
+ 264 00eb 03       		.byte	3
+ 265 00ec D8       		.byte	-40
+ 266 00ed 04       		.byte	4
+ 267 00ee D9       		.byte	-39
+ 268 00ef 04       		.byte	4
+ 269 00f0 DB       		.byte	-37
+ 270 00f1 04       		.byte	4
+ 271 00f2 DC       		.byte	-36
+ 272 00f3 11       		.byte	17
+ 273 00f4 DD       		.byte	-35
+ 274 00f5 10       		.byte	16
+ 275 00f6 DF       		.byte	-33
+ 276 00f7 01       		.byte	1
+ 277 00f8 00       		.byte	0
+ 278 00f9 24       		.byte	36
+ 279 00fa 01       		.byte	1
+ 280 00fb 80       		.byte	-128
+ 281 00fc 05       		.byte	5
+ 282 00fd 04       		.byte	4
+ 283 00fe 06       		.byte	6
+ 284 00ff 08       		.byte	8
+ 285 0100 09       		.byte	9
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 6
+
+
+ 286 0101 08       		.byte	8
+ 287 0102 0A       		.byte	10
+ 288 0103 82       		.byte	-126
+ 289 0104 0D       		.byte	13
+ 290 0105 80       		.byte	-128
+ 291 0106 0E       		.byte	14
+ 292 0107 28       		.byte	40
+ 293 0108 0F       		.byte	15
+ 294 0109 02       		.byte	2
+ 295 010a 11       		.byte	17
+ 296 010b 10       		.byte	16
+ 297 010c 12       		.byte	18
+ 298 010d 02       		.byte	2
+ 299 010e 15       		.byte	21
+ 300 010f 40       		.byte	64
+ 301 0110 17       		.byte	23
+ 302 0111 24       		.byte	36
+ 303 0112 19       		.byte	25
+ 304 0113 02       		.byte	2
+ 305 0114 1A       		.byte	26
+ 306 0115 80       		.byte	-128
+ 307 0116 1E       		.byte	30
+ 308 0117 08       		.byte	8
+ 309 0118 1F       		.byte	31
+ 310 0119 20       		.byte	32
+ 311 011a 20       		.byte	32
+ 312 011b 40       		.byte	64
+ 313 011c 22       		.byte	34
+ 314 011d 01       		.byte	1
+ 315 011e 25       		.byte	37
+ 316 011f 04       		.byte	4
+ 317 0120 26       		.byte	38
+ 318 0121 08       		.byte	8
+ 319 0122 27       		.byte	39
+ 320 0123 20       		.byte	32
+ 321 0124 29       		.byte	41
+ 322 0125 80       		.byte	-128
+ 323 0126 2B       		.byte	43
+ 324 0127 10       		.byte	16
+ 325 0128 2E       		.byte	46
+ 326 0129 08       		.byte	8
+ 327 012a 2F       		.byte	47
+ 328 012b 08       		.byte	8
+ 329 012c 30       		.byte	48
+ 330 012d 02       		.byte	2
+ 331 012e 31       		.byte	49
+ 332 012f 08       		.byte	8
+ 333 0130 32       		.byte	50
+ 334 0131 40       		.byte	64
+ 335 0132 36       		.byte	54
+ 336 0133 34       		.byte	52
+ 337 0134 37       		.byte	55
+ 338 0135 01       		.byte	1
+ 339 0136 38       		.byte	56
+ 340 0137 40       		.byte	64
+ 341 0138 39       		.byte	57
+ 342 0139 0A       		.byte	10
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 7
+
+
+ 343 013a 3D       		.byte	61
+ 344 013b C8       		.byte	-56
+ 345 013c 3F       		.byte	63
+ 346 013d 02       		.byte	2
+ 347 013e 68       		.byte	104
+ 348 013f 02       		.byte	2
+ 349 0140 69       		.byte	105
+ 350 0141 10       		.byte	16
+ 351 0142 6F       		.byte	111
+ 352 0143 05       		.byte	5
+ 353 0144 C0       		.byte	-64
+ 354 0145 67       		.byte	103
+ 355 0146 C2       		.byte	-62
+ 356 0147 ED       		.byte	-19
+ 357 0148 C4       		.byte	-60
+ 358 0149 E3       		.byte	-29
+ 359 014a CA       		.byte	-54
+ 360 014b 6A       		.byte	106
+ 361 014c CC       		.byte	-52
+ 362 014d EB       		.byte	-21
+ 363 014e CE       		.byte	-50
+ 364 014f DB       		.byte	-37
+ 365 0150 04       		.byte	4
+ 366 0151 02       		.byte	2
+ 367 0152 06       		.byte	6
+ 368 0153 05       		.byte	5
+ 369 0154 08       		.byte	8
+ 370 0155 04       		.byte	4
+ 371 0156 0A       		.byte	10
+ 372 0157 02       		.byte	2
+ 373 0158 16       		.byte	22
+ 374 0159 1A       		.byte	26
+ 375 015a 1A       		.byte	26
+ 376 015b 08       		.byte	8
+ 377 015c 1C       		.byte	28
+ 378 015d 01       		.byte	1
+ 379 015e 1E       		.byte	30
+ 380 015f 02       		.byte	2
+ 381 0160 2A       		.byte	42
+ 382 0161 10       		.byte	16
+ 383 0162 32       		.byte	50
+ 384 0163 1F       		.byte	31
+ 385 0164 40       		.byte	64
+ 386 0165 60       		.byte	96
+ 387 0166 41       		.byte	65
+ 388 0167 03       		.byte	3
+ 389 0168 49       		.byte	73
+ 390 0169 FF       		.byte	-1
+ 391 016a 4A       		.byte	74
+ 392 016b FF       		.byte	-1
+ 393 016c 4B       		.byte	75
+ 394 016d FF       		.byte	-1
+ 395 016e 4D       		.byte	77
+ 396 016f A0       		.byte	-96
+ 397 0170 4F       		.byte	79
+ 398 0171 04       		.byte	4
+ 399 0172 50       		.byte	80
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 8
+
+
+ 400 0173 18       		.byte	24
+ 401 0174 58       		.byte	88
+ 402 0175 04       		.byte	4
+ 403 0176 5A       		.byte	90
+ 404 0177 04       		.byte	4
+ 405 0178 5C       		.byte	92
+ 406 0179 01       		.byte	1
+ 407 017a 5F       		.byte	95
+ 408 017b 01       		.byte	1
+ 409 017c 60       		.byte	96
+ 410 017d 40       		.byte	64
+ 411 017e 62       		.byte	98
+ 412 017f C0       		.byte	-64
+ 413 0180 64       		.byte	100
+ 414 0181 40       		.byte	64
+ 415 0182 65       		.byte	101
+ 416 0183 40       		.byte	64
+ 417 0184 66       		.byte	102
+ 418 0185 C0       		.byte	-64
+ 419 0186 68       		.byte	104
+ 420 0187 C0       		.byte	-64
+ 421 0188 6A       		.byte	106
+ 422 0189 C0       		.byte	-64
+ 423 018a 6C       		.byte	108
+ 424 018b C0       		.byte	-64
+ 425 018c 6E       		.byte	110
+ 426 018d C0       		.byte	-64
+ 427 018e 82       		.byte	-126
+ 428 018f 20       		.byte	32
+ 429 0190 84       		.byte	-124
+ 430 0191 04       		.byte	4
+ 431 0192 85       		.byte	-123
+ 432 0193 2C       		.byte	44
+ 433 0194 86       		.byte	-122
+ 434 0195 0A       		.byte	10
+ 435 0196 87       		.byte	-121
+ 436 0197 10       		.byte	16
+ 437 0198 8D       		.byte	-115
+ 438 0199 34       		.byte	52
+ 439 019a 8E       		.byte	-114
+ 440 019b 68       		.byte	104
+ 441 019c 91       		.byte	-111
+ 442 019d 08       		.byte	8
+ 443 019e 92       		.byte	-110
+ 444 019f 01       		.byte	1
+ 445 01a0 93       		.byte	-109
+ 446 01a1 34       		.byte	52
+ 447 01a2 94       		.byte	-108
+ 448 01a3 08       		.byte	8
+ 449 01a4 95       		.byte	-107
+ 450 01a5 20       		.byte	32
+ 451 01a6 96       		.byte	-106
+ 452 01a7 14       		.byte	20
+ 453 01a8 97       		.byte	-105
+ 454 01a9 1A       		.byte	26
+ 455 01aa 9A       		.byte	-102
+ 456 01ab 02       		.byte	2
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 9
+
+
+ 457 01ac 9B       		.byte	-101
+ 458 01ad 01       		.byte	1
+ 459 01ae 9D       		.byte	-99
+ 460 01af 34       		.byte	52
+ 461 01b0 9E       		.byte	-98
+ 462 01b1 40       		.byte	64
+ 463 01b2 A5       		.byte	-91
+ 464 01b3 04       		.byte	4
+ 465 01b4 A6       		.byte	-90
+ 466 01b5 80       		.byte	-128
+ 467 01b6 A7       		.byte	-89
+ 468 01b7 1A       		.byte	26
+ 469 01b8 A8       		.byte	-88
+ 470 01b9 10       		.byte	16
+ 471 01ba AA       		.byte	-86
+ 472 01bb 08       		.byte	8
+ 473 01bc AD       		.byte	-83
+ 474 01bd 01       		.byte	1
+ 475 01be B0       		.byte	-80
+ 476 01bf 80       		.byte	-128
+ 477 01c0 B1       		.byte	-79
+ 478 01c1 3C       		.byte	60
+ 479 01c2 B2       		.byte	-78
+ 480 01c3 02       		.byte	2
+ 481 01c4 B3       		.byte	-77
+ 482 01c5 02       		.byte	2
+ 483 01c6 B4       		.byte	-76
+ 484 01c7 01       		.byte	1
+ 485 01c8 B5       		.byte	-75
+ 486 01c9 01       		.byte	1
+ 487 01ca B6       		.byte	-74
+ 488 01cb 7C       		.byte	124
+ 489 01cc BB       		.byte	-69
+ 490 01cd 02       		.byte	2
+ 491 01ce BE       		.byte	-66
+ 492 01cf 04       		.byte	4
+ 493 01d0 C0       		.byte	-64
+ 494 01d1 20       		.byte	32
+ 495 01d2 C1       		.byte	-63
+ 496 01d3 06       		.byte	6
+ 497 01d4 C5       		.byte	-59
+ 498 01d5 D5       		.byte	-43
+ 499 01d6 C6       		.byte	-58
+ 500 01d7 20       		.byte	32
+ 501 01d8 C7       		.byte	-57
+ 502 01d9 01       		.byte	1
+ 503 01da C8       		.byte	-56
+ 504 01db 1B       		.byte	27
+ 505 01dc C9       		.byte	-55
+ 506 01dd FF       		.byte	-1
+ 507 01de CA       		.byte	-54
+ 508 01df FF       		.byte	-1
+ 509 01e0 CB       		.byte	-53
+ 510 01e1 FF       		.byte	-1
+ 511 01e2 CD       		.byte	-51
+ 512 01e3 AF       		.byte	-81
+ 513 01e4 CE       		.byte	-50
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 10
+
+
+ 514 01e5 0F       		.byte	15
+ 515 01e6 CF       		.byte	-49
+ 516 01e7 04       		.byte	4
+ 517 01e8 D0       		.byte	-48
+ 518 01e9 18       		.byte	24
+ 519 01ea D2       		.byte	-46
+ 520 01eb 80       		.byte	-128
+ 521 01ec D4       		.byte	-44
+ 522 01ed 07       		.byte	7
+ 523 01ee D8       		.byte	-40
+ 524 01ef 04       		.byte	4
+ 525 01f0 D9       		.byte	-39
+ 526 01f1 04       		.byte	4
+ 527 01f2 DA       		.byte	-38
+ 528 01f3 04       		.byte	4
+ 529 01f4 DB       		.byte	-37
+ 530 01f5 04       		.byte	4
+ 531 01f6 DF       		.byte	-33
+ 532 01f7 01       		.byte	1
+ 533 01f8 E0       		.byte	-32
+ 534 01f9 40       		.byte	64
+ 535 01fa E2       		.byte	-30
+ 536 01fb C0       		.byte	-64
+ 537 01fc E4       		.byte	-28
+ 538 01fd 40       		.byte	64
+ 539 01fe E5       		.byte	-27
+ 540 01ff 40       		.byte	64
+ 541 0200 E6       		.byte	-26
+ 542 0201 C0       		.byte	-64
+ 543 0202 E8       		.byte	-24
+ 544 0203 C0       		.byte	-64
+ 545 0204 EA       		.byte	-22
+ 546 0205 C0       		.byte	-64
+ 547 0206 EC       		.byte	-20
+ 548 0207 C0       		.byte	-64
+ 549 0208 EE       		.byte	-18
+ 550 0209 C0       		.byte	-64
+ 551 020a 00       		.byte	0
+ 552 020b 04       		.byte	4
+ 553 020c 01       		.byte	1
+ 554 020d 82       		.byte	-126
+ 555 020e 04       		.byte	4
+ 556 020f 08       		.byte	8
+ 557 0210 06       		.byte	6
+ 558 0211 08       		.byte	8
+ 559 0212 09       		.byte	9
+ 560 0213 20       		.byte	32
+ 561 0214 0A       		.byte	10
+ 562 0215 42       		.byte	66
+ 563 0216 0B       		.byte	11
+ 564 0217 10       		.byte	16
+ 565 0218 0D       		.byte	13
+ 566 0219 80       		.byte	-128
+ 567 021a 0E       		.byte	14
+ 568 021b 28       		.byte	40
+ 569 021c 10       		.byte	16
+ 570 021d 28       		.byte	40
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 11
+
+
+ 571 021e 17       		.byte	23
+ 572 021f 20       		.byte	32
+ 573 0220 18       		.byte	24
+ 574 0221 04       		.byte	4
+ 575 0222 19       		.byte	25
+ 576 0223 88       		.byte	-120
+ 577 0224 1B       		.byte	27
+ 578 0225 11       		.byte	17
+ 579 0226 1D       		.byte	29
+ 580 0227 04       		.byte	4
+ 581 0228 1E       		.byte	30
+ 582 0229 20       		.byte	32
+ 583 022a 1F       		.byte	31
+ 584 022b 08       		.byte	8
+ 585 022c 20       		.byte	32
+ 586 022d 20       		.byte	32
+ 587 022e 21       		.byte	33
+ 588 022f 05       		.byte	5
+ 589 0230 22       		.byte	34
+ 590 0231 12       		.byte	18
+ 591 0232 23       		.byte	35
+ 592 0233 10       		.byte	16
+ 593 0234 2B       		.byte	43
+ 594 0235 11       		.byte	17
+ 595 0236 30       		.byte	48
+ 596 0237 28       		.byte	40
+ 597 0238 32       		.byte	50
+ 598 0239 42       		.byte	66
+ 599 023a 38       		.byte	56
+ 600 023b 40       		.byte	64
+ 601 023c 39       		.byte	57
+ 602 023d 08       		.byte	8
+ 603 023e 40       		.byte	64
+ 604 023f 04       		.byte	4
+ 605 0240 46       		.byte	70
+ 606 0241 10       		.byte	16
+ 607 0242 48       		.byte	72
+ 608 0243 20       		.byte	32
+ 609 0244 49       		.byte	73
+ 610 0245 01       		.byte	1
+ 611 0246 4B       		.byte	75
+ 612 0247 20       		.byte	32
+ 613 0248 4F       		.byte	79
+ 614 0249 20       		.byte	32
+ 615 024a 50       		.byte	80
+ 616 024b 08       		.byte	8
+ 617 024c 51       		.byte	81
+ 618 024d 28       		.byte	40
+ 619 024e 52       		.byte	82
+ 620 024f 10       		.byte	16
+ 621 0250 53       		.byte	83
+ 622 0251 10       		.byte	16
+ 623 0252 59       		.byte	89
+ 624 0253 49       		.byte	73
+ 625 0254 5A       		.byte	90
+ 626 0255 20       		.byte	32
+ 627 0256 72       		.byte	114
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 12
+
+
+ 628 0257 40       		.byte	64
+ 629 0258 80       		.byte	-128
+ 630 0259 04       		.byte	4
+ 631 025a 90       		.byte	-112
+ 632 025b 40       		.byte	64
+ 633 025c 92       		.byte	-110
+ 634 025d 82       		.byte	-126
+ 635 025e 94       		.byte	-108
+ 636 025f 04       		.byte	4
+ 637 0260 95       		.byte	-107
+ 638 0261 0A       		.byte	10
+ 639 0262 99       		.byte	-103
+ 640 0263 02       		.byte	2
+ 641 0264 9B       		.byte	-101
+ 642 0265 20       		.byte	32
+ 643 0266 9D       		.byte	-99
+ 644 0267 84       		.byte	-124
+ 645 0268 9E       		.byte	-98
+ 646 0269 08       		.byte	8
+ 647 026a A2       		.byte	-94
+ 648 026b 0C       		.byte	12
+ 649 026c A3       		.byte	-93
+ 650 026d 20       		.byte	32
+ 651 026e A4       		.byte	-92
+ 652 026f 10       		.byte	16
+ 653 0270 A5       		.byte	-91
+ 654 0271 C8       		.byte	-56
+ 655 0272 A6       		.byte	-90
+ 656 0273 22       		.byte	34
+ 657 0274 A7       		.byte	-89
+ 658 0275 18       		.byte	24
+ 659 0276 C0       		.byte	-64
+ 660 0277 6D       		.byte	109
+ 661 0278 C2       		.byte	-62
+ 662 0279 EF       		.byte	-17
+ 663 027a C4       		.byte	-60
+ 664 027b 46       		.byte	70
+ 665 027c CA       		.byte	-54
+ 666 027d 0A       		.byte	10
+ 667 027e CC       		.byte	-52
+ 668 027f 0F       		.byte	15
+ 669 0280 CE       		.byte	-50
+ 670 0281 0A       		.byte	10
+ 671 0282 D0       		.byte	-48
+ 672 0283 44       		.byte	68
+ 673 0284 D2       		.byte	-46
+ 674 0285 24       		.byte	36
+ 675 0286 D6       		.byte	-42
+ 676 0287 0F       		.byte	15
+ 677 0288 E6       		.byte	-26
+ 678 0289 02       		.byte	2
+ 679 028a 03       		.byte	3
+ 680 028b 01       		.byte	1
+ 681 028c 06       		.byte	6
+ 682 028d 01       		.byte	1
+ 683 028e 18       		.byte	24
+ 684 028f 02       		.byte	2
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 13
+
+
+ 685 0290 26       		.byte	38
+ 686 0291 01       		.byte	1
+ 687 0292 2A       		.byte	42
+ 688 0293 06       		.byte	6
+ 689 0294 32       		.byte	50
+ 690 0295 01       		.byte	1
+ 691 0296 34       		.byte	52
+ 692 0297 04       		.byte	4
+ 693 0298 36       		.byte	54
+ 694 0299 02       		.byte	2
+ 695 029a 37       		.byte	55
+ 696 029b 01       		.byte	1
+ 697 029c 40       		.byte	64
+ 698 029d 10       		.byte	16
+ 699 029e 41       		.byte	65
+ 700 029f 02       		.byte	2
+ 701 02a0 49       		.byte	73
+ 702 02a1 FF       		.byte	-1
+ 703 02a2 4A       		.byte	74
+ 704 02a3 FF       		.byte	-1
+ 705 02a4 4B       		.byte	75
+ 706 02a5 FF       		.byte	-1
+ 707 02a6 4D       		.byte	77
+ 708 02a7 A0       		.byte	-96
+ 709 02a8 4F       		.byte	79
+ 710 02a9 04       		.byte	4
+ 711 02aa 50       		.byte	80
+ 712 02ab 18       		.byte	24
+ 713 02ac 52       		.byte	82
+ 714 02ad 80       		.byte	-128
+ 715 02ae 58       		.byte	88
+ 716 02af 04       		.byte	4
+ 717 02b0 59       		.byte	89
+ 718 02b1 04       		.byte	4
+ 719 02b2 5A       		.byte	90
+ 720 02b3 04       		.byte	4
+ 721 02b4 5B       		.byte	91
+ 722 02b5 04       		.byte	4
+ 723 02b6 5C       		.byte	92
+ 724 02b7 10       		.byte	16
+ 725 02b8 5D       		.byte	93
+ 726 02b9 11       		.byte	17
+ 727 02ba 5F       		.byte	95
+ 728 02bb 01       		.byte	1
+ 729 02bc 60       		.byte	96
+ 730 02bd 40       		.byte	64
+ 731 02be 62       		.byte	98
+ 732 02bf C0       		.byte	-64
+ 733 02c0 64       		.byte	100
+ 734 02c1 40       		.byte	64
+ 735 02c2 65       		.byte	101
+ 736 02c3 40       		.byte	64
+ 737 02c4 66       		.byte	102
+ 738 02c5 C0       		.byte	-64
+ 739 02c6 68       		.byte	104
+ 740 02c7 C0       		.byte	-64
+ 741 02c8 6A       		.byte	106
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 14
+
+
+ 742 02c9 C0       		.byte	-64
+ 743 02ca 6C       		.byte	108
+ 744 02cb C0       		.byte	-64
+ 745 02cc 6E       		.byte	110
+ 746 02cd C0       		.byte	-64
+ 747 02ce 81       		.byte	-127
+ 748 02cf 04       		.byte	4
+ 749 02d0 83       		.byte	-125
+ 750 02d1 1A       		.byte	26
+ 751 02d2 85       		.byte	-123
+ 752 02d3 20       		.byte	32
+ 753 02d4 87       		.byte	-121
+ 754 02d5 5A       		.byte	90
+ 755 02d6 8A       		.byte	-118
+ 756 02d7 08       		.byte	8
+ 757 02d8 8D       		.byte	-115
+ 758 02d9 08       		.byte	8
+ 759 02da 8E       		.byte	-114
+ 760 02db 05       		.byte	5
+ 761 02dc 8F       		.byte	-113
+ 762 02dd 34       		.byte	52
+ 763 02de 95       		.byte	-107
+ 764 02df 34       		.byte	52
+ 765 02e0 96       		.byte	-106
+ 766 02e1 02       		.byte	2
+ 767 02e2 99       		.byte	-103
+ 768 02e3 2C       		.byte	44
+ 769 02e4 9B       		.byte	-101
+ 770 02e5 10       		.byte	16
+ 771 02e6 9E       		.byte	-98
+ 772 02e7 06       		.byte	6
+ 773 02e8 A5       		.byte	-91
+ 774 02e9 34       		.byte	52
+ 775 02ea A9       		.byte	-87
+ 776 02eb 01       		.byte	1
+ 777 02ec AC       		.byte	-84
+ 778 02ed 08       		.byte	8
+ 779 02ee AF       		.byte	-81
+ 780 02ef 01       		.byte	1
+ 781 02f0 B0       		.byte	-80
+ 782 02f1 08       		.byte	8
+ 783 02f2 B1       		.byte	-79
+ 784 02f3 40       		.byte	64
+ 785 02f4 B2       		.byte	-78
+ 786 02f5 01       		.byte	1
+ 787 02f6 B3       		.byte	-77
+ 788 02f7 01       		.byte	1
+ 789 02f8 B4       		.byte	-76
+ 790 02f9 02       		.byte	2
+ 791 02fa B5       		.byte	-75
+ 792 02fb 02       		.byte	2
+ 793 02fc B6       		.byte	-74
+ 794 02fd 04       		.byte	4
+ 795 02fe B7       		.byte	-73
+ 796 02ff 3C       		.byte	60
+ 797 0300 BB       		.byte	-69
+ 798 0301 80       		.byte	-128
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 15
+
+
+ 799 0302 BE       		.byte	-66
+ 800 0303 10       		.byte	16
+ 801 0304 C0       		.byte	-64
+ 802 0305 10       		.byte	16
+ 803 0306 C1       		.byte	-63
+ 804 0307 02       		.byte	2
+ 805 0308 C5       		.byte	-59
+ 806 0309 D0       		.byte	-48
+ 807 030a C6       		.byte	-58
+ 808 030b 20       		.byte	32
+ 809 030c C7       		.byte	-57
+ 810 030d 51       		.byte	81
+ 811 030e C8       		.byte	-56
+ 812 030f 3A       		.byte	58
+ 813 0310 C9       		.byte	-55
+ 814 0311 FF       		.byte	-1
+ 815 0312 CA       		.byte	-54
+ 816 0313 FF       		.byte	-1
+ 817 0314 CB       		.byte	-53
+ 818 0315 FF       		.byte	-1
+ 819 0316 CD       		.byte	-51
+ 820 0317 AF       		.byte	-81
+ 821 0318 CE       		.byte	-50
+ 822 0319 0F       		.byte	15
+ 823 031a CF       		.byte	-49
+ 824 031b 04       		.byte	4
+ 825 031c D0       		.byte	-48
+ 826 031d 18       		.byte	24
+ 827 031e D4       		.byte	-44
+ 828 031f 07       		.byte	7
+ 829 0320 D8       		.byte	-40
+ 830 0321 04       		.byte	4
+ 831 0322 D9       		.byte	-39
+ 832 0323 04       		.byte	4
+ 833 0324 DA       		.byte	-38
+ 834 0325 04       		.byte	4
+ 835 0326 DB       		.byte	-37
+ 836 0327 04       		.byte	4
+ 837 0328 DC       		.byte	-36
+ 838 0329 11       		.byte	17
+ 839 032a DD       		.byte	-35
+ 840 032b 11       		.byte	17
+ 841 032c DF       		.byte	-33
+ 842 032d 01       		.byte	1
+ 843 032e E0       		.byte	-32
+ 844 032f 40       		.byte	64
+ 845 0330 E2       		.byte	-30
+ 846 0331 C0       		.byte	-64
+ 847 0332 E4       		.byte	-28
+ 848 0333 40       		.byte	64
+ 849 0334 E5       		.byte	-27
+ 850 0335 40       		.byte	64
+ 851 0336 E6       		.byte	-26
+ 852 0337 C0       		.byte	-64
+ 853 0338 E8       		.byte	-24
+ 854 0339 C0       		.byte	-64
+ 855 033a EA       		.byte	-22
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 16
+
+
+ 856 033b C0       		.byte	-64
+ 857 033c EC       		.byte	-20
+ 858 033d C0       		.byte	-64
+ 859 033e EE       		.byte	-18
+ 860 033f C0       		.byte	-64
+ 861 0340 00       		.byte	0
+ 862 0341 04       		.byte	4
+ 863 0342 06       		.byte	6
+ 864 0343 0A       		.byte	10
+ 865 0344 0A       		.byte	10
+ 866 0345 04       		.byte	4
+ 867 0346 0D       		.byte	13
+ 868 0347 80       		.byte	-128
+ 869 0348 0F       		.byte	15
+ 870 0349 20       		.byte	32
+ 871 034a 10       		.byte	16
+ 872 034b 28       		.byte	40
+ 873 034c 17       		.byte	23
+ 874 034d 40       		.byte	64
+ 875 034e 19       		.byte	25
+ 876 034f 40       		.byte	64
+ 877 0350 1A       		.byte	26
+ 878 0351 24       		.byte	36
+ 879 0352 1E       		.byte	30
+ 880 0353 88       		.byte	-120
+ 881 0354 1F       		.byte	31
+ 882 0355 48       		.byte	72
+ 883 0356 20       		.byte	32
+ 884 0357 01       		.byte	1
+ 885 0358 21       		.byte	33
+ 886 0359 80       		.byte	-128
+ 887 035a 24       		.byte	36
+ 888 035b 08       		.byte	8
+ 889 035c 25       		.byte	37
+ 890 035d 40       		.byte	64
+ 891 035e 26       		.byte	38
+ 892 035f 20       		.byte	32
+ 893 0360 27       		.byte	39
+ 894 0361 60       		.byte	96
+ 895 0362 2F       		.byte	47
+ 896 0363 2A       		.byte	42
+ 897 0364 36       		.byte	54
+ 898 0365 28       		.byte	40
+ 899 0366 38       		.byte	56
+ 900 0367 02       		.byte	2
+ 901 0368 3C       		.byte	60
+ 902 0369 01       		.byte	1
+ 903 036a 3D       		.byte	61
+ 904 036b 80       		.byte	-128
+ 905 036c 3E       		.byte	62
+ 906 036d 08       		.byte	8
+ 907 036e 40       		.byte	64
+ 908 036f 01       		.byte	1
+ 909 0370 41       		.byte	65
+ 910 0371 20       		.byte	32
+ 911 0372 45       		.byte	69
+ 912 0373 A0       		.byte	-96
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 17
+
+
+ 913 0374 4F       		.byte	79
+ 914 0375 01       		.byte	1
+ 915 0376 55       		.byte	85
+ 916 0377 20       		.byte	32
+ 917 0378 56       		.byte	86
+ 918 0379 0A       		.byte	10
+ 919 037a 57       		.byte	87
+ 920 037b 12       		.byte	18
+ 921 037c 5E       		.byte	94
+ 922 037d 88       		.byte	-120
+ 923 037e 5F       		.byte	95
+ 924 037f 21       		.byte	33
+ 925 0380 70       		.byte	112
+ 926 0381 01       		.byte	1
+ 927 0382 8E       		.byte	-114
+ 928 0383 10       		.byte	16
+ 929 0384 90       		.byte	-112
+ 930 0385 04       		.byte	4
+ 931 0386 94       		.byte	-108
+ 932 0387 08       		.byte	8
+ 933 0388 9D       		.byte	-99
+ 934 0389 40       		.byte	64
+ 935 038a 9E       		.byte	-98
+ 936 038b 08       		.byte	8
+ 937 038c A0       		.byte	-96
+ 938 038d 28       		.byte	40
+ 939 038e A2       		.byte	-94
+ 940 038f 08       		.byte	8
+ 941 0390 A3       		.byte	-93
+ 942 0391 20       		.byte	32
+ 943 0392 A5       		.byte	-91
+ 944 0393 C0       		.byte	-64
+ 945 0394 A6       		.byte	-90
+ 946 0395 20       		.byte	32
+ 947 0396 B1       		.byte	-79
+ 948 0397 04       		.byte	4
+ 949 0398 C0       		.byte	-64
+ 950 0399 C4       		.byte	-60
+ 951 039a C2       		.byte	-62
+ 952 039b A2       		.byte	-94
+ 953 039c C4       		.byte	-60
+ 954 039d 86       		.byte	-122
+ 955 039e CA       		.byte	-54
+ 956 039f 70       		.byte	112
+ 957 03a0 CC       		.byte	-52
+ 958 03a1 60       		.byte	96
+ 959 03a2 CE       		.byte	-50
+ 960 03a3 D1       		.byte	-47
+ 961 03a4 D0       		.byte	-48
+ 962 03a5 3C       		.byte	60
+ 963 03a6 D6       		.byte	-42
+ 964 03a7 F0       		.byte	-16
+ 965 03a8 E2       		.byte	-30
+ 966 03a9 40       		.byte	64
+ 967 03aa EE       		.byte	-18
+ 968 03ab 80       		.byte	-128
+ 969 03ac AF       		.byte	-81
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 18
+
+
+ 970 03ad 40       		.byte	64
+ 971 03ae E6       		.byte	-26
+ 972 03af 02       		.byte	2
+ 973 03b0 EA       		.byte	-22
+ 974 03b1 02       		.byte	2
+ 975 03b2 EE       		.byte	-18
+ 976 03b3 02       		.byte	2
+ 977 03b4 EA       		.byte	-22
+ 978 03b5 02       		.byte	2
+ 979 03b6 EE       		.byte	-18
+ 980 03b7 02       		.byte	2
+ 981 03b8 30       		.byte	48
+ 982 03b9 10       		.byte	16
+ 983 03ba 33       		.byte	51
+ 984 03bb 01       		.byte	1
+ 985 03bc 36       		.byte	54
+ 986 03bd 40       		.byte	64
+ 987 03be CC       		.byte	-52
+ 988 03bf 70       		.byte	112
+ 989 03c0 51       		.byte	81
+ 990 03c1 20       		.byte	32
+ 991 03c2 53       		.byte	83
+ 992 03c3 02       		.byte	2
+ 993 03c4 57       		.byte	87
+ 994 03c5 20       		.byte	32
+ 995 03c6 5C       		.byte	92
+ 996 03c7 10       		.byte	16
+ 997 03c8 80       		.byte	-128
+ 998 03c9 10       		.byte	16
+ 999 03ca 84       		.byte	-124
+ 1000 03cb 10       		.byte	16
+ 1001 03cc 9C       		.byte	-100
+ 1002 03cd 10       		.byte	16
+ 1003 03ce 9F       		.byte	-97
+ 1004 03cf 01       		.byte	1
+ 1005 03d0 A6       		.byte	-90
+ 1006 03d1 40       		.byte	64
+ 1007 03d2 D4       		.byte	-44
+ 1008 03d3 E0       		.byte	-32
+ 1009 03d4 D6       		.byte	-42
+ 1010 03d5 20       		.byte	32
+ 1011 03d6 E6       		.byte	-26
+ 1012 03d7 C0       		.byte	-64
+ 1013 03d8 8F       		.byte	-113
+ 1014 03d9 20       		.byte	32
+ 1015 03da 9F       		.byte	-97
+ 1016 03db 01       		.byte	1
+ 1017 03dc A6       		.byte	-90
+ 1018 03dd 40       		.byte	64
+ 1019 03de A7       		.byte	-89
+ 1020 03df 22       		.byte	34
+ 1021 03e0 B1       		.byte	-79
+ 1022 03e1 20       		.byte	32
+ 1023 03e2 9F       		.byte	-97
+ 1024 03e3 01       		.byte	1
+ 1025 03e4 A6       		.byte	-90
+ 1026 03e5 40       		.byte	64
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 19
+
+
+ 1027 03e6 AF       		.byte	-81
+ 1028 03e7 02       		.byte	2
+ 1029 03e8 EA       		.byte	-22
+ 1030 03e9 10       		.byte	16
+ 1031 03ea 87       		.byte	-121
+ 1032 03eb 10       		.byte	16
+ 1033 03ec 97       		.byte	-105
+ 1034 03ed 20       		.byte	32
+ 1035 03ee 0B       		.byte	11
+ 1036 03ef 24       		.byte	36
+ 1037 03f0 0F       		.byte	15
+ 1038 03f1 40       		.byte	64
+ 1039 03f2 97       		.byte	-105
+ 1040 03f3 20       		.byte	32
+ 1041 03f4 C2       		.byte	-62
+ 1042 03f5 0E       		.byte	14
+ 1043 03f6 AE       		.byte	-82
+ 1044 03f7 40       		.byte	64
+ 1045 03f8 AF       		.byte	-81
+ 1046 03f9 01       		.byte	1
+ 1047 03fa EA       		.byte	-22
+ 1048 03fb 40       		.byte	64
+ 1049 03fc EE       		.byte	-18
+ 1050 03fd 40       		.byte	64
+ 1051 03fe AF       		.byte	-81
+ 1052 03ff 44       		.byte	68
+ 1053 0400 00       		.byte	0
+ 1054 0401 03       		.byte	3
+ 1055 0402 08       		.byte	8
+ 1056 0403 03       		.byte	3
+ 1057 0404 0A       		.byte	10
+ 1058 0405 03       		.byte	3
+ 1059 0406 00       		.byte	0
+ 1060 0407 2A       		.byte	42
+ 1061 0408 00       		.byte	0
+ 1062 0409 0F       		.byte	15
+ 1063 040a 0F       		.byte	15
+ 1064 040b 00       		.byte	0
+ 1065 040c 0F       		.byte	15
+ 1066 040d 00       		.byte	0
+ 1067 040e 00       		.byte	0
+ 1068 040f 00       		.byte	0
+ 1069 0410 40       		.byte	64
+ 1070 0411 00       		.byte	0
+ 1071 0412 00       		.byte	0
+ 1072 0413 00       		.byte	0
+ 1073 0414 00       		.byte	0
+ 1074 0415 00       		.byte	0
+ 1075 0416 00       		.byte	0
+ 1076 0417 00       		.byte	0
+ 1077 0418 C0       		.byte	-64
+ 1078 0419 00       		.byte	0
+ 1079 041a 00       		.byte	0
+ 1080 041b 00       		.byte	0
+ 1081 041c 00       		.byte	0
+ 1082 041d 03       		.byte	3
+ 1083 041e 03       		.byte	3
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 20
+
+
+ 1084 041f 00       		.byte	0
+ 1085 0420 00       		.byte	0
+ 1086 0421 00       		.byte	0
+ 1087 0422 00       		.byte	0
+ 1088 0423 00       		.byte	0
+ 1089 0424 04       		.byte	4
+ 1090 0425 00       		.byte	0
+ 1091 0426 14       		.byte	20
+ 1092 0427 01       		.byte	1
+ 1093              		.section	.cywolatch,"a",%progbits
+ 1094              		.align	2
+ 1095              		.type	cy_meta_wonvl, %object
+ 1096              		.size	cy_meta_wonvl, 4
+ 1097              	cy_meta_wonvl:
+ 1098 0000 BC       		.byte	-68
+ 1099 0001 90       		.byte	-112
+ 1100 0002 AC       		.byte	-84
+ 1101 0003 AF       		.byte	-81
+ 1102              		.section	.cycustnvl,"a",%progbits
+ 1103              		.align	2
+ 1104              		.type	cy_meta_custnvl, %object
+ 1105              		.size	cy_meta_custnvl, 4
+ 1106              	cy_meta_custnvl:
+ 1107 0000 00       		.byte	0
+ 1108 0001 00       		.byte	0
+ 1109 0002 40       		.byte	64
+ 1110 0003 05       		.byte	5
+ 1111              		.section	.cymeta,"a",%progbits
+ 1112              		.align	2
+ 1113              		.type	cy_metadata, %object
+ 1114              		.size	cy_metadata, 12
+ 1115              	cy_metadata:
+ 1116 0000 00       		.byte	0
+ 1117 0001 01       		.byte	1
+ 1118 0002 2E       		.byte	46
+ 1119 0003 16       		.byte	22
+ 1120 0004 10       		.byte	16
+ 1121 0005 69       		.byte	105
+ 1122 0006 00       		.byte	0
+ 1123 0007 01       		.byte	1
+ 1124 0008 00       		.byte	0
+ 1125 0009 00       		.byte	0
+ 1126 000a 00       		.byte	0
+ 1127 000b 00       		.byte	0
+ 1128              		.section	.cyflashprotect,"a",%progbits
+ 1129              		.align	2
+ 1130              		.type	cy_meta_flashprotect, %object
+ 1131              		.size	cy_meta_flashprotect, 256
+ 1132              	cy_meta_flashprotect:
+ 1133 0000 00000000 		.space	256
+ 1133      00000000 
+ 1133      00000000 
+ 1133      00000000 
+ 1133      00000000 
+ 1134              		.text
+ 1135              	.Letext0:
+ 1136              		.file 1 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 21
+
+
+ 1137              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1138              		.file 3 "Generated_Source\\PSoC5\\cymetadata.c"
+ 1139              		.section	.debug_info,"",%progbits
+ 1140              	.Ldebug_info0:
+ 1141 0000 31010000 		.4byte	0x131
+ 1142 0004 0400     		.2byte	0x4
+ 1143 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 1144 000a 04       		.byte	0x4
+ 1145 000b 01       		.uleb128 0x1
+ 1146 000c 24000000 		.4byte	.LASF17
+ 1147 0010 0C       		.byte	0xc
+ 1148 0011 A4010000 		.4byte	.LASF18
+ 1149 0015 5F010000 		.4byte	.LASF19
+ 1150 0019 00000000 		.4byte	.Ldebug_line0
+ 1151 001d 02       		.uleb128 0x2
+ 1152 001e 01       		.byte	0x1
+ 1153 001f 06       		.byte	0x6
+ 1154 0020 98010000 		.4byte	.LASF0
+ 1155 0024 03       		.uleb128 0x3
+ 1156 0025 00000000 		.4byte	.LASF9
+ 1157 0029 01       		.byte	0x1
+ 1158 002a 1D       		.byte	0x1d
+ 1159 002b 2F000000 		.4byte	0x2f
+ 1160 002f 02       		.uleb128 0x2
+ 1161 0030 01       		.byte	0x1
+ 1162 0031 08       		.byte	0x8
+ 1163 0032 16000000 		.4byte	.LASF1
+ 1164 0036 02       		.uleb128 0x2
+ 1165 0037 02       		.byte	0x2
+ 1166 0038 05       		.byte	0x5
+ 1167 0039 85010000 		.4byte	.LASF2
+ 1168 003d 02       		.uleb128 0x2
+ 1169 003e 02       		.byte	0x2
+ 1170 003f 07       		.byte	0x7
+ 1171 0040 C4000000 		.4byte	.LASF3
+ 1172 0044 02       		.uleb128 0x2
+ 1173 0045 04       		.byte	0x4
+ 1174 0046 05       		.byte	0x5
+ 1175 0047 8F010000 		.4byte	.LASF4
+ 1176 004b 02       		.uleb128 0x2
+ 1177 004c 04       		.byte	0x4
+ 1178 004d 07       		.byte	0x7
+ 1179 004e B2000000 		.4byte	.LASF5
+ 1180 0052 02       		.uleb128 0x2
+ 1181 0053 08       		.byte	0x8
+ 1182 0054 05       		.byte	0x5
+ 1183 0055 51010000 		.4byte	.LASF6
+ 1184 0059 02       		.uleb128 0x2
+ 1185 005a 08       		.byte	0x8
+ 1186 005b 07       		.byte	0x7
+ 1187 005c 06010000 		.4byte	.LASF7
+ 1188 0060 04       		.uleb128 0x4
+ 1189 0061 04       		.byte	0x4
+ 1190 0062 05       		.byte	0x5
+ 1191 0063 696E7400 		.ascii	"int\000"
+ 1192 0067 02       		.uleb128 0x2
+ 1193 0068 04       		.byte	0x4
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 22
+
+
+ 1194 0069 07       		.byte	0x7
+ 1195 006a F9000000 		.4byte	.LASF8
+ 1196 006e 03       		.uleb128 0x3
+ 1197 006f 1D010000 		.4byte	.LASF10
+ 1198 0073 02       		.byte	0x2
+ 1199 0074 18       		.byte	0x18
+ 1200 0075 24000000 		.4byte	0x24
+ 1201 0079 05       		.uleb128 0x5
+ 1202 007a 91000000 		.4byte	0x91
+ 1203 007e 8A000000 		.4byte	0x8a
+ 1204 0082 06       		.uleb128 0x6
+ 1205 0083 8A000000 		.4byte	0x8a
+ 1206 0087 2704     		.2byte	0x427
+ 1207 0089 00       		.byte	0
+ 1208 008a 02       		.uleb128 0x2
+ 1209 008b 04       		.byte	0x4
+ 1210 008c 07       		.byte	0x7
+ 1211 008d 48010000 		.4byte	.LASF11
+ 1212 0091 07       		.uleb128 0x7
+ 1213 0092 6E000000 		.4byte	0x6e
+ 1214 0096 08       		.uleb128 0x8
+ 1215 0097 E7000000 		.4byte	.LASF12
+ 1216 009b 03       		.byte	0x3
+ 1217 009c 1F       		.byte	0x1f
+ 1218 009d A7000000 		.4byte	0xa7
+ 1219 00a1 05       		.uleb128 0x5
+ 1220 00a2 03       		.byte	0x3
+ 1221 00a3 00000000 		.4byte	cy_meta_configecc
+ 1222 00a7 07       		.uleb128 0x7
+ 1223 00a8 79000000 		.4byte	0x79
+ 1224 00ac 05       		.uleb128 0x5
+ 1225 00ad 91000000 		.4byte	0x91
+ 1226 00b1 BC000000 		.4byte	0xbc
+ 1227 00b5 09       		.uleb128 0x9
+ 1228 00b6 8A000000 		.4byte	0x8a
+ 1229 00ba 03       		.byte	0x3
+ 1230 00bb 00       		.byte	0
+ 1231 00bc 08       		.uleb128 0x8
+ 1232 00bd D7000000 		.4byte	.LASF13
+ 1233 00c1 03       		.byte	0x3
+ 1234 00c2 B1       		.byte	0xb1
+ 1235 00c3 CD000000 		.4byte	0xcd
+ 1236 00c7 05       		.uleb128 0x5
+ 1237 00c8 03       		.byte	0x3
+ 1238 00c9 00000000 		.4byte	cy_meta_custnvl
+ 1239 00cd 07       		.uleb128 0x7
+ 1240 00ce AC000000 		.4byte	0xac
+ 1241 00d2 08       		.uleb128 0x8
+ 1242 00d3 3A010000 		.4byte	.LASF14
+ 1243 00d7 03       		.byte	0x3
+ 1244 00d8 BF       		.byte	0xbf
+ 1245 00d9 E3000000 		.4byte	0xe3
+ 1246 00dd 05       		.uleb128 0x5
+ 1247 00de 03       		.byte	0x3
+ 1248 00df 00000000 		.4byte	cy_meta_wonvl
+ 1249 00e3 07       		.uleb128 0x7
+ 1250 00e4 AC000000 		.4byte	0xac
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 23
+
+
+ 1251 00e8 05       		.uleb128 0x5
+ 1252 00e9 91000000 		.4byte	0x91
+ 1253 00ed F8000000 		.4byte	0xf8
+ 1254 00f1 09       		.uleb128 0x9
+ 1255 00f2 8A000000 		.4byte	0x8a
+ 1256 00f6 FF       		.byte	0xff
+ 1257 00f7 00       		.byte	0
+ 1258 00f8 08       		.uleb128 0x8
+ 1259 00f9 25010000 		.4byte	.LASF15
+ 1260 00fd 03       		.byte	0x3
+ 1261 00fe CD       		.byte	0xcd
+ 1262 00ff 09010000 		.4byte	0x109
+ 1263 0103 05       		.uleb128 0x5
+ 1264 0104 03       		.byte	0x3
+ 1265 0105 00000000 		.4byte	cy_meta_flashprotect
+ 1266 0109 07       		.uleb128 0x7
+ 1267 010a E8000000 		.4byte	0xe8
+ 1268 010e 05       		.uleb128 0x5
+ 1269 010f 91000000 		.4byte	0x91
+ 1270 0113 1E010000 		.4byte	0x11e
+ 1271 0117 09       		.uleb128 0x9
+ 1272 0118 8A000000 		.4byte	0x8a
+ 1273 011c 0B       		.byte	0xb
+ 1274 011d 00       		.byte	0
+ 1275 011e 08       		.uleb128 0x8
+ 1276 011f 0A000000 		.4byte	.LASF16
+ 1277 0123 03       		.byte	0x3
+ 1278 0124 FA       		.byte	0xfa
+ 1279 0125 2F010000 		.4byte	0x12f
+ 1280 0129 05       		.uleb128 0x5
+ 1281 012a 03       		.byte	0x3
+ 1282 012b 00000000 		.4byte	cy_metadata
+ 1283 012f 07       		.uleb128 0x7
+ 1284 0130 0E010000 		.4byte	0x10e
+ 1285 0134 00       		.byte	0
+ 1286              		.section	.debug_abbrev,"",%progbits
+ 1287              	.Ldebug_abbrev0:
+ 1288 0000 01       		.uleb128 0x1
+ 1289 0001 11       		.uleb128 0x11
+ 1290 0002 01       		.byte	0x1
+ 1291 0003 25       		.uleb128 0x25
+ 1292 0004 0E       		.uleb128 0xe
+ 1293 0005 13       		.uleb128 0x13
+ 1294 0006 0B       		.uleb128 0xb
+ 1295 0007 03       		.uleb128 0x3
+ 1296 0008 0E       		.uleb128 0xe
+ 1297 0009 1B       		.uleb128 0x1b
+ 1298 000a 0E       		.uleb128 0xe
+ 1299 000b 10       		.uleb128 0x10
+ 1300 000c 17       		.uleb128 0x17
+ 1301 000d 00       		.byte	0
+ 1302 000e 00       		.byte	0
+ 1303 000f 02       		.uleb128 0x2
+ 1304 0010 24       		.uleb128 0x24
+ 1305 0011 00       		.byte	0
+ 1306 0012 0B       		.uleb128 0xb
+ 1307 0013 0B       		.uleb128 0xb
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 24
+
+
+ 1308 0014 3E       		.uleb128 0x3e
+ 1309 0015 0B       		.uleb128 0xb
+ 1310 0016 03       		.uleb128 0x3
+ 1311 0017 0E       		.uleb128 0xe
+ 1312 0018 00       		.byte	0
+ 1313 0019 00       		.byte	0
+ 1314 001a 03       		.uleb128 0x3
+ 1315 001b 16       		.uleb128 0x16
+ 1316 001c 00       		.byte	0
+ 1317 001d 03       		.uleb128 0x3
+ 1318 001e 0E       		.uleb128 0xe
+ 1319 001f 3A       		.uleb128 0x3a
+ 1320 0020 0B       		.uleb128 0xb
+ 1321 0021 3B       		.uleb128 0x3b
+ 1322 0022 0B       		.uleb128 0xb
+ 1323 0023 49       		.uleb128 0x49
+ 1324 0024 13       		.uleb128 0x13
+ 1325 0025 00       		.byte	0
+ 1326 0026 00       		.byte	0
+ 1327 0027 04       		.uleb128 0x4
+ 1328 0028 24       		.uleb128 0x24
+ 1329 0029 00       		.byte	0
+ 1330 002a 0B       		.uleb128 0xb
+ 1331 002b 0B       		.uleb128 0xb
+ 1332 002c 3E       		.uleb128 0x3e
+ 1333 002d 0B       		.uleb128 0xb
+ 1334 002e 03       		.uleb128 0x3
+ 1335 002f 08       		.uleb128 0x8
+ 1336 0030 00       		.byte	0
+ 1337 0031 00       		.byte	0
+ 1338 0032 05       		.uleb128 0x5
+ 1339 0033 01       		.uleb128 0x1
+ 1340 0034 01       		.byte	0x1
+ 1341 0035 49       		.uleb128 0x49
+ 1342 0036 13       		.uleb128 0x13
+ 1343 0037 01       		.uleb128 0x1
+ 1344 0038 13       		.uleb128 0x13
+ 1345 0039 00       		.byte	0
+ 1346 003a 00       		.byte	0
+ 1347 003b 06       		.uleb128 0x6
+ 1348 003c 21       		.uleb128 0x21
+ 1349 003d 00       		.byte	0
+ 1350 003e 49       		.uleb128 0x49
+ 1351 003f 13       		.uleb128 0x13
+ 1352 0040 2F       		.uleb128 0x2f
+ 1353 0041 05       		.uleb128 0x5
+ 1354 0042 00       		.byte	0
+ 1355 0043 00       		.byte	0
+ 1356 0044 07       		.uleb128 0x7
+ 1357 0045 26       		.uleb128 0x26
+ 1358 0046 00       		.byte	0
+ 1359 0047 49       		.uleb128 0x49
+ 1360 0048 13       		.uleb128 0x13
+ 1361 0049 00       		.byte	0
+ 1362 004a 00       		.byte	0
+ 1363 004b 08       		.uleb128 0x8
+ 1364 004c 34       		.uleb128 0x34
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 25
+
+
+ 1365 004d 00       		.byte	0
+ 1366 004e 03       		.uleb128 0x3
+ 1367 004f 0E       		.uleb128 0xe
+ 1368 0050 3A       		.uleb128 0x3a
+ 1369 0051 0B       		.uleb128 0xb
+ 1370 0052 3B       		.uleb128 0x3b
+ 1371 0053 0B       		.uleb128 0xb
+ 1372 0054 49       		.uleb128 0x49
+ 1373 0055 13       		.uleb128 0x13
+ 1374 0056 3F       		.uleb128 0x3f
+ 1375 0057 19       		.uleb128 0x19
+ 1376 0058 02       		.uleb128 0x2
+ 1377 0059 18       		.uleb128 0x18
+ 1378 005a 00       		.byte	0
+ 1379 005b 00       		.byte	0
+ 1380 005c 09       		.uleb128 0x9
+ 1381 005d 21       		.uleb128 0x21
+ 1382 005e 00       		.byte	0
+ 1383 005f 49       		.uleb128 0x49
+ 1384 0060 13       		.uleb128 0x13
+ 1385 0061 2F       		.uleb128 0x2f
+ 1386 0062 0B       		.uleb128 0xb
+ 1387 0063 00       		.byte	0
+ 1388 0064 00       		.byte	0
+ 1389 0065 00       		.byte	0
+ 1390              		.section	.debug_aranges,"",%progbits
+ 1391 0000 14000000 		.4byte	0x14
+ 1392 0004 0200     		.2byte	0x2
+ 1393 0006 00000000 		.4byte	.Ldebug_info0
+ 1394 000a 04       		.byte	0x4
+ 1395 000b 00       		.byte	0
+ 1396 000c 0000     		.2byte	0
+ 1397 000e 0000     		.2byte	0
+ 1398 0010 00000000 		.4byte	0
+ 1399 0014 00000000 		.4byte	0
+ 1400              		.section	.debug_line,"",%progbits
+ 1401              	.Ldebug_line0:
+ 1402 0000 3D010000 		.section	.debug_str,"MS",%progbits,1
+ 1402      02003701 
+ 1402      00000201 
+ 1402      FB0E0D00 
+ 1402      01010101 
+ 1403              	.LASF9:
+ 1404 0000 5F5F7569 		.ascii	"__uint8_t\000"
+ 1404      6E74385F 
+ 1404      7400
+ 1405              	.LASF16:
+ 1406 000a 63795F6D 		.ascii	"cy_metadata\000"
+ 1406      65746164 
+ 1406      61746100 
+ 1407              	.LASF1:
+ 1408 0016 756E7369 		.ascii	"unsigned char\000"
+ 1408      676E6564 
+ 1408      20636861 
+ 1408      7200
+ 1409              	.LASF17:
+ 1410 0024 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 26
+
+
+ 1410      43313120 
+ 1410      352E342E 
+ 1410      31203230 
+ 1410      31363036 
+ 1411 0057 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1411      20726576 
+ 1411      6973696F 
+ 1411      6E203233 
+ 1411      37373135 
+ 1412 008a 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1412      66756E63 
+ 1412      74696F6E 
+ 1412      2D736563 
+ 1412      74696F6E 
+ 1413              	.LASF5:
+ 1414 00b2 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1414      20756E73 
+ 1414      69676E65 
+ 1414      6420696E 
+ 1414      7400
+ 1415              	.LASF3:
+ 1416 00c4 73686F72 		.ascii	"short unsigned int\000"
+ 1416      7420756E 
+ 1416      7369676E 
+ 1416      65642069 
+ 1416      6E7400
+ 1417              	.LASF13:
+ 1418 00d7 63795F6D 		.ascii	"cy_meta_custnvl\000"
+ 1418      6574615F 
+ 1418      63757374 
+ 1418      6E766C00 
+ 1419              	.LASF12:
+ 1420 00e7 63795F6D 		.ascii	"cy_meta_configecc\000"
+ 1420      6574615F 
+ 1420      636F6E66 
+ 1420      69676563 
+ 1420      6300
+ 1421              	.LASF8:
+ 1422 00f9 756E7369 		.ascii	"unsigned int\000"
+ 1422      676E6564 
+ 1422      20696E74 
+ 1422      00
+ 1423              	.LASF7:
+ 1424 0106 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1424      206C6F6E 
+ 1424      6720756E 
+ 1424      7369676E 
+ 1424      65642069 
+ 1425              	.LASF10:
+ 1426 011d 75696E74 		.ascii	"uint8_t\000"
+ 1426      385F7400 
+ 1427              	.LASF15:
+ 1428 0125 63795F6D 		.ascii	"cy_meta_flashprotect\000"
+ 1428      6574615F 
+ 1428      666C6173 
+ 1428      6870726F 
+ 1428      74656374 
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\ccgUhtfo.s 			page 27
+
+
+ 1429              	.LASF14:
+ 1430 013a 63795F6D 		.ascii	"cy_meta_wonvl\000"
+ 1430      6574615F 
+ 1430      776F6E76 
+ 1430      6C00
+ 1431              	.LASF11:
+ 1432 0148 73697A65 		.ascii	"sizetype\000"
+ 1432      74797065 
+ 1432      00
+ 1433              	.LASF6:
+ 1434 0151 6C6F6E67 		.ascii	"long long int\000"
+ 1434      206C6F6E 
+ 1434      6720696E 
+ 1434      7400
+ 1435              	.LASF19:
+ 1436 015f 533A5C53 		.ascii	"S:\\SpiderBot\\Servos\\Servo Board.cydsn\000"
+ 1436      70696465 
+ 1436      72426F74 
+ 1436      5C536572 
+ 1436      766F735C 
+ 1437              	.LASF2:
+ 1438 0185 73686F72 		.ascii	"short int\000"
+ 1438      7420696E 
+ 1438      7400
+ 1439              	.LASF4:
+ 1440 018f 6C6F6E67 		.ascii	"long int\000"
+ 1440      20696E74 
+ 1440      00
+ 1441              	.LASF0:
+ 1442 0198 7369676E 		.ascii	"signed char\000"
+ 1442      65642063 
+ 1442      68617200 
+ 1443              	.LASF18:
+ 1444 01a4 47656E65 		.ascii	"Generated_Source\\PSoC5\\cymetadata.c\000"
+ 1444      72617465 
+ 1444      645F536F 
+ 1444      75726365 
+ 1444      5C50536F 
+ 1445              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

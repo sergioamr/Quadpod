@@ -1,0 +1,2854 @@
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"PWMB.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.PWMB_Enable,"ax",%progbits
+  20              		.align	2
+  21              		.global	PWMB_Enable
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	PWMB_Enable, %function
+  25              	PWMB_Enable:
+  26              	.LFB2:
+  27              		.file 1 "Generated_Source\\PSoC5\\PWMB.c"
+   1:Generated_Source\PSoC5/PWMB.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/PWMB.c **** * File Name: PWMB.c
+   3:Generated_Source\PSoC5/PWMB.c **** * Version 3.30
+   4:Generated_Source\PSoC5/PWMB.c **** *
+   5:Generated_Source\PSoC5/PWMB.c **** * Description:
+   6:Generated_Source\PSoC5/PWMB.c **** *  The PWM User Module consist of an 8 or 16-bit counter with two 8 or 16-bit
+   7:Generated_Source\PSoC5/PWMB.c **** *  comparitors. Each instance of this user module is capable of generating
+   8:Generated_Source\PSoC5/PWMB.c **** *  two PWM outputs with the same period. The pulse width is selectable between
+   9:Generated_Source\PSoC5/PWMB.c **** *  1 and 255/65535. The period is selectable between 2 and 255/65536 clocks.
+  10:Generated_Source\PSoC5/PWMB.c **** *  The compare value output may be configured to be active when the present
+  11:Generated_Source\PSoC5/PWMB.c **** *  counter is less than or less than/equal to the compare value.
+  12:Generated_Source\PSoC5/PWMB.c **** *  A terminal count output is also provided. It generates a pulse one clock
+  13:Generated_Source\PSoC5/PWMB.c **** *  width wide when the counter is equal to zero.
+  14:Generated_Source\PSoC5/PWMB.c **** *
+  15:Generated_Source\PSoC5/PWMB.c **** * Note:
+  16:Generated_Source\PSoC5/PWMB.c **** *
+  17:Generated_Source\PSoC5/PWMB.c **** *******************************************************************************
+  18:Generated_Source\PSoC5/PWMB.c **** * Copyright 2008-2014, Cypress Semiconductor Corporation.  All rights reserved.
+  19:Generated_Source\PSoC5/PWMB.c **** * You may use this file only in accordance with the license, terms, conditions,
+  20:Generated_Source\PSoC5/PWMB.c **** * disclaimers, and limitations in the end user license agreement accompanying
+  21:Generated_Source\PSoC5/PWMB.c **** * the software package with which this file was provided.
+  22:Generated_Source\PSoC5/PWMB.c **** ********************************************************************************/
+  23:Generated_Source\PSoC5/PWMB.c **** 
+  24:Generated_Source\PSoC5/PWMB.c **** #include "PWMB.h"
+  25:Generated_Source\PSoC5/PWMB.c **** 
+  26:Generated_Source\PSoC5/PWMB.c **** /* Error message for removed <resource> through optimization */
+  27:Generated_Source\PSoC5/PWMB.c **** #ifdef PWMB_PWMUDB_genblk1_ctrlreg__REMOVED
+  28:Generated_Source\PSoC5/PWMB.c ****     #error PWM_v3_30 detected with a constant 0 for the enable or \
+  29:Generated_Source\PSoC5/PWMB.c ****          constant 1 for reset. This will prevent the component from operating.
+  30:Generated_Source\PSoC5/PWMB.c **** #endif /* PWMB_PWMUDB_genblk1_ctrlreg__REMOVED */
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 2
+
+
+  31:Generated_Source\PSoC5/PWMB.c **** 
+  32:Generated_Source\PSoC5/PWMB.c **** uint8 PWMB_initVar = 0u;
+  33:Generated_Source\PSoC5/PWMB.c **** 
+  34:Generated_Source\PSoC5/PWMB.c **** 
+  35:Generated_Source\PSoC5/PWMB.c **** /*******************************************************************************
+  36:Generated_Source\PSoC5/PWMB.c **** * Function Name: PWMB_Start
+  37:Generated_Source\PSoC5/PWMB.c **** ********************************************************************************
+  38:Generated_Source\PSoC5/PWMB.c **** *
+  39:Generated_Source\PSoC5/PWMB.c **** * Summary:
+  40:Generated_Source\PSoC5/PWMB.c **** *  The start function initializes the pwm with the default values, the
+  41:Generated_Source\PSoC5/PWMB.c **** *  enables the counter to begin counting.  It does not enable interrupts,
+  42:Generated_Source\PSoC5/PWMB.c **** *  the EnableInt command should be called if interrupt generation is required.
+  43:Generated_Source\PSoC5/PWMB.c **** *
+  44:Generated_Source\PSoC5/PWMB.c **** * Parameters:
+  45:Generated_Source\PSoC5/PWMB.c **** *  None
+  46:Generated_Source\PSoC5/PWMB.c **** *
+  47:Generated_Source\PSoC5/PWMB.c **** * Return:
+  48:Generated_Source\PSoC5/PWMB.c **** *  None
+  49:Generated_Source\PSoC5/PWMB.c **** *
+  50:Generated_Source\PSoC5/PWMB.c **** * Global variables:
+  51:Generated_Source\PSoC5/PWMB.c **** *  PWMB_initVar: Is modified when this function is called for the
+  52:Generated_Source\PSoC5/PWMB.c **** *   first time. Is used to ensure that initialization happens only once.
+  53:Generated_Source\PSoC5/PWMB.c **** *
+  54:Generated_Source\PSoC5/PWMB.c **** *******************************************************************************/
+  55:Generated_Source\PSoC5/PWMB.c **** void PWMB_Start(void) 
+  56:Generated_Source\PSoC5/PWMB.c **** {
+  57:Generated_Source\PSoC5/PWMB.c ****     /* If not Initialized then initialize all required hardware and software */
+  58:Generated_Source\PSoC5/PWMB.c ****     if(PWMB_initVar == 0u)
+  59:Generated_Source\PSoC5/PWMB.c ****     {
+  60:Generated_Source\PSoC5/PWMB.c ****         PWMB_Init();
+  61:Generated_Source\PSoC5/PWMB.c ****         PWMB_initVar = 1u;
+  62:Generated_Source\PSoC5/PWMB.c ****     }
+  63:Generated_Source\PSoC5/PWMB.c ****     PWMB_Enable();
+  64:Generated_Source\PSoC5/PWMB.c **** 
+  65:Generated_Source\PSoC5/PWMB.c **** }
+  66:Generated_Source\PSoC5/PWMB.c **** 
+  67:Generated_Source\PSoC5/PWMB.c **** 
+  68:Generated_Source\PSoC5/PWMB.c **** /*******************************************************************************
+  69:Generated_Source\PSoC5/PWMB.c **** * Function Name: PWMB_Init
+  70:Generated_Source\PSoC5/PWMB.c **** ********************************************************************************
+  71:Generated_Source\PSoC5/PWMB.c **** *
+  72:Generated_Source\PSoC5/PWMB.c **** * Summary:
+  73:Generated_Source\PSoC5/PWMB.c **** *  Initialize component's parameters to the parameters set by user in the
+  74:Generated_Source\PSoC5/PWMB.c **** *  customizer of the component placed onto schematic. Usually called in
+  75:Generated_Source\PSoC5/PWMB.c **** *  PWMB_Start().
+  76:Generated_Source\PSoC5/PWMB.c **** *
+  77:Generated_Source\PSoC5/PWMB.c **** * Parameters:
+  78:Generated_Source\PSoC5/PWMB.c **** *  None
+  79:Generated_Source\PSoC5/PWMB.c **** *
+  80:Generated_Source\PSoC5/PWMB.c **** * Return:
+  81:Generated_Source\PSoC5/PWMB.c **** *  None
+  82:Generated_Source\PSoC5/PWMB.c **** *
+  83:Generated_Source\PSoC5/PWMB.c **** *******************************************************************************/
+  84:Generated_Source\PSoC5/PWMB.c **** void PWMB_Init(void) 
+  85:Generated_Source\PSoC5/PWMB.c **** {
+  86:Generated_Source\PSoC5/PWMB.c ****     #if (PWMB_UsingFixedFunction || PWMB_UseControl)
+  87:Generated_Source\PSoC5/PWMB.c ****         uint8 ctrl;
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 3
+
+
+  88:Generated_Source\PSoC5/PWMB.c ****     #endif /* (PWMB_UsingFixedFunction || PWMB_UseControl) */
+  89:Generated_Source\PSoC5/PWMB.c **** 
+  90:Generated_Source\PSoC5/PWMB.c ****     #if(!PWMB_UsingFixedFunction)
+  91:Generated_Source\PSoC5/PWMB.c ****         #if(PWMB_UseStatus)
+  92:Generated_Source\PSoC5/PWMB.c ****             /* Interrupt State Backup for Critical Region*/
+  93:Generated_Source\PSoC5/PWMB.c ****             uint8 PWMB_interruptState;
+  94:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_UseStatus) */
+  95:Generated_Source\PSoC5/PWMB.c ****     #endif /* (!PWMB_UsingFixedFunction) */
+  96:Generated_Source\PSoC5/PWMB.c **** 
+  97:Generated_Source\PSoC5/PWMB.c ****     #if (PWMB_UsingFixedFunction)
+  98:Generated_Source\PSoC5/PWMB.c ****         /* You are allowed to write the compare value (FF only) */
+  99:Generated_Source\PSoC5/PWMB.c ****         PWMB_CONTROL |= PWMB_CFG0_MODE;
+ 100:Generated_Source\PSoC5/PWMB.c ****         #if (PWMB_DeadBand2_4)
+ 101:Generated_Source\PSoC5/PWMB.c ****             PWMB_CONTROL |= PWMB_CFG0_DB;
+ 102:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_DeadBand2_4) */
+ 103:Generated_Source\PSoC5/PWMB.c **** 
+ 104:Generated_Source\PSoC5/PWMB.c ****         ctrl = PWMB_CONTROL3 & ((uint8 )(~PWMB_CTRL_CMPMODE1_MASK));
+ 105:Generated_Source\PSoC5/PWMB.c ****         PWMB_CONTROL3 = ctrl | PWMB_DEFAULT_COMPARE1_MODE;
+ 106:Generated_Source\PSoC5/PWMB.c **** 
+ 107:Generated_Source\PSoC5/PWMB.c ****          /* Clear and Set SYNCTC and SYNCCMP bits of RT1 register */
+ 108:Generated_Source\PSoC5/PWMB.c ****         PWMB_RT1 &= ((uint8)(~PWMB_RT1_MASK));
+ 109:Generated_Source\PSoC5/PWMB.c ****         PWMB_RT1 |= PWMB_SYNC;
+ 110:Generated_Source\PSoC5/PWMB.c **** 
+ 111:Generated_Source\PSoC5/PWMB.c ****         /*Enable DSI Sync all all inputs of the PWM*/
+ 112:Generated_Source\PSoC5/PWMB.c ****         PWMB_RT1 &= ((uint8)(~PWMB_SYNCDSI_MASK));
+ 113:Generated_Source\PSoC5/PWMB.c ****         PWMB_RT1 |= PWMB_SYNCDSI_EN;
+ 114:Generated_Source\PSoC5/PWMB.c **** 
+ 115:Generated_Source\PSoC5/PWMB.c ****     #elif (PWMB_UseControl)
+ 116:Generated_Source\PSoC5/PWMB.c ****         /* Set the default compare mode defined in the parameter */
+ 117:Generated_Source\PSoC5/PWMB.c ****         ctrl = PWMB_CONTROL & ((uint8)(~PWMB_CTRL_CMPMODE2_MASK)) &
+ 118:Generated_Source\PSoC5/PWMB.c ****                 ((uint8)(~PWMB_CTRL_CMPMODE1_MASK));
+ 119:Generated_Source\PSoC5/PWMB.c ****         PWMB_CONTROL = ctrl | PWMB_DEFAULT_COMPARE2_MODE |
+ 120:Generated_Source\PSoC5/PWMB.c ****                                    PWMB_DEFAULT_COMPARE1_MODE;
+ 121:Generated_Source\PSoC5/PWMB.c ****     #endif /* (PWMB_UsingFixedFunction) */
+ 122:Generated_Source\PSoC5/PWMB.c **** 
+ 123:Generated_Source\PSoC5/PWMB.c ****     #if (!PWMB_UsingFixedFunction)
+ 124:Generated_Source\PSoC5/PWMB.c ****         #if (PWMB_Resolution == 8)
+ 125:Generated_Source\PSoC5/PWMB.c ****             /* Set FIFO 0 to 1 byte register for period*/
+ 126:Generated_Source\PSoC5/PWMB.c ****             PWMB_AUX_CONTROLDP0 |= (PWMB_AUX_CTRL_FIFO0_CLR);
+ 127:Generated_Source\PSoC5/PWMB.c ****         #else /* (PWMB_Resolution == 16)*/
+ 128:Generated_Source\PSoC5/PWMB.c ****             /* Set FIFO 0 to 1 byte register for period */
+ 129:Generated_Source\PSoC5/PWMB.c ****             PWMB_AUX_CONTROLDP0 |= (PWMB_AUX_CTRL_FIFO0_CLR);
+ 130:Generated_Source\PSoC5/PWMB.c ****             PWMB_AUX_CONTROLDP1 |= (PWMB_AUX_CTRL_FIFO0_CLR);
+ 131:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_Resolution == 8) */
+ 132:Generated_Source\PSoC5/PWMB.c **** 
+ 133:Generated_Source\PSoC5/PWMB.c ****         PWMB_WriteCounter(PWMB_INIT_PERIOD_VALUE);
+ 134:Generated_Source\PSoC5/PWMB.c ****     #endif /* (!PWMB_UsingFixedFunction) */
+ 135:Generated_Source\PSoC5/PWMB.c **** 
+ 136:Generated_Source\PSoC5/PWMB.c ****     PWMB_WritePeriod(PWMB_INIT_PERIOD_VALUE);
+ 137:Generated_Source\PSoC5/PWMB.c **** 
+ 138:Generated_Source\PSoC5/PWMB.c ****         #if (PWMB_UseOneCompareMode)
+ 139:Generated_Source\PSoC5/PWMB.c ****             PWMB_WriteCompare(PWMB_INIT_COMPARE_VALUE1);
+ 140:Generated_Source\PSoC5/PWMB.c ****         #else
+ 141:Generated_Source\PSoC5/PWMB.c ****             PWMB_WriteCompare1(PWMB_INIT_COMPARE_VALUE1);
+ 142:Generated_Source\PSoC5/PWMB.c ****             PWMB_WriteCompare2(PWMB_INIT_COMPARE_VALUE2);
+ 143:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_UseOneCompareMode) */
+ 144:Generated_Source\PSoC5/PWMB.c **** 
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 4
+
+
+ 145:Generated_Source\PSoC5/PWMB.c ****         #if (PWMB_KillModeMinTime)
+ 146:Generated_Source\PSoC5/PWMB.c ****             PWMB_WriteKillTime(PWMB_MinimumKillTime);
+ 147:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_KillModeMinTime) */
+ 148:Generated_Source\PSoC5/PWMB.c **** 
+ 149:Generated_Source\PSoC5/PWMB.c ****         #if (PWMB_DeadBandUsed)
+ 150:Generated_Source\PSoC5/PWMB.c ****             PWMB_WriteDeadTime(PWMB_INIT_DEAD_TIME);
+ 151:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_DeadBandUsed) */
+ 152:Generated_Source\PSoC5/PWMB.c **** 
+ 153:Generated_Source\PSoC5/PWMB.c ****     #if (PWMB_UseStatus || PWMB_UsingFixedFunction)
+ 154:Generated_Source\PSoC5/PWMB.c ****         PWMB_SetInterruptMode(PWMB_INIT_INTERRUPTS_MODE);
+ 155:Generated_Source\PSoC5/PWMB.c ****     #endif /* (PWMB_UseStatus || PWMB_UsingFixedFunction) */
+ 156:Generated_Source\PSoC5/PWMB.c **** 
+ 157:Generated_Source\PSoC5/PWMB.c ****     #if (PWMB_UsingFixedFunction)
+ 158:Generated_Source\PSoC5/PWMB.c ****         /* Globally Enable the Fixed Function Block chosen */
+ 159:Generated_Source\PSoC5/PWMB.c ****         PWMB_GLOBAL_ENABLE |= PWMB_BLOCK_EN_MASK;
+ 160:Generated_Source\PSoC5/PWMB.c ****         /* Set the Interrupt source to come from the status register */
+ 161:Generated_Source\PSoC5/PWMB.c ****         PWMB_CONTROL2 |= PWMB_CTRL2_IRQ_SEL;
+ 162:Generated_Source\PSoC5/PWMB.c ****     #else
+ 163:Generated_Source\PSoC5/PWMB.c ****         #if(PWMB_UseStatus)
+ 164:Generated_Source\PSoC5/PWMB.c **** 
+ 165:Generated_Source\PSoC5/PWMB.c ****             /* CyEnterCriticalRegion and CyExitCriticalRegion are used to mark following region cri
+ 166:Generated_Source\PSoC5/PWMB.c ****             /* Enter Critical Region*/
+ 167:Generated_Source\PSoC5/PWMB.c ****             PWMB_interruptState = CyEnterCriticalSection();
+ 168:Generated_Source\PSoC5/PWMB.c ****             /* Use the interrupt output of the status register for IRQ output */
+ 169:Generated_Source\PSoC5/PWMB.c ****             PWMB_STATUS_AUX_CTRL |= PWMB_STATUS_ACTL_INT_EN_MASK;
+ 170:Generated_Source\PSoC5/PWMB.c **** 
+ 171:Generated_Source\PSoC5/PWMB.c ****              /* Exit Critical Region*/
+ 172:Generated_Source\PSoC5/PWMB.c ****             CyExitCriticalSection(PWMB_interruptState);
+ 173:Generated_Source\PSoC5/PWMB.c **** 
+ 174:Generated_Source\PSoC5/PWMB.c ****             /* Clear the FIFO to enable the PWMB_STATUS_FIFOFULL
+ 175:Generated_Source\PSoC5/PWMB.c ****                    bit to be set on FIFO full. */
+ 176:Generated_Source\PSoC5/PWMB.c ****             PWMB_ClearFIFO();
+ 177:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_UseStatus) */
+ 178:Generated_Source\PSoC5/PWMB.c ****     #endif /* (PWMB_UsingFixedFunction) */
+ 179:Generated_Source\PSoC5/PWMB.c **** }
+ 180:Generated_Source\PSoC5/PWMB.c **** 
+ 181:Generated_Source\PSoC5/PWMB.c **** 
+ 182:Generated_Source\PSoC5/PWMB.c **** /*******************************************************************************
+ 183:Generated_Source\PSoC5/PWMB.c **** * Function Name: PWMB_Enable
+ 184:Generated_Source\PSoC5/PWMB.c **** ********************************************************************************
+ 185:Generated_Source\PSoC5/PWMB.c **** *
+ 186:Generated_Source\PSoC5/PWMB.c **** * Summary:
+ 187:Generated_Source\PSoC5/PWMB.c **** *  Enables the PWM block operation
+ 188:Generated_Source\PSoC5/PWMB.c **** *
+ 189:Generated_Source\PSoC5/PWMB.c **** * Parameters:
+ 190:Generated_Source\PSoC5/PWMB.c **** *  None
+ 191:Generated_Source\PSoC5/PWMB.c **** *
+ 192:Generated_Source\PSoC5/PWMB.c **** * Return:
+ 193:Generated_Source\PSoC5/PWMB.c **** *  None
+ 194:Generated_Source\PSoC5/PWMB.c **** *
+ 195:Generated_Source\PSoC5/PWMB.c **** * Side Effects:
+ 196:Generated_Source\PSoC5/PWMB.c **** *  This works only if software enable mode is chosen
+ 197:Generated_Source\PSoC5/PWMB.c **** *
+ 198:Generated_Source\PSoC5/PWMB.c **** *******************************************************************************/
+ 199:Generated_Source\PSoC5/PWMB.c **** void PWMB_Enable(void) 
+ 200:Generated_Source\PSoC5/PWMB.c **** {
+  28              		.loc 1 200 0
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 5
+
+
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+ 201:Generated_Source\PSoC5/PWMB.c ****     /* Globally Enable the Fixed Function Block chosen */
+ 202:Generated_Source\PSoC5/PWMB.c ****     #if (PWMB_UsingFixedFunction)
+ 203:Generated_Source\PSoC5/PWMB.c ****         PWMB_GLOBAL_ENABLE |= PWMB_BLOCK_EN_MASK;
+ 204:Generated_Source\PSoC5/PWMB.c ****         PWMB_GLOBAL_STBY_ENABLE |= PWMB_BLOCK_STBY_EN_MASK;
+ 205:Generated_Source\PSoC5/PWMB.c ****     #endif /* (PWMB_UsingFixedFunction) */
+ 206:Generated_Source\PSoC5/PWMB.c **** 
+ 207:Generated_Source\PSoC5/PWMB.c ****     /* Enable the PWM from the control register  */
+ 208:Generated_Source\PSoC5/PWMB.c ****     #if (PWMB_UseControl || PWMB_UsingFixedFunction)
+ 209:Generated_Source\PSoC5/PWMB.c ****         PWMB_CONTROL |= PWMB_CTRL_ENABLE;
+  33              		.loc 1 209 0
+  34 0000 024A     		ldr	r2, .L2
+  35 0002 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  36 0004 43F08003 		orr	r3, r3, #128
+  37 0008 1370     		strb	r3, [r2]
+  38 000a 7047     		bx	lr
+  39              	.L3:
+  40              		.align	2
+  41              	.L2:
+  42 000c 73640040 		.word	1073767539
+  43              		.cfi_endproc
+  44              	.LFE2:
+  45              		.size	PWMB_Enable, .-PWMB_Enable
+  46              		.section	.text.PWMB_Stop,"ax",%progbits
+  47              		.align	2
+  48              		.global	PWMB_Stop
+  49              		.thumb
+  50              		.thumb_func
+  51              		.type	PWMB_Stop, %function
+  52              	PWMB_Stop:
+  53              	.LFB3:
+ 210:Generated_Source\PSoC5/PWMB.c ****     #endif /* (PWMB_UseControl || PWMB_UsingFixedFunction) */
+ 211:Generated_Source\PSoC5/PWMB.c **** }
+ 212:Generated_Source\PSoC5/PWMB.c **** 
+ 213:Generated_Source\PSoC5/PWMB.c **** 
+ 214:Generated_Source\PSoC5/PWMB.c **** /*******************************************************************************
+ 215:Generated_Source\PSoC5/PWMB.c **** * Function Name: PWMB_Stop
+ 216:Generated_Source\PSoC5/PWMB.c **** ********************************************************************************
+ 217:Generated_Source\PSoC5/PWMB.c **** *
+ 218:Generated_Source\PSoC5/PWMB.c **** * Summary:
+ 219:Generated_Source\PSoC5/PWMB.c **** *  The stop function halts the PWM, but does not change any modes or disable
+ 220:Generated_Source\PSoC5/PWMB.c **** *  interrupts.
+ 221:Generated_Source\PSoC5/PWMB.c **** *
+ 222:Generated_Source\PSoC5/PWMB.c **** * Parameters:
+ 223:Generated_Source\PSoC5/PWMB.c **** *  None
+ 224:Generated_Source\PSoC5/PWMB.c **** *
+ 225:Generated_Source\PSoC5/PWMB.c **** * Return:
+ 226:Generated_Source\PSoC5/PWMB.c **** *  None
+ 227:Generated_Source\PSoC5/PWMB.c **** *
+ 228:Generated_Source\PSoC5/PWMB.c **** * Side Effects:
+ 229:Generated_Source\PSoC5/PWMB.c **** *  If the Enable mode is set to Hardware only then this function
+ 230:Generated_Source\PSoC5/PWMB.c **** *  has no effect on the operation of the PWM
+ 231:Generated_Source\PSoC5/PWMB.c **** *
+ 232:Generated_Source\PSoC5/PWMB.c **** *******************************************************************************/
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 6
+
+
+ 233:Generated_Source\PSoC5/PWMB.c **** void PWMB_Stop(void) 
+ 234:Generated_Source\PSoC5/PWMB.c **** {
+  54              		.loc 1 234 0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 0
+  57              		@ frame_needed = 0, uses_anonymous_args = 0
+  58              		@ link register save eliminated.
+ 235:Generated_Source\PSoC5/PWMB.c ****     #if (PWMB_UseControl || PWMB_UsingFixedFunction)
+ 236:Generated_Source\PSoC5/PWMB.c ****         PWMB_CONTROL &= ((uint8)(~PWMB_CTRL_ENABLE));
+  59              		.loc 1 236 0
+  60 0000 024A     		ldr	r2, .L5
+  61 0002 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  62 0004 03F07F03 		and	r3, r3, #127
+  63 0008 1370     		strb	r3, [r2]
+  64 000a 7047     		bx	lr
+  65              	.L6:
+  66              		.align	2
+  67              	.L5:
+  68 000c 73640040 		.word	1073767539
+  69              		.cfi_endproc
+  70              	.LFE3:
+  71              		.size	PWMB_Stop, .-PWMB_Stop
+  72              		.section	.text.PWMB_WriteCounter,"ax",%progbits
+  73              		.align	2
+  74              		.global	PWMB_WriteCounter
+  75              		.thumb
+  76              		.thumb_func
+  77              		.type	PWMB_WriteCounter, %function
+  78              	PWMB_WriteCounter:
+  79              	.LFB4:
+ 237:Generated_Source\PSoC5/PWMB.c ****     #endif /* (PWMB_UseControl || PWMB_UsingFixedFunction) */
+ 238:Generated_Source\PSoC5/PWMB.c **** 
+ 239:Generated_Source\PSoC5/PWMB.c ****     /* Globally disable the Fixed Function Block chosen */
+ 240:Generated_Source\PSoC5/PWMB.c ****     #if (PWMB_UsingFixedFunction)
+ 241:Generated_Source\PSoC5/PWMB.c ****         PWMB_GLOBAL_ENABLE &= ((uint8)(~PWMB_BLOCK_EN_MASK));
+ 242:Generated_Source\PSoC5/PWMB.c ****         PWMB_GLOBAL_STBY_ENABLE &= ((uint8)(~PWMB_BLOCK_STBY_EN_MASK));
+ 243:Generated_Source\PSoC5/PWMB.c ****     #endif /* (PWMB_UsingFixedFunction) */
+ 244:Generated_Source\PSoC5/PWMB.c **** }
+ 245:Generated_Source\PSoC5/PWMB.c **** 
+ 246:Generated_Source\PSoC5/PWMB.c **** #if (PWMB_UseOneCompareMode)
+ 247:Generated_Source\PSoC5/PWMB.c ****     #if (PWMB_CompareMode1SW)
+ 248:Generated_Source\PSoC5/PWMB.c **** 
+ 249:Generated_Source\PSoC5/PWMB.c **** 
+ 250:Generated_Source\PSoC5/PWMB.c ****         /*******************************************************************************
+ 251:Generated_Source\PSoC5/PWMB.c ****         * Function Name: PWMB_SetCompareMode
+ 252:Generated_Source\PSoC5/PWMB.c ****         ********************************************************************************
+ 253:Generated_Source\PSoC5/PWMB.c ****         *
+ 254:Generated_Source\PSoC5/PWMB.c ****         * Summary:
+ 255:Generated_Source\PSoC5/PWMB.c ****         *  This function writes the Compare Mode for the pwm output when in Dither mode,
+ 256:Generated_Source\PSoC5/PWMB.c ****         *  Center Align Mode or One Output Mode.
+ 257:Generated_Source\PSoC5/PWMB.c ****         *
+ 258:Generated_Source\PSoC5/PWMB.c ****         * Parameters:
+ 259:Generated_Source\PSoC5/PWMB.c ****         *  comparemode:  The new compare mode for the PWM output. Use the compare types
+ 260:Generated_Source\PSoC5/PWMB.c ****         *                defined in the H file as input arguments.
+ 261:Generated_Source\PSoC5/PWMB.c ****         *
+ 262:Generated_Source\PSoC5/PWMB.c ****         * Return:
+ 263:Generated_Source\PSoC5/PWMB.c ****         *  None
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 7
+
+
+ 264:Generated_Source\PSoC5/PWMB.c ****         *
+ 265:Generated_Source\PSoC5/PWMB.c ****         *******************************************************************************/
+ 266:Generated_Source\PSoC5/PWMB.c ****         void PWMB_SetCompareMode(uint8 comparemode) 
+ 267:Generated_Source\PSoC5/PWMB.c ****         {
+ 268:Generated_Source\PSoC5/PWMB.c ****             #if(PWMB_UsingFixedFunction)
+ 269:Generated_Source\PSoC5/PWMB.c **** 
+ 270:Generated_Source\PSoC5/PWMB.c ****                 #if(0 != PWMB_CTRL_CMPMODE1_SHIFT)
+ 271:Generated_Source\PSoC5/PWMB.c ****                     uint8 comparemodemasked = ((uint8)((uint8)comparemode << PWMB_CTRL_CMPMODE1_SHI
+ 272:Generated_Source\PSoC5/PWMB.c ****                 #else
+ 273:Generated_Source\PSoC5/PWMB.c ****                     uint8 comparemodemasked = comparemode;
+ 274:Generated_Source\PSoC5/PWMB.c ****                 #endif /* (0 != PWMB_CTRL_CMPMODE1_SHIFT) */
+ 275:Generated_Source\PSoC5/PWMB.c **** 
+ 276:Generated_Source\PSoC5/PWMB.c ****                 PWMB_CONTROL3 &= ((uint8)(~PWMB_CTRL_CMPMODE1_MASK)); /*Clear Existing Data */
+ 277:Generated_Source\PSoC5/PWMB.c ****                 PWMB_CONTROL3 |= comparemodemasked;
+ 278:Generated_Source\PSoC5/PWMB.c **** 
+ 279:Generated_Source\PSoC5/PWMB.c ****             #elif (PWMB_UseControl)
+ 280:Generated_Source\PSoC5/PWMB.c **** 
+ 281:Generated_Source\PSoC5/PWMB.c ****                 #if(0 != PWMB_CTRL_CMPMODE1_SHIFT)
+ 282:Generated_Source\PSoC5/PWMB.c ****                     uint8 comparemode1masked = ((uint8)((uint8)comparemode << PWMB_CTRL_CMPMODE1_SH
+ 283:Generated_Source\PSoC5/PWMB.c ****                                                 PWMB_CTRL_CMPMODE1_MASK;
+ 284:Generated_Source\PSoC5/PWMB.c ****                 #else
+ 285:Generated_Source\PSoC5/PWMB.c ****                     uint8 comparemode1masked = comparemode & PWMB_CTRL_CMPMODE1_MASK;
+ 286:Generated_Source\PSoC5/PWMB.c ****                 #endif /* (0 != PWMB_CTRL_CMPMODE1_SHIFT) */
+ 287:Generated_Source\PSoC5/PWMB.c **** 
+ 288:Generated_Source\PSoC5/PWMB.c ****                 #if(0 != PWMB_CTRL_CMPMODE2_SHIFT)
+ 289:Generated_Source\PSoC5/PWMB.c ****                     uint8 comparemode2masked = ((uint8)((uint8)comparemode << PWMB_CTRL_CMPMODE2_SH
+ 290:Generated_Source\PSoC5/PWMB.c ****                                                PWMB_CTRL_CMPMODE2_MASK;
+ 291:Generated_Source\PSoC5/PWMB.c ****                 #else
+ 292:Generated_Source\PSoC5/PWMB.c ****                     uint8 comparemode2masked = comparemode & PWMB_CTRL_CMPMODE2_MASK;
+ 293:Generated_Source\PSoC5/PWMB.c ****                 #endif /* (0 != PWMB_CTRL_CMPMODE2_SHIFT) */
+ 294:Generated_Source\PSoC5/PWMB.c **** 
+ 295:Generated_Source\PSoC5/PWMB.c ****                 /*Clear existing mode */
+ 296:Generated_Source\PSoC5/PWMB.c ****                 PWMB_CONTROL &= ((uint8)(~(PWMB_CTRL_CMPMODE1_MASK |
+ 297:Generated_Source\PSoC5/PWMB.c ****                                             PWMB_CTRL_CMPMODE2_MASK)));
+ 298:Generated_Source\PSoC5/PWMB.c ****                 PWMB_CONTROL |= (comparemode1masked | comparemode2masked);
+ 299:Generated_Source\PSoC5/PWMB.c **** 
+ 300:Generated_Source\PSoC5/PWMB.c ****             #else
+ 301:Generated_Source\PSoC5/PWMB.c ****                 uint8 temp = comparemode;
+ 302:Generated_Source\PSoC5/PWMB.c ****             #endif /* (PWMB_UsingFixedFunction) */
+ 303:Generated_Source\PSoC5/PWMB.c ****         }
+ 304:Generated_Source\PSoC5/PWMB.c ****     #endif /* PWMB_CompareMode1SW */
+ 305:Generated_Source\PSoC5/PWMB.c **** 
+ 306:Generated_Source\PSoC5/PWMB.c **** #else /* UseOneCompareMode */
+ 307:Generated_Source\PSoC5/PWMB.c **** 
+ 308:Generated_Source\PSoC5/PWMB.c ****     #if (PWMB_CompareMode1SW)
+ 309:Generated_Source\PSoC5/PWMB.c **** 
+ 310:Generated_Source\PSoC5/PWMB.c **** 
+ 311:Generated_Source\PSoC5/PWMB.c ****         /*******************************************************************************
+ 312:Generated_Source\PSoC5/PWMB.c ****         * Function Name: PWMB_SetCompareMode1
+ 313:Generated_Source\PSoC5/PWMB.c ****         ********************************************************************************
+ 314:Generated_Source\PSoC5/PWMB.c ****         *
+ 315:Generated_Source\PSoC5/PWMB.c ****         * Summary:
+ 316:Generated_Source\PSoC5/PWMB.c ****         *  This function writes the Compare Mode for the pwm or pwm1 output
+ 317:Generated_Source\PSoC5/PWMB.c ****         *
+ 318:Generated_Source\PSoC5/PWMB.c ****         * Parameters:
+ 319:Generated_Source\PSoC5/PWMB.c ****         *  comparemode:  The new compare mode for the PWM output. Use the compare types
+ 320:Generated_Source\PSoC5/PWMB.c ****         *                defined in the H file as input arguments.
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 8
+
+
+ 321:Generated_Source\PSoC5/PWMB.c ****         *
+ 322:Generated_Source\PSoC5/PWMB.c ****         * Return:
+ 323:Generated_Source\PSoC5/PWMB.c ****         *  None
+ 324:Generated_Source\PSoC5/PWMB.c ****         *
+ 325:Generated_Source\PSoC5/PWMB.c ****         *******************************************************************************/
+ 326:Generated_Source\PSoC5/PWMB.c ****         void PWMB_SetCompareMode1(uint8 comparemode) 
+ 327:Generated_Source\PSoC5/PWMB.c ****         {
+ 328:Generated_Source\PSoC5/PWMB.c ****             #if(0 != PWMB_CTRL_CMPMODE1_SHIFT)
+ 329:Generated_Source\PSoC5/PWMB.c ****                 uint8 comparemodemasked = ((uint8)((uint8)comparemode << PWMB_CTRL_CMPMODE1_SHIFT))
+ 330:Generated_Source\PSoC5/PWMB.c ****                                            PWMB_CTRL_CMPMODE1_MASK;
+ 331:Generated_Source\PSoC5/PWMB.c ****             #else
+ 332:Generated_Source\PSoC5/PWMB.c ****                 uint8 comparemodemasked = comparemode & PWMB_CTRL_CMPMODE1_MASK;
+ 333:Generated_Source\PSoC5/PWMB.c ****             #endif /* (0 != PWMB_CTRL_CMPMODE1_SHIFT) */
+ 334:Generated_Source\PSoC5/PWMB.c **** 
+ 335:Generated_Source\PSoC5/PWMB.c ****             #if (PWMB_UseControl)
+ 336:Generated_Source\PSoC5/PWMB.c ****                 PWMB_CONTROL &= ((uint8)(~PWMB_CTRL_CMPMODE1_MASK)); /*Clear existing mode */
+ 337:Generated_Source\PSoC5/PWMB.c ****                 PWMB_CONTROL |= comparemodemasked;
+ 338:Generated_Source\PSoC5/PWMB.c ****             #endif /* (PWMB_UseControl) */
+ 339:Generated_Source\PSoC5/PWMB.c ****         }
+ 340:Generated_Source\PSoC5/PWMB.c ****     #endif /* PWMB_CompareMode1SW */
+ 341:Generated_Source\PSoC5/PWMB.c **** 
+ 342:Generated_Source\PSoC5/PWMB.c **** #if (PWMB_CompareMode2SW)
+ 343:Generated_Source\PSoC5/PWMB.c **** 
+ 344:Generated_Source\PSoC5/PWMB.c **** 
+ 345:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 346:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_SetCompareMode2
+ 347:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 348:Generated_Source\PSoC5/PWMB.c ****     *
+ 349:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 350:Generated_Source\PSoC5/PWMB.c ****     *  This function writes the Compare Mode for the pwm or pwm2 output
+ 351:Generated_Source\PSoC5/PWMB.c ****     *
+ 352:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 353:Generated_Source\PSoC5/PWMB.c ****     *  comparemode:  The new compare mode for the PWM output. Use the compare types
+ 354:Generated_Source\PSoC5/PWMB.c ****     *                defined in the H file as input arguments.
+ 355:Generated_Source\PSoC5/PWMB.c ****     *
+ 356:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 357:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 358:Generated_Source\PSoC5/PWMB.c ****     *
+ 359:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 360:Generated_Source\PSoC5/PWMB.c ****     void PWMB_SetCompareMode2(uint8 comparemode) 
+ 361:Generated_Source\PSoC5/PWMB.c ****     {
+ 362:Generated_Source\PSoC5/PWMB.c **** 
+ 363:Generated_Source\PSoC5/PWMB.c ****         #if(0 != PWMB_CTRL_CMPMODE2_SHIFT)
+ 364:Generated_Source\PSoC5/PWMB.c ****             uint8 comparemodemasked = ((uint8)((uint8)comparemode << PWMB_CTRL_CMPMODE2_SHIFT)) &
+ 365:Generated_Source\PSoC5/PWMB.c ****                                                  PWMB_CTRL_CMPMODE2_MASK;
+ 366:Generated_Source\PSoC5/PWMB.c ****         #else
+ 367:Generated_Source\PSoC5/PWMB.c ****             uint8 comparemodemasked = comparemode & PWMB_CTRL_CMPMODE2_MASK;
+ 368:Generated_Source\PSoC5/PWMB.c ****         #endif /* (0 != PWMB_CTRL_CMPMODE2_SHIFT) */
+ 369:Generated_Source\PSoC5/PWMB.c **** 
+ 370:Generated_Source\PSoC5/PWMB.c ****         #if (PWMB_UseControl)
+ 371:Generated_Source\PSoC5/PWMB.c ****             PWMB_CONTROL &= ((uint8)(~PWMB_CTRL_CMPMODE2_MASK)); /*Clear existing mode */
+ 372:Generated_Source\PSoC5/PWMB.c ****             PWMB_CONTROL |= comparemodemasked;
+ 373:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_UseControl) */
+ 374:Generated_Source\PSoC5/PWMB.c ****     }
+ 375:Generated_Source\PSoC5/PWMB.c ****     #endif /*PWMB_CompareMode2SW */
+ 376:Generated_Source\PSoC5/PWMB.c **** 
+ 377:Generated_Source\PSoC5/PWMB.c **** #endif /* UseOneCompareMode */
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 9
+
+
+ 378:Generated_Source\PSoC5/PWMB.c **** 
+ 379:Generated_Source\PSoC5/PWMB.c **** 
+ 380:Generated_Source\PSoC5/PWMB.c **** #if (!PWMB_UsingFixedFunction)
+ 381:Generated_Source\PSoC5/PWMB.c **** 
+ 382:Generated_Source\PSoC5/PWMB.c **** 
+ 383:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 384:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_WriteCounter
+ 385:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 386:Generated_Source\PSoC5/PWMB.c ****     *
+ 387:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 388:Generated_Source\PSoC5/PWMB.c ****     *  Writes a new counter value directly to the counter register. This will be
+ 389:Generated_Source\PSoC5/PWMB.c ****     *  implemented for that currently running period and only that period. This API
+ 390:Generated_Source\PSoC5/PWMB.c ****     *  is valid only for UDB implementation and not available for fixed function
+ 391:Generated_Source\PSoC5/PWMB.c ****     *  PWM implementation.
+ 392:Generated_Source\PSoC5/PWMB.c ****     *
+ 393:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 394:Generated_Source\PSoC5/PWMB.c ****     *  counter:  The period new period counter value.
+ 395:Generated_Source\PSoC5/PWMB.c ****     *
+ 396:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 397:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 398:Generated_Source\PSoC5/PWMB.c ****     *
+ 399:Generated_Source\PSoC5/PWMB.c ****     * Side Effects:
+ 400:Generated_Source\PSoC5/PWMB.c ****     *  The PWM Period will be reloaded when a counter value will be a zero
+ 401:Generated_Source\PSoC5/PWMB.c ****     *
+ 402:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 403:Generated_Source\PSoC5/PWMB.c ****     void PWMB_WriteCounter(uint16 counter) \
+ 404:Generated_Source\PSoC5/PWMB.c ****                                        
+ 405:Generated_Source\PSoC5/PWMB.c ****     {
+  80              		.loc 1 405 0
+  81              		.cfi_startproc
+  82              		@ args = 0, pretend = 0, frame = 0
+  83              		@ frame_needed = 0, uses_anonymous_args = 0
+  84              		@ link register save eliminated.
+  85              	.LVL0:
+ 406:Generated_Source\PSoC5/PWMB.c ****         CY_SET_REG16(PWMB_COUNTER_LSB_PTR, counter);
+  86              		.loc 1 406 0
+  87 0000 014B     		ldr	r3, .L8
+  88 0002 1880     		strh	r0, [r3]	@ movhi
+  89 0004 7047     		bx	lr
+  90              	.L9:
+  91 0006 00BF     		.align	2
+  92              	.L8:
+  93 0008 04680040 		.word	1073768452
+  94              		.cfi_endproc
+  95              	.LFE4:
+  96              		.size	PWMB_WriteCounter, .-PWMB_WriteCounter
+  97              		.section	.text.PWMB_ReadCounter,"ax",%progbits
+  98              		.align	2
+  99              		.global	PWMB_ReadCounter
+ 100              		.thumb
+ 101              		.thumb_func
+ 102              		.type	PWMB_ReadCounter, %function
+ 103              	PWMB_ReadCounter:
+ 104              	.LFB5:
+ 407:Generated_Source\PSoC5/PWMB.c ****     }
+ 408:Generated_Source\PSoC5/PWMB.c **** 
+ 409:Generated_Source\PSoC5/PWMB.c **** 
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 10
+
+
+ 410:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 411:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_ReadCounter
+ 412:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 413:Generated_Source\PSoC5/PWMB.c ****     *
+ 414:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 415:Generated_Source\PSoC5/PWMB.c ****     *  This function returns the current value of the counter.  It doesn't matter
+ 416:Generated_Source\PSoC5/PWMB.c ****     *  if the counter is enabled or running.
+ 417:Generated_Source\PSoC5/PWMB.c ****     *
+ 418:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 419:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 420:Generated_Source\PSoC5/PWMB.c ****     *
+ 421:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 422:Generated_Source\PSoC5/PWMB.c ****     *  The current value of the counter.
+ 423:Generated_Source\PSoC5/PWMB.c ****     *
+ 424:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 425:Generated_Source\PSoC5/PWMB.c ****     uint16 PWMB_ReadCounter(void) 
+ 426:Generated_Source\PSoC5/PWMB.c ****     {
+ 105              		.loc 1 426 0
+ 106              		.cfi_startproc
+ 107              		@ args = 0, pretend = 0, frame = 0
+ 108              		@ frame_needed = 0, uses_anonymous_args = 0
+ 109              		@ link register save eliminated.
+ 427:Generated_Source\PSoC5/PWMB.c ****         /* Force capture by reading Accumulator */
+ 428:Generated_Source\PSoC5/PWMB.c ****         /* Must first do a software capture to be able to read the counter */
+ 429:Generated_Source\PSoC5/PWMB.c ****         /* It is up to the user code to make sure there isn't already captured data in the FIFO */
+ 430:Generated_Source\PSoC5/PWMB.c ****           (void)CY_GET_REG8(PWMB_COUNTERCAP_LSB_PTR_8BIT);
+ 110              		.loc 1 430 0
+ 111 0000 024B     		ldr	r3, .L11
+ 112 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 431:Generated_Source\PSoC5/PWMB.c **** 
+ 432:Generated_Source\PSoC5/PWMB.c ****         /* Read the data from the FIFO */
+ 433:Generated_Source\PSoC5/PWMB.c ****         return (CY_GET_REG16(PWMB_CAPTURE_LSB_PTR));
+ 113              		.loc 1 433 0
+ 114 0004 024B     		ldr	r3, .L11+4
+ 115 0006 1888     		ldrh	r0, [r3]
+ 434:Generated_Source\PSoC5/PWMB.c ****     }
+ 116              		.loc 1 434 0
+ 117 0008 80B2     		uxth	r0, r0
+ 118 000a 7047     		bx	lr
+ 119              	.L12:
+ 120              		.align	2
+ 121              	.L11:
+ 122 000c 12640040 		.word	1073767442
+ 123 0010 A4680040 		.word	1073768612
+ 124              		.cfi_endproc
+ 125              	.LFE5:
+ 126              		.size	PWMB_ReadCounter, .-PWMB_ReadCounter
+ 127              		.section	.text.PWMB_WritePeriod,"ax",%progbits
+ 128              		.align	2
+ 129              		.global	PWMB_WritePeriod
+ 130              		.thumb
+ 131              		.thumb_func
+ 132              		.type	PWMB_WritePeriod, %function
+ 133              	PWMB_WritePeriod:
+ 134              	.LFB7:
+ 435:Generated_Source\PSoC5/PWMB.c **** 
+ 436:Generated_Source\PSoC5/PWMB.c ****     #if (PWMB_UseStatus)
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 11
+
+
+ 437:Generated_Source\PSoC5/PWMB.c **** 
+ 438:Generated_Source\PSoC5/PWMB.c **** 
+ 439:Generated_Source\PSoC5/PWMB.c ****         /*******************************************************************************
+ 440:Generated_Source\PSoC5/PWMB.c ****         * Function Name: PWMB_ClearFIFO
+ 441:Generated_Source\PSoC5/PWMB.c ****         ********************************************************************************
+ 442:Generated_Source\PSoC5/PWMB.c ****         *
+ 443:Generated_Source\PSoC5/PWMB.c ****         * Summary:
+ 444:Generated_Source\PSoC5/PWMB.c ****         *  This function clears all capture data from the capture FIFO
+ 445:Generated_Source\PSoC5/PWMB.c ****         *
+ 446:Generated_Source\PSoC5/PWMB.c ****         * Parameters:
+ 447:Generated_Source\PSoC5/PWMB.c ****         *  None
+ 448:Generated_Source\PSoC5/PWMB.c ****         *
+ 449:Generated_Source\PSoC5/PWMB.c ****         * Return:
+ 450:Generated_Source\PSoC5/PWMB.c ****         *  None
+ 451:Generated_Source\PSoC5/PWMB.c ****         *
+ 452:Generated_Source\PSoC5/PWMB.c ****         *******************************************************************************/
+ 453:Generated_Source\PSoC5/PWMB.c ****         void PWMB_ClearFIFO(void) 
+ 454:Generated_Source\PSoC5/PWMB.c ****         {
+ 455:Generated_Source\PSoC5/PWMB.c ****             while(0u != (PWMB_ReadStatusRegister() & PWMB_STATUS_FIFONEMPTY))
+ 456:Generated_Source\PSoC5/PWMB.c ****             {
+ 457:Generated_Source\PSoC5/PWMB.c ****                 (void)PWMB_ReadCapture();
+ 458:Generated_Source\PSoC5/PWMB.c ****             }
+ 459:Generated_Source\PSoC5/PWMB.c ****         }
+ 460:Generated_Source\PSoC5/PWMB.c **** 
+ 461:Generated_Source\PSoC5/PWMB.c ****     #endif /* PWMB_UseStatus */
+ 462:Generated_Source\PSoC5/PWMB.c **** 
+ 463:Generated_Source\PSoC5/PWMB.c **** #endif /* !PWMB_UsingFixedFunction */
+ 464:Generated_Source\PSoC5/PWMB.c **** 
+ 465:Generated_Source\PSoC5/PWMB.c **** 
+ 466:Generated_Source\PSoC5/PWMB.c **** /*******************************************************************************
+ 467:Generated_Source\PSoC5/PWMB.c **** * Function Name: PWMB_WritePeriod
+ 468:Generated_Source\PSoC5/PWMB.c **** ********************************************************************************
+ 469:Generated_Source\PSoC5/PWMB.c **** *
+ 470:Generated_Source\PSoC5/PWMB.c **** * Summary:
+ 471:Generated_Source\PSoC5/PWMB.c **** *  This function is used to change the period of the counter.  The new period
+ 472:Generated_Source\PSoC5/PWMB.c **** *  will be loaded the next time terminal count is detected.
+ 473:Generated_Source\PSoC5/PWMB.c **** *
+ 474:Generated_Source\PSoC5/PWMB.c **** * Parameters:
+ 475:Generated_Source\PSoC5/PWMB.c **** *  period:  Period value. May be between 1 and (2^Resolution)-1.  A value of 0
+ 476:Generated_Source\PSoC5/PWMB.c **** *           will result in the counter remaining at zero.
+ 477:Generated_Source\PSoC5/PWMB.c **** *
+ 478:Generated_Source\PSoC5/PWMB.c **** * Return:
+ 479:Generated_Source\PSoC5/PWMB.c **** *  None
+ 480:Generated_Source\PSoC5/PWMB.c **** *
+ 481:Generated_Source\PSoC5/PWMB.c **** *******************************************************************************/
+ 482:Generated_Source\PSoC5/PWMB.c **** void PWMB_WritePeriod(uint16 period) 
+ 483:Generated_Source\PSoC5/PWMB.c **** {
+ 135              		.loc 1 483 0
+ 136              		.cfi_startproc
+ 137              		@ args = 0, pretend = 0, frame = 0
+ 138              		@ frame_needed = 0, uses_anonymous_args = 0
+ 139              		@ link register save eliminated.
+ 140              	.LVL1:
+ 484:Generated_Source\PSoC5/PWMB.c ****     #if(PWMB_UsingFixedFunction)
+ 485:Generated_Source\PSoC5/PWMB.c ****         CY_SET_REG16(PWMB_PERIOD_LSB_PTR, (uint16)period);
+ 486:Generated_Source\PSoC5/PWMB.c ****     #else
+ 487:Generated_Source\PSoC5/PWMB.c ****         CY_SET_REG16(PWMB_PERIOD_LSB_PTR, period);
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 12
+
+
+ 141              		.loc 1 487 0
+ 142 0000 014B     		ldr	r3, .L14
+ 143 0002 1880     		strh	r0, [r3]	@ movhi
+ 144 0004 7047     		bx	lr
+ 145              	.L15:
+ 146 0006 00BF     		.align	2
+ 147              	.L14:
+ 148 0008 84680040 		.word	1073768580
+ 149              		.cfi_endproc
+ 150              	.LFE7:
+ 151              		.size	PWMB_WritePeriod, .-PWMB_WritePeriod
+ 152              		.section	.text.PWMB_WriteCompare1,"ax",%progbits
+ 153              		.align	2
+ 154              		.global	PWMB_WriteCompare1
+ 155              		.thumb
+ 156              		.thumb_func
+ 157              		.type	PWMB_WriteCompare1, %function
+ 158              	PWMB_WriteCompare1:
+ 159              	.LFB8:
+ 488:Generated_Source\PSoC5/PWMB.c ****     #endif /* (PWMB_UsingFixedFunction) */
+ 489:Generated_Source\PSoC5/PWMB.c **** }
+ 490:Generated_Source\PSoC5/PWMB.c **** 
+ 491:Generated_Source\PSoC5/PWMB.c **** #if (PWMB_UseOneCompareMode)
+ 492:Generated_Source\PSoC5/PWMB.c **** 
+ 493:Generated_Source\PSoC5/PWMB.c **** 
+ 494:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 495:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_WriteCompare
+ 496:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 497:Generated_Source\PSoC5/PWMB.c ****     *
+ 498:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 499:Generated_Source\PSoC5/PWMB.c ****     *  This funtion is used to change the compare1 value when the PWM is in Dither
+ 500:Generated_Source\PSoC5/PWMB.c ****     *  mode. The compare output will reflect the new value on the next UDB clock.
+ 501:Generated_Source\PSoC5/PWMB.c ****     *  The compare output will be driven high when the present counter value is
+ 502:Generated_Source\PSoC5/PWMB.c ****     *  compared to the compare value based on the compare mode defined in
+ 503:Generated_Source\PSoC5/PWMB.c ****     *  Dither Mode.
+ 504:Generated_Source\PSoC5/PWMB.c ****     *
+ 505:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 506:Generated_Source\PSoC5/PWMB.c ****     *  compare:  New compare value.
+ 507:Generated_Source\PSoC5/PWMB.c ****     *
+ 508:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 509:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 510:Generated_Source\PSoC5/PWMB.c ****     *
+ 511:Generated_Source\PSoC5/PWMB.c ****     * Side Effects:
+ 512:Generated_Source\PSoC5/PWMB.c ****     *  This function is only available if the PWM mode parameter is set to
+ 513:Generated_Source\PSoC5/PWMB.c ****     *  Dither Mode, Center Aligned Mode or One Output Mode
+ 514:Generated_Source\PSoC5/PWMB.c ****     *
+ 515:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 516:Generated_Source\PSoC5/PWMB.c ****     void PWMB_WriteCompare(uint16 compare) \
+ 517:Generated_Source\PSoC5/PWMB.c ****                                        
+ 518:Generated_Source\PSoC5/PWMB.c ****     {
+ 519:Generated_Source\PSoC5/PWMB.c ****         #if(PWMB_UsingFixedFunction)
+ 520:Generated_Source\PSoC5/PWMB.c ****             CY_SET_REG16(PWMB_COMPARE1_LSB_PTR, (uint16)compare);
+ 521:Generated_Source\PSoC5/PWMB.c ****         #else
+ 522:Generated_Source\PSoC5/PWMB.c ****             CY_SET_REG16(PWMB_COMPARE1_LSB_PTR, compare);
+ 523:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_UsingFixedFunction) */
+ 524:Generated_Source\PSoC5/PWMB.c **** 
+ 525:Generated_Source\PSoC5/PWMB.c ****         #if (PWMB_PWMMode == PWMB__B_PWM__DITHER)
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 13
+
+
+ 526:Generated_Source\PSoC5/PWMB.c ****             #if(PWMB_UsingFixedFunction)
+ 527:Generated_Source\PSoC5/PWMB.c ****                 CY_SET_REG16(PWMB_COMPARE2_LSB_PTR, (uint16)(compare + 1u));
+ 528:Generated_Source\PSoC5/PWMB.c ****             #else
+ 529:Generated_Source\PSoC5/PWMB.c ****                 CY_SET_REG16(PWMB_COMPARE2_LSB_PTR, (compare + 1u));
+ 530:Generated_Source\PSoC5/PWMB.c ****             #endif /* (PWMB_UsingFixedFunction) */
+ 531:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_PWMMode == PWMB__B_PWM__DITHER) */
+ 532:Generated_Source\PSoC5/PWMB.c ****     }
+ 533:Generated_Source\PSoC5/PWMB.c **** 
+ 534:Generated_Source\PSoC5/PWMB.c **** 
+ 535:Generated_Source\PSoC5/PWMB.c **** #else
+ 536:Generated_Source\PSoC5/PWMB.c **** 
+ 537:Generated_Source\PSoC5/PWMB.c **** 
+ 538:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 539:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_WriteCompare1
+ 540:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 541:Generated_Source\PSoC5/PWMB.c ****     *
+ 542:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 543:Generated_Source\PSoC5/PWMB.c ****     *  This funtion is used to change the compare1 value.  The compare output will
+ 544:Generated_Source\PSoC5/PWMB.c ****     *  reflect the new value on the next UDB clock.  The compare output will be
+ 545:Generated_Source\PSoC5/PWMB.c ****     *  driven high when the present counter value is less than or less than or
+ 546:Generated_Source\PSoC5/PWMB.c ****     *  equal to the compare register, depending on the mode.
+ 547:Generated_Source\PSoC5/PWMB.c ****     *
+ 548:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 549:Generated_Source\PSoC5/PWMB.c ****     *  compare:  New compare value.
+ 550:Generated_Source\PSoC5/PWMB.c ****     *
+ 551:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 552:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 553:Generated_Source\PSoC5/PWMB.c ****     *
+ 554:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 555:Generated_Source\PSoC5/PWMB.c ****     void PWMB_WriteCompare1(uint16 compare) \
+ 556:Generated_Source\PSoC5/PWMB.c ****                                         
+ 557:Generated_Source\PSoC5/PWMB.c ****     {
+ 160              		.loc 1 557 0
+ 161              		.cfi_startproc
+ 162              		@ args = 0, pretend = 0, frame = 0
+ 163              		@ frame_needed = 0, uses_anonymous_args = 0
+ 164              		@ link register save eliminated.
+ 165              	.LVL2:
+ 558:Generated_Source\PSoC5/PWMB.c ****         #if(PWMB_UsingFixedFunction)
+ 559:Generated_Source\PSoC5/PWMB.c ****             CY_SET_REG16(PWMB_COMPARE1_LSB_PTR, (uint16)compare);
+ 560:Generated_Source\PSoC5/PWMB.c ****         #else
+ 561:Generated_Source\PSoC5/PWMB.c ****             CY_SET_REG16(PWMB_COMPARE1_LSB_PTR, compare);
+ 166              		.loc 1 561 0
+ 167 0000 014B     		ldr	r3, .L17
+ 168 0002 1880     		strh	r0, [r3]	@ movhi
+ 169 0004 7047     		bx	lr
+ 170              	.L18:
+ 171 0006 00BF     		.align	2
+ 172              	.L17:
+ 173 0008 44680040 		.word	1073768516
+ 174              		.cfi_endproc
+ 175              	.LFE8:
+ 176              		.size	PWMB_WriteCompare1, .-PWMB_WriteCompare1
+ 177              		.section	.text.PWMB_WriteCompare2,"ax",%progbits
+ 178              		.align	2
+ 179              		.global	PWMB_WriteCompare2
+ 180              		.thumb
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 14
+
+
+ 181              		.thumb_func
+ 182              		.type	PWMB_WriteCompare2, %function
+ 183              	PWMB_WriteCompare2:
+ 184              	.LFB9:
+ 562:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_UsingFixedFunction) */
+ 563:Generated_Source\PSoC5/PWMB.c ****     }
+ 564:Generated_Source\PSoC5/PWMB.c **** 
+ 565:Generated_Source\PSoC5/PWMB.c **** 
+ 566:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 567:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_WriteCompare2
+ 568:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 569:Generated_Source\PSoC5/PWMB.c ****     *
+ 570:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 571:Generated_Source\PSoC5/PWMB.c ****     *  This funtion is used to change the compare value, for compare1 output.
+ 572:Generated_Source\PSoC5/PWMB.c ****     *  The compare output will reflect the new value on the next UDB clock.
+ 573:Generated_Source\PSoC5/PWMB.c ****     *  The compare output will be driven high when the present counter value is
+ 574:Generated_Source\PSoC5/PWMB.c ****     *  less than or less than or equal to the compare register, depending on the
+ 575:Generated_Source\PSoC5/PWMB.c ****     *  mode.
+ 576:Generated_Source\PSoC5/PWMB.c ****     *
+ 577:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 578:Generated_Source\PSoC5/PWMB.c ****     *  compare:  New compare value.
+ 579:Generated_Source\PSoC5/PWMB.c ****     *
+ 580:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 581:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 582:Generated_Source\PSoC5/PWMB.c ****     *
+ 583:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 584:Generated_Source\PSoC5/PWMB.c ****     void PWMB_WriteCompare2(uint16 compare) \
+ 585:Generated_Source\PSoC5/PWMB.c ****                                         
+ 586:Generated_Source\PSoC5/PWMB.c ****     {
+ 185              		.loc 1 586 0
+ 186              		.cfi_startproc
+ 187              		@ args = 0, pretend = 0, frame = 0
+ 188              		@ frame_needed = 0, uses_anonymous_args = 0
+ 189              		@ link register save eliminated.
+ 190              	.LVL3:
+ 587:Generated_Source\PSoC5/PWMB.c ****         #if(PWMB_UsingFixedFunction)
+ 588:Generated_Source\PSoC5/PWMB.c ****             CY_SET_REG16(PWMB_COMPARE2_LSB_PTR, compare);
+ 589:Generated_Source\PSoC5/PWMB.c ****         #else
+ 590:Generated_Source\PSoC5/PWMB.c ****             CY_SET_REG16(PWMB_COMPARE2_LSB_PTR, compare);
+ 191              		.loc 1 590 0
+ 192 0000 014B     		ldr	r3, .L20
+ 193 0002 1880     		strh	r0, [r3]	@ movhi
+ 194 0004 7047     		bx	lr
+ 195              	.L21:
+ 196 0006 00BF     		.align	2
+ 197              	.L20:
+ 198 0008 64680040 		.word	1073768548
+ 199              		.cfi_endproc
+ 200              	.LFE9:
+ 201              		.size	PWMB_WriteCompare2, .-PWMB_WriteCompare2
+ 202              		.section	.text.PWMB_WriteDeadTime,"ax",%progbits
+ 203              		.align	2
+ 204              		.global	PWMB_WriteDeadTime
+ 205              		.thumb
+ 206              		.thumb_func
+ 207              		.type	PWMB_WriteDeadTime, %function
+ 208              	PWMB_WriteDeadTime:
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 15
+
+
+ 209              	.LFB10:
+ 591:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_UsingFixedFunction) */
+ 592:Generated_Source\PSoC5/PWMB.c ****     }
+ 593:Generated_Source\PSoC5/PWMB.c **** #endif /* UseOneCompareMode */
+ 594:Generated_Source\PSoC5/PWMB.c **** 
+ 595:Generated_Source\PSoC5/PWMB.c **** #if (PWMB_DeadBandUsed)
+ 596:Generated_Source\PSoC5/PWMB.c **** 
+ 597:Generated_Source\PSoC5/PWMB.c **** 
+ 598:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 599:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_WriteDeadTime
+ 600:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 601:Generated_Source\PSoC5/PWMB.c ****     *
+ 602:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 603:Generated_Source\PSoC5/PWMB.c ****     *  This function writes the dead-band counts to the corresponding register
+ 604:Generated_Source\PSoC5/PWMB.c ****     *
+ 605:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 606:Generated_Source\PSoC5/PWMB.c ****     *  deadtime:  Number of counts for dead time
+ 607:Generated_Source\PSoC5/PWMB.c ****     *
+ 608:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 609:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 610:Generated_Source\PSoC5/PWMB.c ****     *
+ 611:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 612:Generated_Source\PSoC5/PWMB.c ****     void PWMB_WriteDeadTime(uint8 deadtime) 
+ 613:Generated_Source\PSoC5/PWMB.c ****     {
+ 210              		.loc 1 613 0
+ 211              		.cfi_startproc
+ 212              		@ args = 0, pretend = 0, frame = 0
+ 213              		@ frame_needed = 0, uses_anonymous_args = 0
+ 214              		@ link register save eliminated.
+ 215              	.LVL4:
+ 614:Generated_Source\PSoC5/PWMB.c ****         /* If using the Dead Band 1-255 mode then just write the register */
+ 615:Generated_Source\PSoC5/PWMB.c ****         #if(!PWMB_DeadBand2_4)
+ 616:Generated_Source\PSoC5/PWMB.c ****             CY_SET_REG8(PWMB_DEADBAND_COUNT_PTR, deadtime);
+ 617:Generated_Source\PSoC5/PWMB.c ****         #else
+ 618:Generated_Source\PSoC5/PWMB.c ****             /* Otherwise the data has to be masked and offset */
+ 619:Generated_Source\PSoC5/PWMB.c ****             /* Clear existing data */
+ 620:Generated_Source\PSoC5/PWMB.c ****             PWMB_DEADBAND_COUNT &= ((uint8)(~PWMB_DEADBAND_COUNT_MASK));
+ 216              		.loc 1 620 0
+ 217 0000 054B     		ldr	r3, .L23
+ 218 0002 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 219 0004 02F0FC02 		and	r2, r2, #252
+ 220 0008 1A70     		strb	r2, [r3]
+ 621:Generated_Source\PSoC5/PWMB.c **** 
+ 622:Generated_Source\PSoC5/PWMB.c ****             /* Set new dead time */
+ 623:Generated_Source\PSoC5/PWMB.c ****             #if(PWMB_DEADBAND_COUNT_SHIFT)
+ 624:Generated_Source\PSoC5/PWMB.c ****                 PWMB_DEADBAND_COUNT |= ((uint8)((uint8)deadtime << PWMB_DEADBAND_COUNT_SHIFT)) &
+ 625:Generated_Source\PSoC5/PWMB.c ****                                                     PWMB_DEADBAND_COUNT_MASK;
+ 626:Generated_Source\PSoC5/PWMB.c ****             #else
+ 627:Generated_Source\PSoC5/PWMB.c ****                 PWMB_DEADBAND_COUNT |= deadtime & PWMB_DEADBAND_COUNT_MASK;
+ 221              		.loc 1 627 0
+ 222 000a 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 223 000c 00F00300 		and	r0, r0, #3
+ 224              	.LVL5:
+ 225 0010 1043     		orrs	r0, r0, r2
+ 226 0012 1870     		strb	r0, [r3]
+ 227 0014 7047     		bx	lr
+ 228              	.L24:
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 16
+
+
+ 229 0016 00BF     		.align	2
+ 230              	.L23:
+ 231 0018 70640040 		.word	1073767536
+ 232              		.cfi_endproc
+ 233              	.LFE10:
+ 234              		.size	PWMB_WriteDeadTime, .-PWMB_WriteDeadTime
+ 235              		.section	.text.PWMB_ReadDeadTime,"ax",%progbits
+ 236              		.align	2
+ 237              		.global	PWMB_ReadDeadTime
+ 238              		.thumb
+ 239              		.thumb_func
+ 240              		.type	PWMB_ReadDeadTime, %function
+ 241              	PWMB_ReadDeadTime:
+ 242              	.LFB11:
+ 628:Generated_Source\PSoC5/PWMB.c ****             #endif /* (PWMB_DEADBAND_COUNT_SHIFT) */
+ 629:Generated_Source\PSoC5/PWMB.c **** 
+ 630:Generated_Source\PSoC5/PWMB.c ****         #endif /* (!PWMB_DeadBand2_4) */
+ 631:Generated_Source\PSoC5/PWMB.c ****     }
+ 632:Generated_Source\PSoC5/PWMB.c **** 
+ 633:Generated_Source\PSoC5/PWMB.c **** 
+ 634:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 635:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_ReadDeadTime
+ 636:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 637:Generated_Source\PSoC5/PWMB.c ****     *
+ 638:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 639:Generated_Source\PSoC5/PWMB.c ****     *  This function reads the dead-band counts from the corresponding register
+ 640:Generated_Source\PSoC5/PWMB.c ****     *
+ 641:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 642:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 643:Generated_Source\PSoC5/PWMB.c ****     *
+ 644:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 645:Generated_Source\PSoC5/PWMB.c ****     *  Dead Band Counts
+ 646:Generated_Source\PSoC5/PWMB.c ****     *
+ 647:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 648:Generated_Source\PSoC5/PWMB.c ****     uint8 PWMB_ReadDeadTime(void) 
+ 649:Generated_Source\PSoC5/PWMB.c ****     {
+ 243              		.loc 1 649 0
+ 244              		.cfi_startproc
+ 245              		@ args = 0, pretend = 0, frame = 0
+ 246              		@ frame_needed = 0, uses_anonymous_args = 0
+ 247              		@ link register save eliminated.
+ 650:Generated_Source\PSoC5/PWMB.c ****         /* If using the Dead Band 1-255 mode then just read the register */
+ 651:Generated_Source\PSoC5/PWMB.c ****         #if(!PWMB_DeadBand2_4)
+ 652:Generated_Source\PSoC5/PWMB.c ****             return (CY_GET_REG8(PWMB_DEADBAND_COUNT_PTR));
+ 653:Generated_Source\PSoC5/PWMB.c ****         #else
+ 654:Generated_Source\PSoC5/PWMB.c **** 
+ 655:Generated_Source\PSoC5/PWMB.c ****             /* Otherwise the data has to be masked and offset */
+ 656:Generated_Source\PSoC5/PWMB.c ****             #if(PWMB_DEADBAND_COUNT_SHIFT)
+ 657:Generated_Source\PSoC5/PWMB.c ****                 return ((uint8)(((uint8)(PWMB_DEADBAND_COUNT & PWMB_DEADBAND_COUNT_MASK)) >>
+ 658:Generated_Source\PSoC5/PWMB.c ****                                                                            PWMB_DEADBAND_COUNT_SHIF
+ 659:Generated_Source\PSoC5/PWMB.c ****             #else
+ 660:Generated_Source\PSoC5/PWMB.c ****                 return (PWMB_DEADBAND_COUNT & PWMB_DEADBAND_COUNT_MASK);
+ 248              		.loc 1 660 0
+ 249 0000 024B     		ldr	r3, .L26
+ 250 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 661:Generated_Source\PSoC5/PWMB.c ****             #endif /* (PWMB_DEADBAND_COUNT_SHIFT) */
+ 662:Generated_Source\PSoC5/PWMB.c ****         #endif /* (!PWMB_DeadBand2_4) */
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 17
+
+
+ 663:Generated_Source\PSoC5/PWMB.c ****     }
+ 251              		.loc 1 663 0
+ 252 0004 00F00300 		and	r0, r0, #3
+ 253 0008 7047     		bx	lr
+ 254              	.L27:
+ 255 000a 00BF     		.align	2
+ 256              	.L26:
+ 257 000c 70640040 		.word	1073767536
+ 258              		.cfi_endproc
+ 259              	.LFE11:
+ 260              		.size	PWMB_ReadDeadTime, .-PWMB_ReadDeadTime
+ 261              		.section	.text.PWMB_SetInterruptMode,"ax",%progbits
+ 262              		.align	2
+ 263              		.global	PWMB_SetInterruptMode
+ 264              		.thumb
+ 265              		.thumb_func
+ 266              		.type	PWMB_SetInterruptMode, %function
+ 267              	PWMB_SetInterruptMode:
+ 268              	.LFB12:
+ 664:Generated_Source\PSoC5/PWMB.c **** #endif /* DeadBandUsed */
+ 665:Generated_Source\PSoC5/PWMB.c **** 
+ 666:Generated_Source\PSoC5/PWMB.c **** #if (PWMB_UseStatus || PWMB_UsingFixedFunction)
+ 667:Generated_Source\PSoC5/PWMB.c **** 
+ 668:Generated_Source\PSoC5/PWMB.c **** 
+ 669:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 670:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_SetInterruptMode
+ 671:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 672:Generated_Source\PSoC5/PWMB.c ****     *
+ 673:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 674:Generated_Source\PSoC5/PWMB.c ****     *  This function configures the interrupts mask control of theinterrupt
+ 675:Generated_Source\PSoC5/PWMB.c ****     *  source status register.
+ 676:Generated_Source\PSoC5/PWMB.c ****     *
+ 677:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 678:Generated_Source\PSoC5/PWMB.c ****     *  uint8 interruptMode: Bit field containing the interrupt sources enabled
+ 679:Generated_Source\PSoC5/PWMB.c ****     *
+ 680:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 681:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 682:Generated_Source\PSoC5/PWMB.c ****     *
+ 683:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 684:Generated_Source\PSoC5/PWMB.c ****     void PWMB_SetInterruptMode(uint8 interruptMode) 
+ 685:Generated_Source\PSoC5/PWMB.c ****     {
+ 269              		.loc 1 685 0
+ 270              		.cfi_startproc
+ 271              		@ args = 0, pretend = 0, frame = 0
+ 272              		@ frame_needed = 0, uses_anonymous_args = 0
+ 273              		@ link register save eliminated.
+ 274              	.LVL6:
+ 686:Generated_Source\PSoC5/PWMB.c ****         CY_SET_REG8(PWMB_STATUS_MASK_PTR, interruptMode);
+ 275              		.loc 1 686 0
+ 276 0000 014B     		ldr	r3, .L29
+ 277 0002 1870     		strb	r0, [r3]
+ 278 0004 7047     		bx	lr
+ 279              	.L30:
+ 280 0006 00BF     		.align	2
+ 281              	.L29:
+ 282 0008 83640040 		.word	1073767555
+ 283              		.cfi_endproc
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 18
+
+
+ 284              	.LFE12:
+ 285              		.size	PWMB_SetInterruptMode, .-PWMB_SetInterruptMode
+ 286              		.section	.text.PWMB_ReadStatusRegister,"ax",%progbits
+ 287              		.align	2
+ 288              		.global	PWMB_ReadStatusRegister
+ 289              		.thumb
+ 290              		.thumb_func
+ 291              		.type	PWMB_ReadStatusRegister, %function
+ 292              	PWMB_ReadStatusRegister:
+ 293              	.LFB13:
+ 687:Generated_Source\PSoC5/PWMB.c ****     }
+ 688:Generated_Source\PSoC5/PWMB.c **** 
+ 689:Generated_Source\PSoC5/PWMB.c **** 
+ 690:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 691:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_ReadStatusRegister
+ 692:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 693:Generated_Source\PSoC5/PWMB.c ****     *
+ 694:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 695:Generated_Source\PSoC5/PWMB.c ****     *  This function returns the current state of the status register.
+ 696:Generated_Source\PSoC5/PWMB.c ****     *
+ 697:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 698:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 699:Generated_Source\PSoC5/PWMB.c ****     *
+ 700:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 701:Generated_Source\PSoC5/PWMB.c ****     *  uint8 : Current status register value. The status register bits are:
+ 702:Generated_Source\PSoC5/PWMB.c ****     *  [7:6] : Unused(0)
+ 703:Generated_Source\PSoC5/PWMB.c ****     *  [5]   : Kill event output
+ 704:Generated_Source\PSoC5/PWMB.c ****     *  [4]   : FIFO not empty
+ 705:Generated_Source\PSoC5/PWMB.c ****     *  [3]   : FIFO full
+ 706:Generated_Source\PSoC5/PWMB.c ****     *  [2]   : Terminal count
+ 707:Generated_Source\PSoC5/PWMB.c ****     *  [1]   : Compare output 2
+ 708:Generated_Source\PSoC5/PWMB.c ****     *  [0]   : Compare output 1
+ 709:Generated_Source\PSoC5/PWMB.c ****     *
+ 710:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 711:Generated_Source\PSoC5/PWMB.c ****     uint8 PWMB_ReadStatusRegister(void) 
+ 712:Generated_Source\PSoC5/PWMB.c ****     {
+ 294              		.loc 1 712 0
+ 295              		.cfi_startproc
+ 296              		@ args = 0, pretend = 0, frame = 0
+ 297              		@ frame_needed = 0, uses_anonymous_args = 0
+ 298              		@ link register save eliminated.
+ 713:Generated_Source\PSoC5/PWMB.c ****         return (CY_GET_REG8(PWMB_STATUS_PTR));
+ 299              		.loc 1 713 0
+ 300 0000 014B     		ldr	r3, .L32
+ 301 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 714:Generated_Source\PSoC5/PWMB.c ****     }
+ 302              		.loc 1 714 0
+ 303 0004 7047     		bx	lr
+ 304              	.L33:
+ 305 0006 00BF     		.align	2
+ 306              	.L32:
+ 307 0008 63640040 		.word	1073767523
+ 308              		.cfi_endproc
+ 309              	.LFE13:
+ 310              		.size	PWMB_ReadStatusRegister, .-PWMB_ReadStatusRegister
+ 311              		.section	.text.PWMB_ReadControlRegister,"ax",%progbits
+ 312              		.align	2
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 19
+
+
+ 313              		.global	PWMB_ReadControlRegister
+ 314              		.thumb
+ 315              		.thumb_func
+ 316              		.type	PWMB_ReadControlRegister, %function
+ 317              	PWMB_ReadControlRegister:
+ 318              	.LFB14:
+ 715:Generated_Source\PSoC5/PWMB.c **** 
+ 716:Generated_Source\PSoC5/PWMB.c **** #endif /* (PWMB_UseStatus || PWMB_UsingFixedFunction) */
+ 717:Generated_Source\PSoC5/PWMB.c **** 
+ 718:Generated_Source\PSoC5/PWMB.c **** 
+ 719:Generated_Source\PSoC5/PWMB.c **** #if (PWMB_UseControl)
+ 720:Generated_Source\PSoC5/PWMB.c **** 
+ 721:Generated_Source\PSoC5/PWMB.c **** 
+ 722:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 723:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_ReadControlRegister
+ 724:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 725:Generated_Source\PSoC5/PWMB.c ****     *
+ 726:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 727:Generated_Source\PSoC5/PWMB.c ****     *  Returns the current state of the control register. This API is available
+ 728:Generated_Source\PSoC5/PWMB.c ****     *  only if the control register is not removed.
+ 729:Generated_Source\PSoC5/PWMB.c ****     *
+ 730:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 731:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 732:Generated_Source\PSoC5/PWMB.c ****     *
+ 733:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 734:Generated_Source\PSoC5/PWMB.c ****     *  uint8 : Current control register value
+ 735:Generated_Source\PSoC5/PWMB.c ****     *
+ 736:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 737:Generated_Source\PSoC5/PWMB.c ****     uint8 PWMB_ReadControlRegister(void) 
+ 738:Generated_Source\PSoC5/PWMB.c ****     {
+ 319              		.loc 1 738 0
+ 320              		.cfi_startproc
+ 321              		@ args = 0, pretend = 0, frame = 0
+ 322              		@ frame_needed = 0, uses_anonymous_args = 0
+ 323              		@ link register save eliminated.
+ 739:Generated_Source\PSoC5/PWMB.c ****         uint8 result;
+ 740:Generated_Source\PSoC5/PWMB.c **** 
+ 741:Generated_Source\PSoC5/PWMB.c ****         result = CY_GET_REG8(PWMB_CONTROL_PTR);
+ 324              		.loc 1 741 0
+ 325 0000 014B     		ldr	r3, .L35
+ 326 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 327              	.LVL7:
+ 742:Generated_Source\PSoC5/PWMB.c ****         return (result);
+ 743:Generated_Source\PSoC5/PWMB.c ****     }
+ 328              		.loc 1 743 0
+ 329 0004 7047     		bx	lr
+ 330              	.L36:
+ 331 0006 00BF     		.align	2
+ 332              	.L35:
+ 333 0008 73640040 		.word	1073767539
+ 334              		.cfi_endproc
+ 335              	.LFE14:
+ 336              		.size	PWMB_ReadControlRegister, .-PWMB_ReadControlRegister
+ 337              		.section	.text.PWMB_WriteControlRegister,"ax",%progbits
+ 338              		.align	2
+ 339              		.global	PWMB_WriteControlRegister
+ 340              		.thumb
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 20
+
+
+ 341              		.thumb_func
+ 342              		.type	PWMB_WriteControlRegister, %function
+ 343              	PWMB_WriteControlRegister:
+ 344              	.LFB15:
+ 744:Generated_Source\PSoC5/PWMB.c **** 
+ 745:Generated_Source\PSoC5/PWMB.c **** 
+ 746:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 747:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_WriteControlRegister
+ 748:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 749:Generated_Source\PSoC5/PWMB.c ****     *
+ 750:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 751:Generated_Source\PSoC5/PWMB.c ****     *  Sets the bit field of the control register. This API is available only if
+ 752:Generated_Source\PSoC5/PWMB.c ****     *  the control register is not removed.
+ 753:Generated_Source\PSoC5/PWMB.c ****     *
+ 754:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 755:Generated_Source\PSoC5/PWMB.c ****     *  uint8 control: Control register bit field, The status register bits are:
+ 756:Generated_Source\PSoC5/PWMB.c ****     *  [7]   : PWM Enable
+ 757:Generated_Source\PSoC5/PWMB.c ****     *  [6]   : Reset
+ 758:Generated_Source\PSoC5/PWMB.c ****     *  [5:3] : Compare Mode2
+ 759:Generated_Source\PSoC5/PWMB.c ****     *  [2:0] : Compare Mode2
+ 760:Generated_Source\PSoC5/PWMB.c ****     *
+ 761:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 762:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 763:Generated_Source\PSoC5/PWMB.c ****     *
+ 764:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 765:Generated_Source\PSoC5/PWMB.c ****     void PWMB_WriteControlRegister(uint8 control) 
+ 766:Generated_Source\PSoC5/PWMB.c ****     {
+ 345              		.loc 1 766 0
+ 346              		.cfi_startproc
+ 347              		@ args = 0, pretend = 0, frame = 0
+ 348              		@ frame_needed = 0, uses_anonymous_args = 0
+ 349              		@ link register save eliminated.
+ 350              	.LVL8:
+ 767:Generated_Source\PSoC5/PWMB.c ****         CY_SET_REG8(PWMB_CONTROL_PTR, control);
+ 351              		.loc 1 767 0
+ 352 0000 014B     		ldr	r3, .L38
+ 353 0002 1870     		strb	r0, [r3]
+ 354 0004 7047     		bx	lr
+ 355              	.L39:
+ 356 0006 00BF     		.align	2
+ 357              	.L38:
+ 358 0008 73640040 		.word	1073767539
+ 359              		.cfi_endproc
+ 360              	.LFE15:
+ 361              		.size	PWMB_WriteControlRegister, .-PWMB_WriteControlRegister
+ 362              		.section	.text.PWMB_ReadCapture,"ax",%progbits
+ 363              		.align	2
+ 364              		.global	PWMB_ReadCapture
+ 365              		.thumb
+ 366              		.thumb_func
+ 367              		.type	PWMB_ReadCapture, %function
+ 368              	PWMB_ReadCapture:
+ 369              	.LFB16:
+ 768:Generated_Source\PSoC5/PWMB.c ****     }
+ 769:Generated_Source\PSoC5/PWMB.c **** 
+ 770:Generated_Source\PSoC5/PWMB.c **** #endif /* (PWMB_UseControl) */
+ 771:Generated_Source\PSoC5/PWMB.c **** 
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 21
+
+
+ 772:Generated_Source\PSoC5/PWMB.c **** 
+ 773:Generated_Source\PSoC5/PWMB.c **** #if (!PWMB_UsingFixedFunction)
+ 774:Generated_Source\PSoC5/PWMB.c **** 
+ 775:Generated_Source\PSoC5/PWMB.c **** 
+ 776:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 777:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_ReadCapture
+ 778:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 779:Generated_Source\PSoC5/PWMB.c ****     *
+ 780:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 781:Generated_Source\PSoC5/PWMB.c ****     *  Reads the capture value from the capture FIFO.
+ 782:Generated_Source\PSoC5/PWMB.c ****     *
+ 783:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 784:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 785:Generated_Source\PSoC5/PWMB.c ****     *
+ 786:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 787:Generated_Source\PSoC5/PWMB.c ****     *  uint8/uint16: The current capture value
+ 788:Generated_Source\PSoC5/PWMB.c ****     *
+ 789:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 790:Generated_Source\PSoC5/PWMB.c ****     uint16 PWMB_ReadCapture(void) 
+ 791:Generated_Source\PSoC5/PWMB.c ****     {
+ 370              		.loc 1 791 0
+ 371              		.cfi_startproc
+ 372              		@ args = 0, pretend = 0, frame = 0
+ 373              		@ frame_needed = 0, uses_anonymous_args = 0
+ 374              		@ link register save eliminated.
+ 792:Generated_Source\PSoC5/PWMB.c ****         return (CY_GET_REG16(PWMB_CAPTURE_LSB_PTR));
+ 375              		.loc 1 792 0
+ 376 0000 014B     		ldr	r3, .L41
+ 377 0002 1888     		ldrh	r0, [r3]
+ 793:Generated_Source\PSoC5/PWMB.c ****     }
+ 378              		.loc 1 793 0
+ 379 0004 80B2     		uxth	r0, r0
+ 380 0006 7047     		bx	lr
+ 381              	.L42:
+ 382              		.align	2
+ 383              	.L41:
+ 384 0008 A4680040 		.word	1073768612
+ 385              		.cfi_endproc
+ 386              	.LFE16:
+ 387              		.size	PWMB_ReadCapture, .-PWMB_ReadCapture
+ 388              		.section	.text.PWMB_ClearFIFO,"ax",%progbits
+ 389              		.align	2
+ 390              		.global	PWMB_ClearFIFO
+ 391              		.thumb
+ 392              		.thumb_func
+ 393              		.type	PWMB_ClearFIFO, %function
+ 394              	PWMB_ClearFIFO:
+ 395              	.LFB6:
+ 454:Generated_Source\PSoC5/PWMB.c ****             while(0u != (PWMB_ReadStatusRegister() & PWMB_STATUS_FIFONEMPTY))
+ 396              		.loc 1 454 0
+ 397              		.cfi_startproc
+ 398              		@ args = 0, pretend = 0, frame = 0
+ 399              		@ frame_needed = 0, uses_anonymous_args = 0
+ 400 0000 08B5     		push	{r3, lr}
+ 401              		.cfi_def_cfa_offset 8
+ 402              		.cfi_offset 3, -8
+ 403              		.cfi_offset 14, -4
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 22
+
+
+ 455:Generated_Source\PSoC5/PWMB.c ****             {
+ 404              		.loc 1 455 0
+ 405 0002 01E0     		b	.L44
+ 406              	.L45:
+ 457:Generated_Source\PSoC5/PWMB.c ****             }
+ 407              		.loc 1 457 0
+ 408 0004 FFF7FEFF 		bl	PWMB_ReadCapture
+ 409              	.LVL9:
+ 410              	.L44:
+ 455:Generated_Source\PSoC5/PWMB.c ****             {
+ 411              		.loc 1 455 0
+ 412 0008 FFF7FEFF 		bl	PWMB_ReadStatusRegister
+ 413              	.LVL10:
+ 414 000c 10F0100F 		tst	r0, #16
+ 415 0010 F8D1     		bne	.L45
+ 459:Generated_Source\PSoC5/PWMB.c **** 
+ 416              		.loc 1 459 0
+ 417 0012 08BD     		pop	{r3, pc}
+ 418              		.cfi_endproc
+ 419              	.LFE6:
+ 420              		.size	PWMB_ClearFIFO, .-PWMB_ClearFIFO
+ 421              		.section	.text.PWMB_Init,"ax",%progbits
+ 422              		.align	2
+ 423              		.global	PWMB_Init
+ 424              		.thumb
+ 425              		.thumb_func
+ 426              		.type	PWMB_Init, %function
+ 427              	PWMB_Init:
+ 428              	.LFB1:
+  85:Generated_Source\PSoC5/PWMB.c ****     #if (PWMB_UsingFixedFunction || PWMB_UseControl)
+ 429              		.loc 1 85 0
+ 430              		.cfi_startproc
+ 431              		@ args = 0, pretend = 0, frame = 0
+ 432              		@ frame_needed = 0, uses_anonymous_args = 0
+ 433 0000 10B5     		push	{r4, lr}
+ 434              		.cfi_def_cfa_offset 8
+ 435              		.cfi_offset 4, -8
+ 436              		.cfi_offset 14, -4
+ 117:Generated_Source\PSoC5/PWMB.c ****                 ((uint8)(~PWMB_CTRL_CMPMODE1_MASK));
+ 437              		.loc 1 117 0
+ 438 0002 194A     		ldr	r2, .L49
+ 439 0004 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 440 0006 03F0C003 		and	r3, r3, #192
+ 441              	.LVL11:
+ 119:Generated_Source\PSoC5/PWMB.c ****                                    PWMB_DEFAULT_COMPARE1_MODE;
+ 442              		.loc 1 119 0
+ 443 000a 43F00903 		orr	r3, r3, #9
+ 444              	.LVL12:
+ 445 000e 1370     		strb	r3, [r2]
+ 129:Generated_Source\PSoC5/PWMB.c ****             PWMB_AUX_CONTROLDP1 |= (PWMB_AUX_CTRL_FIFO0_CLR);
+ 446              		.loc 1 129 0
+ 447 0010 1F32     		adds	r2, r2, #31
+ 448 0012 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 449 0014 43F00103 		orr	r3, r3, #1
+ 450 0018 1370     		strb	r3, [r2]
+ 130:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_Resolution == 8) */
+ 451              		.loc 1 130 0
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 23
+
+
+ 452 001a 144C     		ldr	r4, .L49+4
+ 453 001c 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 454 001e 43F00103 		orr	r3, r3, #1
+ 455 0022 2370     		strb	r3, [r4]
+ 133:Generated_Source\PSoC5/PWMB.c ****     #endif /* (!PWMB_UsingFixedFunction) */
+ 456              		.loc 1 133 0
+ 457 0024 4FF6FE10 		movw	r0, #63998
+ 458 0028 FFF7FEFF 		bl	PWMB_WriteCounter
+ 459              	.LVL13:
+ 136:Generated_Source\PSoC5/PWMB.c **** 
+ 460              		.loc 1 136 0
+ 461 002c 4FF6FE10 		movw	r0, #63998
+ 462 0030 FFF7FEFF 		bl	PWMB_WritePeriod
+ 463              	.LVL14:
+ 141:Generated_Source\PSoC5/PWMB.c ****             PWMB_WriteCompare2(PWMB_INIT_COMPARE_VALUE2);
+ 464              		.loc 1 141 0
+ 465 0034 4FF49650 		mov	r0, #4800
+ 466 0038 FFF7FEFF 		bl	PWMB_WriteCompare1
+ 467              	.LVL15:
+ 142:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_UseOneCompareMode) */
+ 468              		.loc 1 142 0
+ 469 003c 4FF49650 		mov	r0, #4800
+ 470 0040 FFF7FEFF 		bl	PWMB_WriteCompare2
+ 471              	.LVL16:
+ 150:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_DeadBandUsed) */
+ 472              		.loc 1 150 0
+ 473 0044 0120     		movs	r0, #1
+ 474 0046 FFF7FEFF 		bl	PWMB_WriteDeadTime
+ 475              	.LVL17:
+ 154:Generated_Source\PSoC5/PWMB.c ****     #endif /* (PWMB_UseStatus || PWMB_UsingFixedFunction) */
+ 476              		.loc 1 154 0
+ 477 004a 0020     		movs	r0, #0
+ 478 004c FFF7FEFF 		bl	PWMB_SetInterruptMode
+ 479              	.LVL18:
+ 167:Generated_Source\PSoC5/PWMB.c ****             /* Use the interrupt output of the status register for IRQ output */
+ 480              		.loc 1 167 0
+ 481 0050 FFF7FEFF 		bl	CyEnterCriticalSection
+ 482              	.LVL19:
+ 169:Generated_Source\PSoC5/PWMB.c **** 
+ 483              		.loc 1 169 0
+ 484 0054 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 485 0056 43F01003 		orr	r3, r3, #16
+ 486 005a 2370     		strb	r3, [r4]
+ 172:Generated_Source\PSoC5/PWMB.c **** 
+ 487              		.loc 1 172 0
+ 488 005c FFF7FEFF 		bl	CyExitCriticalSection
+ 489              	.LVL20:
+ 176:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_UseStatus) */
+ 490              		.loc 1 176 0
+ 491 0060 FFF7FEFF 		bl	PWMB_ClearFIFO
+ 492              	.LVL21:
+ 493 0064 10BD     		pop	{r4, pc}
+ 494              	.L50:
+ 495 0066 00BF     		.align	2
+ 496              	.L49:
+ 497 0068 73640040 		.word	1073767539
+ 498 006c 93640040 		.word	1073767571
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 24
+
+
+ 499              		.cfi_endproc
+ 500              	.LFE1:
+ 501              		.size	PWMB_Init, .-PWMB_Init
+ 502              		.section	.text.PWMB_Start,"ax",%progbits
+ 503              		.align	2
+ 504              		.global	PWMB_Start
+ 505              		.thumb
+ 506              		.thumb_func
+ 507              		.type	PWMB_Start, %function
+ 508              	PWMB_Start:
+ 509              	.LFB0:
+  56:Generated_Source\PSoC5/PWMB.c ****     /* If not Initialized then initialize all required hardware and software */
+ 510              		.loc 1 56 0
+ 511              		.cfi_startproc
+ 512              		@ args = 0, pretend = 0, frame = 0
+ 513              		@ frame_needed = 0, uses_anonymous_args = 0
+ 514 0000 08B5     		push	{r3, lr}
+ 515              		.cfi_def_cfa_offset 8
+ 516              		.cfi_offset 3, -8
+ 517              		.cfi_offset 14, -4
+  58:Generated_Source\PSoC5/PWMB.c ****     {
+ 518              		.loc 1 58 0
+ 519 0002 054B     		ldr	r3, .L54
+ 520 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 521 0006 23B9     		cbnz	r3, .L52
+  60:Generated_Source\PSoC5/PWMB.c ****         PWMB_initVar = 1u;
+ 522              		.loc 1 60 0
+ 523 0008 FFF7FEFF 		bl	PWMB_Init
+ 524              	.LVL22:
+  61:Generated_Source\PSoC5/PWMB.c ****     }
+ 525              		.loc 1 61 0
+ 526 000c 0122     		movs	r2, #1
+ 527 000e 024B     		ldr	r3, .L54
+ 528 0010 1A70     		strb	r2, [r3]
+ 529              	.L52:
+  63:Generated_Source\PSoC5/PWMB.c **** 
+ 530              		.loc 1 63 0
+ 531 0012 FFF7FEFF 		bl	PWMB_Enable
+ 532              	.LVL23:
+ 533 0016 08BD     		pop	{r3, pc}
+ 534              	.L55:
+ 535              		.align	2
+ 536              	.L54:
+ 537 0018 00000000 		.word	.LANCHOR0
+ 538              		.cfi_endproc
+ 539              	.LFE0:
+ 540              		.size	PWMB_Start, .-PWMB_Start
+ 541              		.section	.text.PWMB_ReadCompare1,"ax",%progbits
+ 542              		.align	2
+ 543              		.global	PWMB_ReadCompare1
+ 544              		.thumb
+ 545              		.thumb_func
+ 546              		.type	PWMB_ReadCompare1, %function
+ 547              	PWMB_ReadCompare1:
+ 548              	.LFB17:
+ 794:Generated_Source\PSoC5/PWMB.c **** 
+ 795:Generated_Source\PSoC5/PWMB.c **** #endif /* (!PWMB_UsingFixedFunction) */
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 25
+
+
+ 796:Generated_Source\PSoC5/PWMB.c **** 
+ 797:Generated_Source\PSoC5/PWMB.c **** 
+ 798:Generated_Source\PSoC5/PWMB.c **** #if (PWMB_UseOneCompareMode)
+ 799:Generated_Source\PSoC5/PWMB.c **** 
+ 800:Generated_Source\PSoC5/PWMB.c **** 
+ 801:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 802:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_ReadCompare
+ 803:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 804:Generated_Source\PSoC5/PWMB.c ****     *
+ 805:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 806:Generated_Source\PSoC5/PWMB.c ****     *  Reads the compare value for the compare output when the PWM Mode parameter is
+ 807:Generated_Source\PSoC5/PWMB.c ****     *  set to Dither mode, Center Aligned mode, or One Output mode.
+ 808:Generated_Source\PSoC5/PWMB.c ****     *
+ 809:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 810:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 811:Generated_Source\PSoC5/PWMB.c ****     *
+ 812:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 813:Generated_Source\PSoC5/PWMB.c ****     *  uint8/uint16: Current compare value
+ 814:Generated_Source\PSoC5/PWMB.c ****     *
+ 815:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 816:Generated_Source\PSoC5/PWMB.c ****     uint16 PWMB_ReadCompare(void) 
+ 817:Generated_Source\PSoC5/PWMB.c ****     {
+ 818:Generated_Source\PSoC5/PWMB.c ****         #if(PWMB_UsingFixedFunction)
+ 819:Generated_Source\PSoC5/PWMB.c ****             return ((uint16)CY_GET_REG16(PWMB_COMPARE1_LSB_PTR));
+ 820:Generated_Source\PSoC5/PWMB.c ****         #else
+ 821:Generated_Source\PSoC5/PWMB.c ****             return (CY_GET_REG16(PWMB_COMPARE1_LSB_PTR));
+ 822:Generated_Source\PSoC5/PWMB.c ****         #endif /* (PWMB_UsingFixedFunction) */
+ 823:Generated_Source\PSoC5/PWMB.c ****     }
+ 824:Generated_Source\PSoC5/PWMB.c **** 
+ 825:Generated_Source\PSoC5/PWMB.c **** #else
+ 826:Generated_Source\PSoC5/PWMB.c **** 
+ 827:Generated_Source\PSoC5/PWMB.c **** 
+ 828:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 829:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_ReadCompare1
+ 830:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 831:Generated_Source\PSoC5/PWMB.c ****     *
+ 832:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 833:Generated_Source\PSoC5/PWMB.c ****     *  Reads the compare value for the compare1 output.
+ 834:Generated_Source\PSoC5/PWMB.c ****     *
+ 835:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 836:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 837:Generated_Source\PSoC5/PWMB.c ****     *
+ 838:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 839:Generated_Source\PSoC5/PWMB.c ****     *  uint8/uint16: Current compare value.
+ 840:Generated_Source\PSoC5/PWMB.c ****     *
+ 841:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 842:Generated_Source\PSoC5/PWMB.c ****     uint16 PWMB_ReadCompare1(void) 
+ 843:Generated_Source\PSoC5/PWMB.c ****     {
+ 549              		.loc 1 843 0
+ 550              		.cfi_startproc
+ 551              		@ args = 0, pretend = 0, frame = 0
+ 552              		@ frame_needed = 0, uses_anonymous_args = 0
+ 553              		@ link register save eliminated.
+ 844:Generated_Source\PSoC5/PWMB.c ****         return (CY_GET_REG16(PWMB_COMPARE1_LSB_PTR));
+ 554              		.loc 1 844 0
+ 555 0000 014B     		ldr	r3, .L57
+ 556 0002 1888     		ldrh	r0, [r3]
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 26
+
+
+ 845:Generated_Source\PSoC5/PWMB.c ****     }
+ 557              		.loc 1 845 0
+ 558 0004 80B2     		uxth	r0, r0
+ 559 0006 7047     		bx	lr
+ 560              	.L58:
+ 561              		.align	2
+ 562              	.L57:
+ 563 0008 44680040 		.word	1073768516
+ 564              		.cfi_endproc
+ 565              	.LFE17:
+ 566              		.size	PWMB_ReadCompare1, .-PWMB_ReadCompare1
+ 567              		.section	.text.PWMB_ReadCompare2,"ax",%progbits
+ 568              		.align	2
+ 569              		.global	PWMB_ReadCompare2
+ 570              		.thumb
+ 571              		.thumb_func
+ 572              		.type	PWMB_ReadCompare2, %function
+ 573              	PWMB_ReadCompare2:
+ 574              	.LFB18:
+ 846:Generated_Source\PSoC5/PWMB.c **** 
+ 847:Generated_Source\PSoC5/PWMB.c **** 
+ 848:Generated_Source\PSoC5/PWMB.c ****     /*******************************************************************************
+ 849:Generated_Source\PSoC5/PWMB.c ****     * Function Name: PWMB_ReadCompare2
+ 850:Generated_Source\PSoC5/PWMB.c ****     ********************************************************************************
+ 851:Generated_Source\PSoC5/PWMB.c ****     *
+ 852:Generated_Source\PSoC5/PWMB.c ****     * Summary:
+ 853:Generated_Source\PSoC5/PWMB.c ****     *  Reads the compare value for the compare2 output.
+ 854:Generated_Source\PSoC5/PWMB.c ****     *
+ 855:Generated_Source\PSoC5/PWMB.c ****     * Parameters:
+ 856:Generated_Source\PSoC5/PWMB.c ****     *  None
+ 857:Generated_Source\PSoC5/PWMB.c ****     *
+ 858:Generated_Source\PSoC5/PWMB.c ****     * Return:
+ 859:Generated_Source\PSoC5/PWMB.c ****     *  uint8/uint16: Current compare value.
+ 860:Generated_Source\PSoC5/PWMB.c ****     *
+ 861:Generated_Source\PSoC5/PWMB.c ****     *******************************************************************************/
+ 862:Generated_Source\PSoC5/PWMB.c ****     uint16 PWMB_ReadCompare2(void) 
+ 863:Generated_Source\PSoC5/PWMB.c ****     {
+ 575              		.loc 1 863 0
+ 576              		.cfi_startproc
+ 577              		@ args = 0, pretend = 0, frame = 0
+ 578              		@ frame_needed = 0, uses_anonymous_args = 0
+ 579              		@ link register save eliminated.
+ 864:Generated_Source\PSoC5/PWMB.c ****         return (CY_GET_REG16(PWMB_COMPARE2_LSB_PTR));
+ 580              		.loc 1 864 0
+ 581 0000 014B     		ldr	r3, .L60
+ 582 0002 1888     		ldrh	r0, [r3]
+ 865:Generated_Source\PSoC5/PWMB.c ****     }
+ 583              		.loc 1 865 0
+ 584 0004 80B2     		uxth	r0, r0
+ 585 0006 7047     		bx	lr
+ 586              	.L61:
+ 587              		.align	2
+ 588              	.L60:
+ 589 0008 64680040 		.word	1073768548
+ 590              		.cfi_endproc
+ 591              	.LFE18:
+ 592              		.size	PWMB_ReadCompare2, .-PWMB_ReadCompare2
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 27
+
+
+ 593              		.section	.text.PWMB_ReadPeriod,"ax",%progbits
+ 594              		.align	2
+ 595              		.global	PWMB_ReadPeriod
+ 596              		.thumb
+ 597              		.thumb_func
+ 598              		.type	PWMB_ReadPeriod, %function
+ 599              	PWMB_ReadPeriod:
+ 600              	.LFB19:
+ 866:Generated_Source\PSoC5/PWMB.c **** 
+ 867:Generated_Source\PSoC5/PWMB.c **** #endif /* (PWMB_UseOneCompareMode) */
+ 868:Generated_Source\PSoC5/PWMB.c **** 
+ 869:Generated_Source\PSoC5/PWMB.c **** 
+ 870:Generated_Source\PSoC5/PWMB.c **** /*******************************************************************************
+ 871:Generated_Source\PSoC5/PWMB.c **** * Function Name: PWMB_ReadPeriod
+ 872:Generated_Source\PSoC5/PWMB.c **** ********************************************************************************
+ 873:Generated_Source\PSoC5/PWMB.c **** *
+ 874:Generated_Source\PSoC5/PWMB.c **** * Summary:
+ 875:Generated_Source\PSoC5/PWMB.c **** *  Reads the period value used by the PWM hardware.
+ 876:Generated_Source\PSoC5/PWMB.c **** *
+ 877:Generated_Source\PSoC5/PWMB.c **** * Parameters:
+ 878:Generated_Source\PSoC5/PWMB.c **** *  None
+ 879:Generated_Source\PSoC5/PWMB.c **** *
+ 880:Generated_Source\PSoC5/PWMB.c **** * Return:
+ 881:Generated_Source\PSoC5/PWMB.c **** *  uint8/16: Period value
+ 882:Generated_Source\PSoC5/PWMB.c **** *
+ 883:Generated_Source\PSoC5/PWMB.c **** *******************************************************************************/
+ 884:Generated_Source\PSoC5/PWMB.c **** uint16 PWMB_ReadPeriod(void) 
+ 885:Generated_Source\PSoC5/PWMB.c **** {
+ 601              		.loc 1 885 0
+ 602              		.cfi_startproc
+ 603              		@ args = 0, pretend = 0, frame = 0
+ 604              		@ frame_needed = 0, uses_anonymous_args = 0
+ 605              		@ link register save eliminated.
+ 886:Generated_Source\PSoC5/PWMB.c ****     #if(PWMB_UsingFixedFunction)
+ 887:Generated_Source\PSoC5/PWMB.c ****         return ((uint16)CY_GET_REG16(PWMB_PERIOD_LSB_PTR));
+ 888:Generated_Source\PSoC5/PWMB.c ****     #else
+ 889:Generated_Source\PSoC5/PWMB.c ****         return (CY_GET_REG16(PWMB_PERIOD_LSB_PTR));
+ 606              		.loc 1 889 0
+ 607 0000 014B     		ldr	r3, .L63
+ 608 0002 1888     		ldrh	r0, [r3]
+ 890:Generated_Source\PSoC5/PWMB.c ****     #endif /* (PWMB_UsingFixedFunction) */
+ 891:Generated_Source\PSoC5/PWMB.c **** }
+ 609              		.loc 1 891 0
+ 610 0004 80B2     		uxth	r0, r0
+ 611 0006 7047     		bx	lr
+ 612              	.L64:
+ 613              		.align	2
+ 614              	.L63:
+ 615 0008 84680040 		.word	1073768580
+ 616              		.cfi_endproc
+ 617              	.LFE19:
+ 618              		.size	PWMB_ReadPeriod, .-PWMB_ReadPeriod
+ 619              		.global	PWMB_initVar
+ 620              		.bss
+ 621              		.set	.LANCHOR0,. + 0
+ 622              		.type	PWMB_initVar, %object
+ 623              		.size	PWMB_initVar, 1
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 28
+
+
+ 624              	PWMB_initVar:
+ 625 0000 00       		.space	1
+ 626              		.text
+ 627              	.Letext0:
+ 628              		.file 2 "Generated_Source\\PSoC5\\cytypes.h"
+ 629              		.file 3 "Generated_Source\\PSoC5\\CyLib.h"
+ 630              		.section	.debug_info,"",%progbits
+ 631              	.Ldebug_info0:
+ 632 0000 F0030000 		.4byte	0x3f0
+ 633 0004 0400     		.2byte	0x4
+ 634 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 635 000a 04       		.byte	0x4
+ 636 000b 01       		.uleb128 0x1
+ 637 000c 0F010000 		.4byte	.LASF48
+ 638 0010 0C       		.byte	0xc
+ 639 0011 CD020000 		.4byte	.LASF49
+ 640 0015 98000000 		.4byte	.LASF50
+ 641 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 642 001d 00000000 		.4byte	0
+ 643 0021 00000000 		.4byte	.Ldebug_line0
+ 644 0025 02       		.uleb128 0x2
+ 645 0026 01       		.byte	0x1
+ 646 0027 06       		.byte	0x6
+ 647 0028 EB020000 		.4byte	.LASF0
+ 648 002c 02       		.uleb128 0x2
+ 649 002d 01       		.byte	0x1
+ 650 002e 08       		.byte	0x8
+ 651 002f 01010000 		.4byte	.LASF1
+ 652 0033 02       		.uleb128 0x2
+ 653 0034 02       		.byte	0x2
+ 654 0035 05       		.byte	0x5
+ 655 0036 D1010000 		.4byte	.LASF2
+ 656 003a 02       		.uleb128 0x2
+ 657 003b 02       		.byte	0x2
+ 658 003c 07       		.byte	0x7
+ 659 003d 3A000000 		.4byte	.LASF3
+ 660 0041 02       		.uleb128 0x2
+ 661 0042 04       		.byte	0x4
+ 662 0043 05       		.byte	0x5
+ 663 0044 B2020000 		.4byte	.LASF4
+ 664 0048 02       		.uleb128 0x2
+ 665 0049 04       		.byte	0x4
+ 666 004a 07       		.byte	0x7
+ 667 004b A2010000 		.4byte	.LASF5
+ 668 004f 02       		.uleb128 0x2
+ 669 0050 08       		.byte	0x8
+ 670 0051 05       		.byte	0x5
+ 671 0052 60020000 		.4byte	.LASF6
+ 672 0056 02       		.uleb128 0x2
+ 673 0057 08       		.byte	0x8
+ 674 0058 07       		.byte	0x7
+ 675 0059 EA000000 		.4byte	.LASF7
+ 676 005d 03       		.uleb128 0x3
+ 677 005e 04       		.byte	0x4
+ 678 005f 05       		.byte	0x5
+ 679 0060 696E7400 		.ascii	"int\000"
+ 680 0064 02       		.uleb128 0x2
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 29
+
+
+ 681 0065 04       		.byte	0x4
+ 682 0066 07       		.byte	0x7
+ 683 0067 F9010000 		.4byte	.LASF8
+ 684 006b 04       		.uleb128 0x4
+ 685 006c B4010000 		.4byte	.LASF9
+ 686 0070 02       		.byte	0x2
+ 687 0071 E401     		.2byte	0x1e4
+ 688 0073 2C000000 		.4byte	0x2c
+ 689 0077 04       		.uleb128 0x4
+ 690 0078 DB010000 		.4byte	.LASF10
+ 691 007c 02       		.byte	0x2
+ 692 007d E501     		.2byte	0x1e5
+ 693 007f 3A000000 		.4byte	0x3a
+ 694 0083 02       		.uleb128 0x2
+ 695 0084 04       		.byte	0x4
+ 696 0085 04       		.byte	0x4
+ 697 0086 D8000000 		.4byte	.LASF11
+ 698 008a 02       		.uleb128 0x2
+ 699 008b 08       		.byte	0x8
+ 700 008c 04       		.byte	0x4
+ 701 008d CA010000 		.4byte	.LASF12
+ 702 0091 02       		.uleb128 0x2
+ 703 0092 01       		.byte	0x1
+ 704 0093 08       		.byte	0x8
+ 705 0094 BB020000 		.4byte	.LASF13
+ 706 0098 04       		.uleb128 0x4
+ 707 0099 9D010000 		.4byte	.LASF14
+ 708 009d 02       		.byte	0x2
+ 709 009e 8E02     		.2byte	0x28e
+ 710 00a0 A4000000 		.4byte	0xa4
+ 711 00a4 05       		.uleb128 0x5
+ 712 00a5 6B000000 		.4byte	0x6b
+ 713 00a9 04       		.uleb128 0x4
+ 714 00aa 00000000 		.4byte	.LASF15
+ 715 00ae 02       		.byte	0x2
+ 716 00af 8F02     		.2byte	0x28f
+ 717 00b1 B5000000 		.4byte	0xb5
+ 718 00b5 05       		.uleb128 0x5
+ 719 00b6 77000000 		.4byte	0x77
+ 720 00ba 02       		.uleb128 0x2
+ 721 00bb 08       		.byte	0x8
+ 722 00bc 04       		.byte	0x4
+ 723 00bd 4B020000 		.4byte	.LASF16
+ 724 00c1 02       		.uleb128 0x2
+ 725 00c2 04       		.byte	0x4
+ 726 00c3 07       		.byte	0x7
+ 727 00c4 57020000 		.4byte	.LASF17
+ 728 00c8 06       		.uleb128 0x6
+ 729 00c9 DE000000 		.4byte	.LASF18
+ 730 00cd 01       		.byte	0x1
+ 731 00ce C7       		.byte	0xc7
+ 732 00cf 00000000 		.4byte	.LFB2
+ 733 00d3 10000000 		.4byte	.LFE2-.LFB2
+ 734 00d7 01       		.uleb128 0x1
+ 735 00d8 9C       		.byte	0x9c
+ 736 00d9 06       		.uleb128 0x6
+ 737 00da 8E000000 		.4byte	.LASF19
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 30
+
+
+ 738 00de 01       		.byte	0x1
+ 739 00df E9       		.byte	0xe9
+ 740 00e0 00000000 		.4byte	.LFB3
+ 741 00e4 10000000 		.4byte	.LFE3-.LFB3
+ 742 00e8 01       		.uleb128 0x1
+ 743 00e9 9C       		.byte	0x9c
+ 744 00ea 07       		.uleb128 0x7
+ 745 00eb 34020000 		.4byte	.LASF20
+ 746 00ef 01       		.byte	0x1
+ 747 00f0 9301     		.2byte	0x193
+ 748 00f2 00000000 		.4byte	.LFB4
+ 749 00f6 0C000000 		.4byte	.LFE4-.LFB4
+ 750 00fa 01       		.uleb128 0x1
+ 751 00fb 9C       		.byte	0x9c
+ 752 00fc 0F010000 		.4byte	0x10f
+ 753 0100 08       		.uleb128 0x8
+ 754 0101 C2010000 		.4byte	.LASF22
+ 755 0105 01       		.byte	0x1
+ 756 0106 9301     		.2byte	0x193
+ 757 0108 77000000 		.4byte	0x77
+ 758 010c 01       		.uleb128 0x1
+ 759 010d 50       		.byte	0x50
+ 760 010e 00       		.byte	0
+ 761 010f 09       		.uleb128 0x9
+ 762 0110 FF020000 		.4byte	.LASF29
+ 763 0114 01       		.byte	0x1
+ 764 0115 A901     		.2byte	0x1a9
+ 765 0117 77000000 		.4byte	0x77
+ 766 011b 00000000 		.4byte	.LFB5
+ 767 011f 14000000 		.4byte	.LFE5-.LFB5
+ 768 0123 01       		.uleb128 0x1
+ 769 0124 9C       		.byte	0x9c
+ 770 0125 07       		.uleb128 0x7
+ 771 0126 73030000 		.4byte	.LASF21
+ 772 012a 01       		.byte	0x1
+ 773 012b E201     		.2byte	0x1e2
+ 774 012d 00000000 		.4byte	.LFB7
+ 775 0131 0C000000 		.4byte	.LFE7-.LFB7
+ 776 0135 01       		.uleb128 0x1
+ 777 0136 9C       		.byte	0x9c
+ 778 0137 4A010000 		.4byte	0x14a
+ 779 013b 08       		.uleb128 0x8
+ 780 013c 33000000 		.4byte	.LASF23
+ 781 0140 01       		.byte	0x1
+ 782 0141 E201     		.2byte	0x1e2
+ 783 0143 77000000 		.4byte	0x77
+ 784 0147 01       		.uleb128 0x1
+ 785 0148 50       		.byte	0x50
+ 786 0149 00       		.byte	0
+ 787 014a 07       		.uleb128 0x7
+ 788 014b 06000000 		.4byte	.LASF24
+ 789 014f 01       		.byte	0x1
+ 790 0150 2B02     		.2byte	0x22b
+ 791 0152 00000000 		.4byte	.LFB8
+ 792 0156 0C000000 		.4byte	.LFE8-.LFB8
+ 793 015a 01       		.uleb128 0x1
+ 794 015b 9C       		.byte	0x9c
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 31
+
+
+ 795 015c 6F010000 		.4byte	0x16f
+ 796 0160 08       		.uleb128 0x8
+ 797 0161 F7020000 		.4byte	.LASF25
+ 798 0165 01       		.byte	0x1
+ 799 0166 2B02     		.2byte	0x22b
+ 800 0168 77000000 		.4byte	0x77
+ 801 016c 01       		.uleb128 0x1
+ 802 016d 50       		.byte	0x50
+ 803 016e 00       		.byte	0
+ 804 016f 07       		.uleb128 0x7
+ 805 0170 7B000000 		.4byte	.LASF26
+ 806 0174 01       		.byte	0x1
+ 807 0175 4802     		.2byte	0x248
+ 808 0177 00000000 		.4byte	.LFB9
+ 809 017b 0C000000 		.4byte	.LFE9-.LFB9
+ 810 017f 01       		.uleb128 0x1
+ 811 0180 9C       		.byte	0x9c
+ 812 0181 94010000 		.4byte	0x194
+ 813 0185 08       		.uleb128 0x8
+ 814 0186 F7020000 		.4byte	.LASF25
+ 815 018a 01       		.byte	0x1
+ 816 018b 4802     		.2byte	0x248
+ 817 018d 77000000 		.4byte	0x77
+ 818 0191 01       		.uleb128 0x1
+ 819 0192 50       		.byte	0x50
+ 820 0193 00       		.byte	0
+ 821 0194 07       		.uleb128 0x7
+ 822 0195 47030000 		.4byte	.LASF27
+ 823 0199 01       		.byte	0x1
+ 824 019a 6402     		.2byte	0x264
+ 825 019c 00000000 		.4byte	.LFB10
+ 826 01a0 1C000000 		.4byte	.LFE10-.LFB10
+ 827 01a4 01       		.uleb128 0x1
+ 828 01a5 9C       		.byte	0x9c
+ 829 01a6 BB010000 		.4byte	0x1bb
+ 830 01aa 0A       		.uleb128 0xa
+ 831 01ab 10030000 		.4byte	.LASF28
+ 832 01af 01       		.byte	0x1
+ 833 01b0 6402     		.2byte	0x264
+ 834 01b2 6B000000 		.4byte	0x6b
+ 835 01b6 00000000 		.4byte	.LLST0
+ 836 01ba 00       		.byte	0
+ 837 01bb 09       		.uleb128 0x9
+ 838 01bc A0020000 		.4byte	.LASF30
+ 839 01c0 01       		.byte	0x1
+ 840 01c1 8802     		.2byte	0x288
+ 841 01c3 6B000000 		.4byte	0x6b
+ 842 01c7 00000000 		.4byte	.LFB11
+ 843 01cb 10000000 		.4byte	.LFE11-.LFB11
+ 844 01cf 01       		.uleb128 0x1
+ 845 01d0 9C       		.byte	0x9c
+ 846 01d1 07       		.uleb128 0x7
+ 847 01d2 19030000 		.4byte	.LASF31
+ 848 01d6 01       		.byte	0x1
+ 849 01d7 AC02     		.2byte	0x2ac
+ 850 01d9 00000000 		.4byte	.LFB12
+ 851 01dd 0C000000 		.4byte	.LFE12-.LFB12
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 32
+
+
+ 852 01e1 01       		.uleb128 0x1
+ 853 01e2 9C       		.byte	0x9c
+ 854 01e3 F6010000 		.4byte	0x1f6
+ 855 01e7 08       		.uleb128 0x8
+ 856 01e8 92020000 		.4byte	.LASF32
+ 857 01ec 01       		.byte	0x1
+ 858 01ed AC02     		.2byte	0x2ac
+ 859 01ef 6B000000 		.4byte	0x6b
+ 860 01f3 01       		.uleb128 0x1
+ 861 01f4 50       		.byte	0x50
+ 862 01f5 00       		.byte	0
+ 863 01f6 09       		.uleb128 0x9
+ 864 01f7 2F030000 		.4byte	.LASF33
+ 865 01fb 01       		.byte	0x1
+ 866 01fc C702     		.2byte	0x2c7
+ 867 01fe 6B000000 		.4byte	0x6b
+ 868 0202 00000000 		.4byte	.LFB13
+ 869 0206 0C000000 		.4byte	.LFE13-.LFB13
+ 870 020a 01       		.uleb128 0x1
+ 871 020b 9C       		.byte	0x9c
+ 872 020c 0B       		.uleb128 0xb
+ 873 020d 5A030000 		.4byte	.LASF51
+ 874 0211 01       		.byte	0x1
+ 875 0212 E102     		.2byte	0x2e1
+ 876 0214 6B000000 		.4byte	0x6b
+ 877 0218 00000000 		.4byte	.LFB14
+ 878 021c 0C000000 		.4byte	.LFE14-.LFB14
+ 879 0220 01       		.uleb128 0x1
+ 880 0221 9C       		.byte	0x9c
+ 881 0222 35020000 		.4byte	0x235
+ 882 0226 0C       		.uleb128 0xc
+ 883 0227 1C020000 		.4byte	.LASF39
+ 884 022b 01       		.byte	0x1
+ 885 022c E302     		.2byte	0x2e3
+ 886 022e 6B000000 		.4byte	0x6b
+ 887 0232 01       		.uleb128 0x1
+ 888 0233 50       		.byte	0x50
+ 889 0234 00       		.byte	0
+ 890 0235 07       		.uleb128 0x7
+ 891 0236 BE000000 		.4byte	.LASF34
+ 892 023a 01       		.byte	0x1
+ 893 023b FD02     		.2byte	0x2fd
+ 894 023d 00000000 		.4byte	.LFB15
+ 895 0241 0C000000 		.4byte	.LFE15-.LFB15
+ 896 0245 01       		.uleb128 0x1
+ 897 0246 9C       		.byte	0x9c
+ 898 0247 5A020000 		.4byte	0x25a
+ 899 024b 08       		.uleb128 0x8
+ 900 024c BA010000 		.4byte	.LASF35
+ 901 0250 01       		.byte	0x1
+ 902 0251 FD02     		.2byte	0x2fd
+ 903 0253 6B000000 		.4byte	0x6b
+ 904 0257 01       		.uleb128 0x1
+ 905 0258 50       		.byte	0x50
+ 906 0259 00       		.byte	0
+ 907 025a 09       		.uleb128 0x9
+ 908 025b 23020000 		.4byte	.LASF36
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 33
+
+
+ 909 025f 01       		.byte	0x1
+ 910 0260 1603     		.2byte	0x316
+ 911 0262 77000000 		.4byte	0x77
+ 912 0266 00000000 		.4byte	.LFB16
+ 913 026a 0C000000 		.4byte	.LFE16-.LFB16
+ 914 026e 01       		.uleb128 0x1
+ 915 026f 9C       		.byte	0x9c
+ 916 0270 07       		.uleb128 0x7
+ 917 0271 19000000 		.4byte	.LASF37
+ 918 0275 01       		.byte	0x1
+ 919 0276 C501     		.2byte	0x1c5
+ 920 0278 00000000 		.4byte	.LFB6
+ 921 027c 14000000 		.4byte	.LFE6-.LFB6
+ 922 0280 01       		.uleb128 0x1
+ 923 0281 9C       		.byte	0x9c
+ 924 0282 99020000 		.4byte	0x299
+ 925 0286 0D       		.uleb128 0xd
+ 926 0287 08000000 		.4byte	.LVL9
+ 927 028b 5A020000 		.4byte	0x25a
+ 928 028f 0D       		.uleb128 0xd
+ 929 0290 0C000000 		.4byte	.LVL10
+ 930 0294 F6010000 		.4byte	0x1f6
+ 931 0298 00       		.byte	0
+ 932 0299 0E       		.uleb128 0xe
+ 933 029a 61000000 		.4byte	.LASF38
+ 934 029e 01       		.byte	0x1
+ 935 029f 54       		.byte	0x54
+ 936 02a0 00000000 		.4byte	.LFB1
+ 937 02a4 70000000 		.4byte	.LFE1-.LFB1
+ 938 02a8 01       		.uleb128 0x1
+ 939 02a9 9C       		.byte	0x9c
+ 940 02aa 62030000 		.4byte	0x362
+ 941 02ae 0F       		.uleb128 0xf
+ 942 02af 46020000 		.4byte	.LASF40
+ 943 02b3 01       		.byte	0x1
+ 944 02b4 57       		.byte	0x57
+ 945 02b5 6B000000 		.4byte	0x6b
+ 946 02b9 21000000 		.4byte	.LLST1
+ 947 02bd 0F       		.uleb128 0xf
+ 948 02be 4D000000 		.4byte	.LASF41
+ 949 02c2 01       		.byte	0x1
+ 950 02c3 5D       		.byte	0x5d
+ 951 02c4 6B000000 		.4byte	0x6b
+ 952 02c8 34000000 		.4byte	.LLST2
+ 953 02cc 10       		.uleb128 0x10
+ 954 02cd 2C000000 		.4byte	.LVL13
+ 955 02d1 EA000000 		.4byte	0xea
+ 956 02d5 E1020000 		.4byte	0x2e1
+ 957 02d9 11       		.uleb128 0x11
+ 958 02da 01       		.uleb128 0x1
+ 959 02db 50       		.byte	0x50
+ 960 02dc 03       		.uleb128 0x3
+ 961 02dd 0B       		.byte	0xb
+ 962 02de FEF9     		.2byte	0xf9fe
+ 963 02e0 00       		.byte	0
+ 964 02e1 10       		.uleb128 0x10
+ 965 02e2 34000000 		.4byte	.LVL14
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 34
+
+
+ 966 02e6 25010000 		.4byte	0x125
+ 967 02ea F6020000 		.4byte	0x2f6
+ 968 02ee 11       		.uleb128 0x11
+ 969 02ef 01       		.uleb128 0x1
+ 970 02f0 50       		.byte	0x50
+ 971 02f1 03       		.uleb128 0x3
+ 972 02f2 0B       		.byte	0xb
+ 973 02f3 FEF9     		.2byte	0xf9fe
+ 974 02f5 00       		.byte	0
+ 975 02f6 10       		.uleb128 0x10
+ 976 02f7 3C000000 		.4byte	.LVL15
+ 977 02fb 4A010000 		.4byte	0x14a
+ 978 02ff 0B030000 		.4byte	0x30b
+ 979 0303 11       		.uleb128 0x11
+ 980 0304 01       		.uleb128 0x1
+ 981 0305 50       		.byte	0x50
+ 982 0306 03       		.uleb128 0x3
+ 983 0307 0A       		.byte	0xa
+ 984 0308 C012     		.2byte	0x12c0
+ 985 030a 00       		.byte	0
+ 986 030b 10       		.uleb128 0x10
+ 987 030c 44000000 		.4byte	.LVL16
+ 988 0310 6F010000 		.4byte	0x16f
+ 989 0314 20030000 		.4byte	0x320
+ 990 0318 11       		.uleb128 0x11
+ 991 0319 01       		.uleb128 0x1
+ 992 031a 50       		.byte	0x50
+ 993 031b 03       		.uleb128 0x3
+ 994 031c 0A       		.byte	0xa
+ 995 031d C012     		.2byte	0x12c0
+ 996 031f 00       		.byte	0
+ 997 0320 10       		.uleb128 0x10
+ 998 0321 4A000000 		.4byte	.LVL17
+ 999 0325 94010000 		.4byte	0x194
+ 1000 0329 33030000 		.4byte	0x333
+ 1001 032d 11       		.uleb128 0x11
+ 1002 032e 01       		.uleb128 0x1
+ 1003 032f 50       		.byte	0x50
+ 1004 0330 01       		.uleb128 0x1
+ 1005 0331 31       		.byte	0x31
+ 1006 0332 00       		.byte	0
+ 1007 0333 10       		.uleb128 0x10
+ 1008 0334 50000000 		.4byte	.LVL18
+ 1009 0338 D1010000 		.4byte	0x1d1
+ 1010 033c 46030000 		.4byte	0x346
+ 1011 0340 11       		.uleb128 0x11
+ 1012 0341 01       		.uleb128 0x1
+ 1013 0342 50       		.byte	0x50
+ 1014 0343 01       		.uleb128 0x1
+ 1015 0344 30       		.byte	0x30
+ 1016 0345 00       		.byte	0
+ 1017 0346 0D       		.uleb128 0xd
+ 1018 0347 54000000 		.4byte	.LVL19
+ 1019 034b DD030000 		.4byte	0x3dd
+ 1020 034f 0D       		.uleb128 0xd
+ 1021 0350 60000000 		.4byte	.LVL20
+ 1022 0354 E8030000 		.4byte	0x3e8
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 35
+
+
+ 1023 0358 0D       		.uleb128 0xd
+ 1024 0359 64000000 		.4byte	.LVL21
+ 1025 035d 70020000 		.4byte	0x270
+ 1026 0361 00       		.byte	0
+ 1027 0362 0E       		.uleb128 0xe
+ 1028 0363 28000000 		.4byte	.LASF42
+ 1029 0367 01       		.byte	0x1
+ 1030 0368 37       		.byte	0x37
+ 1031 0369 00000000 		.4byte	.LFB0
+ 1032 036d 1C000000 		.4byte	.LFE0-.LFB0
+ 1033 0371 01       		.uleb128 0x1
+ 1034 0372 9C       		.byte	0x9c
+ 1035 0373 8A030000 		.4byte	0x38a
+ 1036 0377 0D       		.uleb128 0xd
+ 1037 0378 0C000000 		.4byte	.LVL22
+ 1038 037c 99020000 		.4byte	0x299
+ 1039 0380 0D       		.uleb128 0xd
+ 1040 0381 16000000 		.4byte	.LVL23
+ 1041 0385 C8000000 		.4byte	0xc8
+ 1042 0389 00       		.byte	0
+ 1043 038a 09       		.uleb128 0x9
+ 1044 038b 6E020000 		.4byte	.LASF43
+ 1045 038f 01       		.byte	0x1
+ 1046 0390 4A03     		.2byte	0x34a
+ 1047 0392 77000000 		.4byte	0x77
+ 1048 0396 00000000 		.4byte	.LFB17
+ 1049 039a 0C000000 		.4byte	.LFE17-.LFB17
+ 1050 039e 01       		.uleb128 0x1
+ 1051 039f 9C       		.byte	0x9c
+ 1052 03a0 09       		.uleb128 0x9
+ 1053 03a1 80020000 		.4byte	.LASF44
+ 1054 03a5 01       		.byte	0x1
+ 1055 03a6 5E03     		.2byte	0x35e
+ 1056 03a8 77000000 		.4byte	0x77
+ 1057 03ac 00000000 		.4byte	.LFB18
+ 1058 03b0 0C000000 		.4byte	.LFE18-.LFB18
+ 1059 03b4 01       		.uleb128 0x1
+ 1060 03b5 9C       		.byte	0x9c
+ 1061 03b6 09       		.uleb128 0x9
+ 1062 03b7 6B000000 		.4byte	.LASF45
+ 1063 03bb 01       		.byte	0x1
+ 1064 03bc 7403     		.2byte	0x374
+ 1065 03be 77000000 		.4byte	0x77
+ 1066 03c2 00000000 		.4byte	.LFB19
+ 1067 03c6 0C000000 		.4byte	.LFE19-.LFB19
+ 1068 03ca 01       		.uleb128 0x1
+ 1069 03cb 9C       		.byte	0x9c
+ 1070 03cc 12       		.uleb128 0x12
+ 1071 03cd C0020000 		.4byte	.LASF52
+ 1072 03d1 01       		.byte	0x1
+ 1073 03d2 20       		.byte	0x20
+ 1074 03d3 6B000000 		.4byte	0x6b
+ 1075 03d7 05       		.uleb128 0x5
+ 1076 03d8 03       		.byte	0x3
+ 1077 03d9 00000000 		.4byte	PWMB_initVar
+ 1078 03dd 13       		.uleb128 0x13
+ 1079 03de E2010000 		.4byte	.LASF46
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 36
+
+
+ 1080 03e2 E2010000 		.4byte	.LASF46
+ 1081 03e6 03       		.byte	0x3
+ 1082 03e7 7D       		.byte	0x7d
+ 1083 03e8 13       		.uleb128 0x13
+ 1084 03e9 06020000 		.4byte	.LASF47
+ 1085 03ed 06020000 		.4byte	.LASF47
+ 1086 03f1 03       		.byte	0x3
+ 1087 03f2 7E       		.byte	0x7e
+ 1088 03f3 00       		.byte	0
+ 1089              		.section	.debug_abbrev,"",%progbits
+ 1090              	.Ldebug_abbrev0:
+ 1091 0000 01       		.uleb128 0x1
+ 1092 0001 11       		.uleb128 0x11
+ 1093 0002 01       		.byte	0x1
+ 1094 0003 25       		.uleb128 0x25
+ 1095 0004 0E       		.uleb128 0xe
+ 1096 0005 13       		.uleb128 0x13
+ 1097 0006 0B       		.uleb128 0xb
+ 1098 0007 03       		.uleb128 0x3
+ 1099 0008 0E       		.uleb128 0xe
+ 1100 0009 1B       		.uleb128 0x1b
+ 1101 000a 0E       		.uleb128 0xe
+ 1102 000b 55       		.uleb128 0x55
+ 1103 000c 17       		.uleb128 0x17
+ 1104 000d 11       		.uleb128 0x11
+ 1105 000e 01       		.uleb128 0x1
+ 1106 000f 10       		.uleb128 0x10
+ 1107 0010 17       		.uleb128 0x17
+ 1108 0011 00       		.byte	0
+ 1109 0012 00       		.byte	0
+ 1110 0013 02       		.uleb128 0x2
+ 1111 0014 24       		.uleb128 0x24
+ 1112 0015 00       		.byte	0
+ 1113 0016 0B       		.uleb128 0xb
+ 1114 0017 0B       		.uleb128 0xb
+ 1115 0018 3E       		.uleb128 0x3e
+ 1116 0019 0B       		.uleb128 0xb
+ 1117 001a 03       		.uleb128 0x3
+ 1118 001b 0E       		.uleb128 0xe
+ 1119 001c 00       		.byte	0
+ 1120 001d 00       		.byte	0
+ 1121 001e 03       		.uleb128 0x3
+ 1122 001f 24       		.uleb128 0x24
+ 1123 0020 00       		.byte	0
+ 1124 0021 0B       		.uleb128 0xb
+ 1125 0022 0B       		.uleb128 0xb
+ 1126 0023 3E       		.uleb128 0x3e
+ 1127 0024 0B       		.uleb128 0xb
+ 1128 0025 03       		.uleb128 0x3
+ 1129 0026 08       		.uleb128 0x8
+ 1130 0027 00       		.byte	0
+ 1131 0028 00       		.byte	0
+ 1132 0029 04       		.uleb128 0x4
+ 1133 002a 16       		.uleb128 0x16
+ 1134 002b 00       		.byte	0
+ 1135 002c 03       		.uleb128 0x3
+ 1136 002d 0E       		.uleb128 0xe
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 37
+
+
+ 1137 002e 3A       		.uleb128 0x3a
+ 1138 002f 0B       		.uleb128 0xb
+ 1139 0030 3B       		.uleb128 0x3b
+ 1140 0031 05       		.uleb128 0x5
+ 1141 0032 49       		.uleb128 0x49
+ 1142 0033 13       		.uleb128 0x13
+ 1143 0034 00       		.byte	0
+ 1144 0035 00       		.byte	0
+ 1145 0036 05       		.uleb128 0x5
+ 1146 0037 35       		.uleb128 0x35
+ 1147 0038 00       		.byte	0
+ 1148 0039 49       		.uleb128 0x49
+ 1149 003a 13       		.uleb128 0x13
+ 1150 003b 00       		.byte	0
+ 1151 003c 00       		.byte	0
+ 1152 003d 06       		.uleb128 0x6
+ 1153 003e 2E       		.uleb128 0x2e
+ 1154 003f 00       		.byte	0
+ 1155 0040 3F       		.uleb128 0x3f
+ 1156 0041 19       		.uleb128 0x19
+ 1157 0042 03       		.uleb128 0x3
+ 1158 0043 0E       		.uleb128 0xe
+ 1159 0044 3A       		.uleb128 0x3a
+ 1160 0045 0B       		.uleb128 0xb
+ 1161 0046 3B       		.uleb128 0x3b
+ 1162 0047 0B       		.uleb128 0xb
+ 1163 0048 27       		.uleb128 0x27
+ 1164 0049 19       		.uleb128 0x19
+ 1165 004a 11       		.uleb128 0x11
+ 1166 004b 01       		.uleb128 0x1
+ 1167 004c 12       		.uleb128 0x12
+ 1168 004d 06       		.uleb128 0x6
+ 1169 004e 40       		.uleb128 0x40
+ 1170 004f 18       		.uleb128 0x18
+ 1171 0050 9742     		.uleb128 0x2117
+ 1172 0052 19       		.uleb128 0x19
+ 1173 0053 00       		.byte	0
+ 1174 0054 00       		.byte	0
+ 1175 0055 07       		.uleb128 0x7
+ 1176 0056 2E       		.uleb128 0x2e
+ 1177 0057 01       		.byte	0x1
+ 1178 0058 3F       		.uleb128 0x3f
+ 1179 0059 19       		.uleb128 0x19
+ 1180 005a 03       		.uleb128 0x3
+ 1181 005b 0E       		.uleb128 0xe
+ 1182 005c 3A       		.uleb128 0x3a
+ 1183 005d 0B       		.uleb128 0xb
+ 1184 005e 3B       		.uleb128 0x3b
+ 1185 005f 05       		.uleb128 0x5
+ 1186 0060 27       		.uleb128 0x27
+ 1187 0061 19       		.uleb128 0x19
+ 1188 0062 11       		.uleb128 0x11
+ 1189 0063 01       		.uleb128 0x1
+ 1190 0064 12       		.uleb128 0x12
+ 1191 0065 06       		.uleb128 0x6
+ 1192 0066 40       		.uleb128 0x40
+ 1193 0067 18       		.uleb128 0x18
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 38
+
+
+ 1194 0068 9742     		.uleb128 0x2117
+ 1195 006a 19       		.uleb128 0x19
+ 1196 006b 01       		.uleb128 0x1
+ 1197 006c 13       		.uleb128 0x13
+ 1198 006d 00       		.byte	0
+ 1199 006e 00       		.byte	0
+ 1200 006f 08       		.uleb128 0x8
+ 1201 0070 05       		.uleb128 0x5
+ 1202 0071 00       		.byte	0
+ 1203 0072 03       		.uleb128 0x3
+ 1204 0073 0E       		.uleb128 0xe
+ 1205 0074 3A       		.uleb128 0x3a
+ 1206 0075 0B       		.uleb128 0xb
+ 1207 0076 3B       		.uleb128 0x3b
+ 1208 0077 05       		.uleb128 0x5
+ 1209 0078 49       		.uleb128 0x49
+ 1210 0079 13       		.uleb128 0x13
+ 1211 007a 02       		.uleb128 0x2
+ 1212 007b 18       		.uleb128 0x18
+ 1213 007c 00       		.byte	0
+ 1214 007d 00       		.byte	0
+ 1215 007e 09       		.uleb128 0x9
+ 1216 007f 2E       		.uleb128 0x2e
+ 1217 0080 00       		.byte	0
+ 1218 0081 3F       		.uleb128 0x3f
+ 1219 0082 19       		.uleb128 0x19
+ 1220 0083 03       		.uleb128 0x3
+ 1221 0084 0E       		.uleb128 0xe
+ 1222 0085 3A       		.uleb128 0x3a
+ 1223 0086 0B       		.uleb128 0xb
+ 1224 0087 3B       		.uleb128 0x3b
+ 1225 0088 05       		.uleb128 0x5
+ 1226 0089 27       		.uleb128 0x27
+ 1227 008a 19       		.uleb128 0x19
+ 1228 008b 49       		.uleb128 0x49
+ 1229 008c 13       		.uleb128 0x13
+ 1230 008d 11       		.uleb128 0x11
+ 1231 008e 01       		.uleb128 0x1
+ 1232 008f 12       		.uleb128 0x12
+ 1233 0090 06       		.uleb128 0x6
+ 1234 0091 40       		.uleb128 0x40
+ 1235 0092 18       		.uleb128 0x18
+ 1236 0093 9742     		.uleb128 0x2117
+ 1237 0095 19       		.uleb128 0x19
+ 1238 0096 00       		.byte	0
+ 1239 0097 00       		.byte	0
+ 1240 0098 0A       		.uleb128 0xa
+ 1241 0099 05       		.uleb128 0x5
+ 1242 009a 00       		.byte	0
+ 1243 009b 03       		.uleb128 0x3
+ 1244 009c 0E       		.uleb128 0xe
+ 1245 009d 3A       		.uleb128 0x3a
+ 1246 009e 0B       		.uleb128 0xb
+ 1247 009f 3B       		.uleb128 0x3b
+ 1248 00a0 05       		.uleb128 0x5
+ 1249 00a1 49       		.uleb128 0x49
+ 1250 00a2 13       		.uleb128 0x13
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 39
+
+
+ 1251 00a3 02       		.uleb128 0x2
+ 1252 00a4 17       		.uleb128 0x17
+ 1253 00a5 00       		.byte	0
+ 1254 00a6 00       		.byte	0
+ 1255 00a7 0B       		.uleb128 0xb
+ 1256 00a8 2E       		.uleb128 0x2e
+ 1257 00a9 01       		.byte	0x1
+ 1258 00aa 3F       		.uleb128 0x3f
+ 1259 00ab 19       		.uleb128 0x19
+ 1260 00ac 03       		.uleb128 0x3
+ 1261 00ad 0E       		.uleb128 0xe
+ 1262 00ae 3A       		.uleb128 0x3a
+ 1263 00af 0B       		.uleb128 0xb
+ 1264 00b0 3B       		.uleb128 0x3b
+ 1265 00b1 05       		.uleb128 0x5
+ 1266 00b2 27       		.uleb128 0x27
+ 1267 00b3 19       		.uleb128 0x19
+ 1268 00b4 49       		.uleb128 0x49
+ 1269 00b5 13       		.uleb128 0x13
+ 1270 00b6 11       		.uleb128 0x11
+ 1271 00b7 01       		.uleb128 0x1
+ 1272 00b8 12       		.uleb128 0x12
+ 1273 00b9 06       		.uleb128 0x6
+ 1274 00ba 40       		.uleb128 0x40
+ 1275 00bb 18       		.uleb128 0x18
+ 1276 00bc 9742     		.uleb128 0x2117
+ 1277 00be 19       		.uleb128 0x19
+ 1278 00bf 01       		.uleb128 0x1
+ 1279 00c0 13       		.uleb128 0x13
+ 1280 00c1 00       		.byte	0
+ 1281 00c2 00       		.byte	0
+ 1282 00c3 0C       		.uleb128 0xc
+ 1283 00c4 34       		.uleb128 0x34
+ 1284 00c5 00       		.byte	0
+ 1285 00c6 03       		.uleb128 0x3
+ 1286 00c7 0E       		.uleb128 0xe
+ 1287 00c8 3A       		.uleb128 0x3a
+ 1288 00c9 0B       		.uleb128 0xb
+ 1289 00ca 3B       		.uleb128 0x3b
+ 1290 00cb 05       		.uleb128 0x5
+ 1291 00cc 49       		.uleb128 0x49
+ 1292 00cd 13       		.uleb128 0x13
+ 1293 00ce 02       		.uleb128 0x2
+ 1294 00cf 18       		.uleb128 0x18
+ 1295 00d0 00       		.byte	0
+ 1296 00d1 00       		.byte	0
+ 1297 00d2 0D       		.uleb128 0xd
+ 1298 00d3 898201   		.uleb128 0x4109
+ 1299 00d6 00       		.byte	0
+ 1300 00d7 11       		.uleb128 0x11
+ 1301 00d8 01       		.uleb128 0x1
+ 1302 00d9 31       		.uleb128 0x31
+ 1303 00da 13       		.uleb128 0x13
+ 1304 00db 00       		.byte	0
+ 1305 00dc 00       		.byte	0
+ 1306 00dd 0E       		.uleb128 0xe
+ 1307 00de 2E       		.uleb128 0x2e
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 40
+
+
+ 1308 00df 01       		.byte	0x1
+ 1309 00e0 3F       		.uleb128 0x3f
+ 1310 00e1 19       		.uleb128 0x19
+ 1311 00e2 03       		.uleb128 0x3
+ 1312 00e3 0E       		.uleb128 0xe
+ 1313 00e4 3A       		.uleb128 0x3a
+ 1314 00e5 0B       		.uleb128 0xb
+ 1315 00e6 3B       		.uleb128 0x3b
+ 1316 00e7 0B       		.uleb128 0xb
+ 1317 00e8 27       		.uleb128 0x27
+ 1318 00e9 19       		.uleb128 0x19
+ 1319 00ea 11       		.uleb128 0x11
+ 1320 00eb 01       		.uleb128 0x1
+ 1321 00ec 12       		.uleb128 0x12
+ 1322 00ed 06       		.uleb128 0x6
+ 1323 00ee 40       		.uleb128 0x40
+ 1324 00ef 18       		.uleb128 0x18
+ 1325 00f0 9742     		.uleb128 0x2117
+ 1326 00f2 19       		.uleb128 0x19
+ 1327 00f3 01       		.uleb128 0x1
+ 1328 00f4 13       		.uleb128 0x13
+ 1329 00f5 00       		.byte	0
+ 1330 00f6 00       		.byte	0
+ 1331 00f7 0F       		.uleb128 0xf
+ 1332 00f8 34       		.uleb128 0x34
+ 1333 00f9 00       		.byte	0
+ 1334 00fa 03       		.uleb128 0x3
+ 1335 00fb 0E       		.uleb128 0xe
+ 1336 00fc 3A       		.uleb128 0x3a
+ 1337 00fd 0B       		.uleb128 0xb
+ 1338 00fe 3B       		.uleb128 0x3b
+ 1339 00ff 0B       		.uleb128 0xb
+ 1340 0100 49       		.uleb128 0x49
+ 1341 0101 13       		.uleb128 0x13
+ 1342 0102 02       		.uleb128 0x2
+ 1343 0103 17       		.uleb128 0x17
+ 1344 0104 00       		.byte	0
+ 1345 0105 00       		.byte	0
+ 1346 0106 10       		.uleb128 0x10
+ 1347 0107 898201   		.uleb128 0x4109
+ 1348 010a 01       		.byte	0x1
+ 1349 010b 11       		.uleb128 0x11
+ 1350 010c 01       		.uleb128 0x1
+ 1351 010d 31       		.uleb128 0x31
+ 1352 010e 13       		.uleb128 0x13
+ 1353 010f 01       		.uleb128 0x1
+ 1354 0110 13       		.uleb128 0x13
+ 1355 0111 00       		.byte	0
+ 1356 0112 00       		.byte	0
+ 1357 0113 11       		.uleb128 0x11
+ 1358 0114 8A8201   		.uleb128 0x410a
+ 1359 0117 00       		.byte	0
+ 1360 0118 02       		.uleb128 0x2
+ 1361 0119 18       		.uleb128 0x18
+ 1362 011a 9142     		.uleb128 0x2111
+ 1363 011c 18       		.uleb128 0x18
+ 1364 011d 00       		.byte	0
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 41
+
+
+ 1365 011e 00       		.byte	0
+ 1366 011f 12       		.uleb128 0x12
+ 1367 0120 34       		.uleb128 0x34
+ 1368 0121 00       		.byte	0
+ 1369 0122 03       		.uleb128 0x3
+ 1370 0123 0E       		.uleb128 0xe
+ 1371 0124 3A       		.uleb128 0x3a
+ 1372 0125 0B       		.uleb128 0xb
+ 1373 0126 3B       		.uleb128 0x3b
+ 1374 0127 0B       		.uleb128 0xb
+ 1375 0128 49       		.uleb128 0x49
+ 1376 0129 13       		.uleb128 0x13
+ 1377 012a 3F       		.uleb128 0x3f
+ 1378 012b 19       		.uleb128 0x19
+ 1379 012c 02       		.uleb128 0x2
+ 1380 012d 18       		.uleb128 0x18
+ 1381 012e 00       		.byte	0
+ 1382 012f 00       		.byte	0
+ 1383 0130 13       		.uleb128 0x13
+ 1384 0131 2E       		.uleb128 0x2e
+ 1385 0132 00       		.byte	0
+ 1386 0133 3F       		.uleb128 0x3f
+ 1387 0134 19       		.uleb128 0x19
+ 1388 0135 3C       		.uleb128 0x3c
+ 1389 0136 19       		.uleb128 0x19
+ 1390 0137 6E       		.uleb128 0x6e
+ 1391 0138 0E       		.uleb128 0xe
+ 1392 0139 03       		.uleb128 0x3
+ 1393 013a 0E       		.uleb128 0xe
+ 1394 013b 3A       		.uleb128 0x3a
+ 1395 013c 0B       		.uleb128 0xb
+ 1396 013d 3B       		.uleb128 0x3b
+ 1397 013e 0B       		.uleb128 0xb
+ 1398 013f 00       		.byte	0
+ 1399 0140 00       		.byte	0
+ 1400 0141 00       		.byte	0
+ 1401              		.section	.debug_loc,"",%progbits
+ 1402              	.Ldebug_loc0:
+ 1403              	.LLST0:
+ 1404 0000 00000000 		.4byte	.LVL4
+ 1405 0004 10000000 		.4byte	.LVL5
+ 1406 0008 0100     		.2byte	0x1
+ 1407 000a 50       		.byte	0x50
+ 1408 000b 10000000 		.4byte	.LVL5
+ 1409 000f 1C000000 		.4byte	.LFE10
+ 1410 0013 0400     		.2byte	0x4
+ 1411 0015 F3       		.byte	0xf3
+ 1412 0016 01       		.uleb128 0x1
+ 1413 0017 50       		.byte	0x50
+ 1414 0018 9F       		.byte	0x9f
+ 1415 0019 00000000 		.4byte	0
+ 1416 001d 00000000 		.4byte	0
+ 1417              	.LLST1:
+ 1418 0021 0A000000 		.4byte	.LVL11
+ 1419 0025 0E000000 		.4byte	.LVL12
+ 1420 0029 0100     		.2byte	0x1
+ 1421 002b 53       		.byte	0x53
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 42
+
+
+ 1422 002c 00000000 		.4byte	0
+ 1423 0030 00000000 		.4byte	0
+ 1424              	.LLST2:
+ 1425 0034 54000000 		.4byte	.LVL19
+ 1426 0038 5F000000 		.4byte	.LVL20-1
+ 1427 003c 0100     		.2byte	0x1
+ 1428 003e 50       		.byte	0x50
+ 1429 003f 00000000 		.4byte	0
+ 1430 0043 00000000 		.4byte	0
+ 1431              		.section	.debug_aranges,"",%progbits
+ 1432 0000 B4000000 		.4byte	0xb4
+ 1433 0004 0200     		.2byte	0x2
+ 1434 0006 00000000 		.4byte	.Ldebug_info0
+ 1435 000a 04       		.byte	0x4
+ 1436 000b 00       		.byte	0
+ 1437 000c 0000     		.2byte	0
+ 1438 000e 0000     		.2byte	0
+ 1439 0010 00000000 		.4byte	.LFB2
+ 1440 0014 10000000 		.4byte	.LFE2-.LFB2
+ 1441 0018 00000000 		.4byte	.LFB3
+ 1442 001c 10000000 		.4byte	.LFE3-.LFB3
+ 1443 0020 00000000 		.4byte	.LFB4
+ 1444 0024 0C000000 		.4byte	.LFE4-.LFB4
+ 1445 0028 00000000 		.4byte	.LFB5
+ 1446 002c 14000000 		.4byte	.LFE5-.LFB5
+ 1447 0030 00000000 		.4byte	.LFB7
+ 1448 0034 0C000000 		.4byte	.LFE7-.LFB7
+ 1449 0038 00000000 		.4byte	.LFB8
+ 1450 003c 0C000000 		.4byte	.LFE8-.LFB8
+ 1451 0040 00000000 		.4byte	.LFB9
+ 1452 0044 0C000000 		.4byte	.LFE9-.LFB9
+ 1453 0048 00000000 		.4byte	.LFB10
+ 1454 004c 1C000000 		.4byte	.LFE10-.LFB10
+ 1455 0050 00000000 		.4byte	.LFB11
+ 1456 0054 10000000 		.4byte	.LFE11-.LFB11
+ 1457 0058 00000000 		.4byte	.LFB12
+ 1458 005c 0C000000 		.4byte	.LFE12-.LFB12
+ 1459 0060 00000000 		.4byte	.LFB13
+ 1460 0064 0C000000 		.4byte	.LFE13-.LFB13
+ 1461 0068 00000000 		.4byte	.LFB14
+ 1462 006c 0C000000 		.4byte	.LFE14-.LFB14
+ 1463 0070 00000000 		.4byte	.LFB15
+ 1464 0074 0C000000 		.4byte	.LFE15-.LFB15
+ 1465 0078 00000000 		.4byte	.LFB16
+ 1466 007c 0C000000 		.4byte	.LFE16-.LFB16
+ 1467 0080 00000000 		.4byte	.LFB6
+ 1468 0084 14000000 		.4byte	.LFE6-.LFB6
+ 1469 0088 00000000 		.4byte	.LFB1
+ 1470 008c 70000000 		.4byte	.LFE1-.LFB1
+ 1471 0090 00000000 		.4byte	.LFB0
+ 1472 0094 1C000000 		.4byte	.LFE0-.LFB0
+ 1473 0098 00000000 		.4byte	.LFB17
+ 1474 009c 0C000000 		.4byte	.LFE17-.LFB17
+ 1475 00a0 00000000 		.4byte	.LFB18
+ 1476 00a4 0C000000 		.4byte	.LFE18-.LFB18
+ 1477 00a8 00000000 		.4byte	.LFB19
+ 1478 00ac 0C000000 		.4byte	.LFE19-.LFB19
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 43
+
+
+ 1479 00b0 00000000 		.4byte	0
+ 1480 00b4 00000000 		.4byte	0
+ 1481              		.section	.debug_ranges,"",%progbits
+ 1482              	.Ldebug_ranges0:
+ 1483 0000 00000000 		.4byte	.LFB2
+ 1484 0004 10000000 		.4byte	.LFE2
+ 1485 0008 00000000 		.4byte	.LFB3
+ 1486 000c 10000000 		.4byte	.LFE3
+ 1487 0010 00000000 		.4byte	.LFB4
+ 1488 0014 0C000000 		.4byte	.LFE4
+ 1489 0018 00000000 		.4byte	.LFB5
+ 1490 001c 14000000 		.4byte	.LFE5
+ 1491 0020 00000000 		.4byte	.LFB7
+ 1492 0024 0C000000 		.4byte	.LFE7
+ 1493 0028 00000000 		.4byte	.LFB8
+ 1494 002c 0C000000 		.4byte	.LFE8
+ 1495 0030 00000000 		.4byte	.LFB9
+ 1496 0034 0C000000 		.4byte	.LFE9
+ 1497 0038 00000000 		.4byte	.LFB10
+ 1498 003c 1C000000 		.4byte	.LFE10
+ 1499 0040 00000000 		.4byte	.LFB11
+ 1500 0044 10000000 		.4byte	.LFE11
+ 1501 0048 00000000 		.4byte	.LFB12
+ 1502 004c 0C000000 		.4byte	.LFE12
+ 1503 0050 00000000 		.4byte	.LFB13
+ 1504 0054 0C000000 		.4byte	.LFE13
+ 1505 0058 00000000 		.4byte	.LFB14
+ 1506 005c 0C000000 		.4byte	.LFE14
+ 1507 0060 00000000 		.4byte	.LFB15
+ 1508 0064 0C000000 		.4byte	.LFE15
+ 1509 0068 00000000 		.4byte	.LFB16
+ 1510 006c 0C000000 		.4byte	.LFE16
+ 1511 0070 00000000 		.4byte	.LFB6
+ 1512 0074 14000000 		.4byte	.LFE6
+ 1513 0078 00000000 		.4byte	.LFB1
+ 1514 007c 70000000 		.4byte	.LFE1
+ 1515 0080 00000000 		.4byte	.LFB0
+ 1516 0084 1C000000 		.4byte	.LFE0
+ 1517 0088 00000000 		.4byte	.LFB17
+ 1518 008c 0C000000 		.4byte	.LFE17
+ 1519 0090 00000000 		.4byte	.LFB18
+ 1520 0094 0C000000 		.4byte	.LFE18
+ 1521 0098 00000000 		.4byte	.LFB19
+ 1522 009c 0C000000 		.4byte	.LFE19
+ 1523 00a0 00000000 		.4byte	0
+ 1524 00a4 00000000 		.4byte	0
+ 1525              		.section	.debug_line,"",%progbits
+ 1526              	.Ldebug_line0:
+ 1527 0000 CC010000 		.section	.debug_str,"MS",%progbits,1
+ 1527      02004C00 
+ 1527      00000201 
+ 1527      FB0E0D00 
+ 1527      01010101 
+ 1528              	.LASF15:
+ 1529 0000 72656731 		.ascii	"reg16\000"
+ 1529      3600
+ 1530              	.LASF24:
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 44
+
+
+ 1531 0006 50574D42 		.ascii	"PWMB_WriteCompare1\000"
+ 1531      5F577269 
+ 1531      7465436F 
+ 1531      6D706172 
+ 1531      653100
+ 1532              	.LASF37:
+ 1533 0019 50574D42 		.ascii	"PWMB_ClearFIFO\000"
+ 1533      5F436C65 
+ 1533      61724649 
+ 1533      464F00
+ 1534              	.LASF42:
+ 1535 0028 50574D42 		.ascii	"PWMB_Start\000"
+ 1535      5F537461 
+ 1535      727400
+ 1536              	.LASF23:
+ 1537 0033 70657269 		.ascii	"period\000"
+ 1537      6F6400
+ 1538              	.LASF3:
+ 1539 003a 73686F72 		.ascii	"short unsigned int\000"
+ 1539      7420756E 
+ 1539      7369676E 
+ 1539      65642069 
+ 1539      6E7400
+ 1540              	.LASF41:
+ 1541 004d 50574D42 		.ascii	"PWMB_interruptState\000"
+ 1541      5F696E74 
+ 1541      65727275 
+ 1541      70745374 
+ 1541      61746500 
+ 1542              	.LASF38:
+ 1543 0061 50574D42 		.ascii	"PWMB_Init\000"
+ 1543      5F496E69 
+ 1543      7400
+ 1544              	.LASF45:
+ 1545 006b 50574D42 		.ascii	"PWMB_ReadPeriod\000"
+ 1545      5F526561 
+ 1545      64506572 
+ 1545      696F6400 
+ 1546              	.LASF26:
+ 1547 007b 50574D42 		.ascii	"PWMB_WriteCompare2\000"
+ 1547      5F577269 
+ 1547      7465436F 
+ 1547      6D706172 
+ 1547      653200
+ 1548              	.LASF19:
+ 1549 008e 50574D42 		.ascii	"PWMB_Stop\000"
+ 1549      5F53746F 
+ 1549      7000
+ 1550              	.LASF50:
+ 1551 0098 533A5C53 		.ascii	"S:\\SpiderBot\\Servos\\Servo Board.cydsn\000"
+ 1551      70696465 
+ 1551      72426F74 
+ 1551      5C536572 
+ 1551      766F735C 
+ 1552              	.LASF34:
+ 1553 00be 50574D42 		.ascii	"PWMB_WriteControlRegister\000"
+ 1553      5F577269 
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 45
+
+
+ 1553      7465436F 
+ 1553      6E74726F 
+ 1553      6C526567 
+ 1554              	.LASF11:
+ 1555 00d8 666C6F61 		.ascii	"float\000"
+ 1555      7400
+ 1556              	.LASF18:
+ 1557 00de 50574D42 		.ascii	"PWMB_Enable\000"
+ 1557      5F456E61 
+ 1557      626C6500 
+ 1558              	.LASF7:
+ 1559 00ea 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1559      206C6F6E 
+ 1559      6720756E 
+ 1559      7369676E 
+ 1559      65642069 
+ 1560              	.LASF1:
+ 1561 0101 756E7369 		.ascii	"unsigned char\000"
+ 1561      676E6564 
+ 1561      20636861 
+ 1561      7200
+ 1562              	.LASF48:
+ 1563 010f 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1563      43313120 
+ 1563      352E342E 
+ 1563      31203230 
+ 1563      31363036 
+ 1564 0142 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1564      20726576 
+ 1564      6973696F 
+ 1564      6E203233 
+ 1564      37373135 
+ 1565 0175 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1565      66756E63 
+ 1565      74696F6E 
+ 1565      2D736563 
+ 1565      74696F6E 
+ 1566              	.LASF14:
+ 1567 019d 72656738 		.ascii	"reg8\000"
+ 1567      00
+ 1568              	.LASF5:
+ 1569 01a2 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1569      20756E73 
+ 1569      69676E65 
+ 1569      6420696E 
+ 1569      7400
+ 1570              	.LASF9:
+ 1571 01b4 75696E74 		.ascii	"uint8\000"
+ 1571      3800
+ 1572              	.LASF35:
+ 1573 01ba 636F6E74 		.ascii	"control\000"
+ 1573      726F6C00 
+ 1574              	.LASF22:
+ 1575 01c2 636F756E 		.ascii	"counter\000"
+ 1575      74657200 
+ 1576              	.LASF12:
+ 1577 01ca 646F7562 		.ascii	"double\000"
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 46
+
+
+ 1577      6C6500
+ 1578              	.LASF2:
+ 1579 01d1 73686F72 		.ascii	"short int\000"
+ 1579      7420696E 
+ 1579      7400
+ 1580              	.LASF10:
+ 1581 01db 75696E74 		.ascii	"uint16\000"
+ 1581      313600
+ 1582              	.LASF46:
+ 1583 01e2 4379456E 		.ascii	"CyEnterCriticalSection\000"
+ 1583      74657243 
+ 1583      72697469 
+ 1583      63616C53 
+ 1583      65637469 
+ 1584              	.LASF8:
+ 1585 01f9 756E7369 		.ascii	"unsigned int\000"
+ 1585      676E6564 
+ 1585      20696E74 
+ 1585      00
+ 1586              	.LASF47:
+ 1587 0206 43794578 		.ascii	"CyExitCriticalSection\000"
+ 1587      69744372 
+ 1587      69746963 
+ 1587      616C5365 
+ 1587      6374696F 
+ 1588              	.LASF39:
+ 1589 021c 72657375 		.ascii	"result\000"
+ 1589      6C7400
+ 1590              	.LASF36:
+ 1591 0223 50574D42 		.ascii	"PWMB_ReadCapture\000"
+ 1591      5F526561 
+ 1591      64436170 
+ 1591      74757265 
+ 1591      00
+ 1592              	.LASF20:
+ 1593 0234 50574D42 		.ascii	"PWMB_WriteCounter\000"
+ 1593      5F577269 
+ 1593      7465436F 
+ 1593      756E7465 
+ 1593      7200
+ 1594              	.LASF40:
+ 1595 0246 6374726C 		.ascii	"ctrl\000"
+ 1595      00
+ 1596              	.LASF16:
+ 1597 024b 6C6F6E67 		.ascii	"long double\000"
+ 1597      20646F75 
+ 1597      626C6500 
+ 1598              	.LASF17:
+ 1599 0257 73697A65 		.ascii	"sizetype\000"
+ 1599      74797065 
+ 1599      00
+ 1600              	.LASF6:
+ 1601 0260 6C6F6E67 		.ascii	"long long int\000"
+ 1601      206C6F6E 
+ 1601      6720696E 
+ 1601      7400
+ 1602              	.LASF43:
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 47
+
+
+ 1603 026e 50574D42 		.ascii	"PWMB_ReadCompare1\000"
+ 1603      5F526561 
+ 1603      64436F6D 
+ 1603      70617265 
+ 1603      3100
+ 1604              	.LASF44:
+ 1605 0280 50574D42 		.ascii	"PWMB_ReadCompare2\000"
+ 1605      5F526561 
+ 1605      64436F6D 
+ 1605      70617265 
+ 1605      3200
+ 1606              	.LASF32:
+ 1607 0292 696E7465 		.ascii	"interruptMode\000"
+ 1607      72727570 
+ 1607      744D6F64 
+ 1607      6500
+ 1608              	.LASF30:
+ 1609 02a0 50574D42 		.ascii	"PWMB_ReadDeadTime\000"
+ 1609      5F526561 
+ 1609      64446561 
+ 1609      6454696D 
+ 1609      6500
+ 1610              	.LASF4:
+ 1611 02b2 6C6F6E67 		.ascii	"long int\000"
+ 1611      20696E74 
+ 1611      00
+ 1612              	.LASF13:
+ 1613 02bb 63686172 		.ascii	"char\000"
+ 1613      00
+ 1614              	.LASF52:
+ 1615 02c0 50574D42 		.ascii	"PWMB_initVar\000"
+ 1615      5F696E69 
+ 1615      74566172 
+ 1615      00
+ 1616              	.LASF49:
+ 1617 02cd 47656E65 		.ascii	"Generated_Source\\PSoC5\\PWMB.c\000"
+ 1617      72617465 
+ 1617      645F536F 
+ 1617      75726365 
+ 1617      5C50536F 
+ 1618              	.LASF0:
+ 1619 02eb 7369676E 		.ascii	"signed char\000"
+ 1619      65642063 
+ 1619      68617200 
+ 1620              	.LASF25:
+ 1621 02f7 636F6D70 		.ascii	"compare\000"
+ 1621      61726500 
+ 1622              	.LASF29:
+ 1623 02ff 50574D42 		.ascii	"PWMB_ReadCounter\000"
+ 1623      5F526561 
+ 1623      64436F75 
+ 1623      6E746572 
+ 1623      00
+ 1624              	.LASF28:
+ 1625 0310 64656164 		.ascii	"deadtime\000"
+ 1625      74696D65 
+ 1625      00
+ARM GAS  C:\Users\ryanc\AppData\Local\Temp\cck4S16E.s 			page 48
+
+
+ 1626              	.LASF31:
+ 1627 0319 50574D42 		.ascii	"PWMB_SetInterruptMode\000"
+ 1627      5F536574 
+ 1627      496E7465 
+ 1627      72727570 
+ 1627      744D6F64 
+ 1628              	.LASF33:
+ 1629 032f 50574D42 		.ascii	"PWMB_ReadStatusRegister\000"
+ 1629      5F526561 
+ 1629      64537461 
+ 1629      74757352 
+ 1629      65676973 
+ 1630              	.LASF27:
+ 1631 0347 50574D42 		.ascii	"PWMB_WriteDeadTime\000"
+ 1631      5F577269 
+ 1631      74654465 
+ 1631      61645469 
+ 1631      6D6500
+ 1632              	.LASF51:
+ 1633 035a 50574D42 		.ascii	"PWMB_ReadControlRegister\000"
+ 1633      5F526561 
+ 1633      64436F6E 
+ 1633      74726F6C 
+ 1633      52656769 
+ 1634              	.LASF21:
+ 1635 0373 50574D42 		.ascii	"PWMB_WritePeriod\000"
+ 1635      5F577269 
+ 1635      74655065 
+ 1635      72696F64 
+ 1635      00
+ 1636              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

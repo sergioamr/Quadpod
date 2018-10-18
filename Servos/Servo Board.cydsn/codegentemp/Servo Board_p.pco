@@ -1,0 +1,56 @@
+dont_use_io iocell 1 0
+dont_use_io iocell 1 1
+set_location "\PWMB:PWMUDB:genblk8:stsreg\" statusicell 2 4 4 
+set_location "Net_1187" macrocell 3 3 0 2
+set_location "\PWMA:PWMUDB:prevCompare1\" macrocell 3 3 1 3
+set_location "\PWMA:PWMUDB:runmode_enable\" macrocell 2 3 1 3
+set_location "\PWMA:PWMUDB:db_cnt_0\" macrocell 3 5 1 0
+set_location "\PWMA:PWMUDB:status_1\" macrocell 3 3 1 0
+set_location "\PWMB:PWMUDB:runmode_enable\" macrocell 2 4 0 0
+set_location "\PWMB:PWMUDB:pwm_db_reg\" macrocell 2 4 1 1
+set_location "\PWMB:PWMUDB:prevCompare2\" macrocell 2 4 0 3
+set_location "MODIN1_1" macrocell 2 5 0 0
+set_location "\PWMB:PWMUDB:db_ph2_run_temp\" macrocell 2 4 0 2
+set_location "\PWMA:PWMUDB:db_ph1_run_temp\" macrocell 3 3 1 2
+set_location "\PWMB:PWMUDB:sP16:pwmdp:u1\" datapathcell 2 4 2 
+set_location "MODIN1_0" macrocell 2 5 1 0
+set_location "\PWMA:PWMUDB:status_0\" macrocell 3 3 0 3
+set_location "\PWMB:PWMUDB:db_ph1_run_temp\" macrocell 2 4 1 2
+set_location "\PWMA:PWMUDB:prevCompare2\" macrocell 3 3 0 0
+set_location "Net_1268" macrocell 2 3 0 0
+set_location "\PWMA:PWMUDB:sP16:pwmdp:u1\" datapathcell 3 3 2 
+set_location "\PWMB:PWMUDB:prevCompare1\" macrocell 2 3 0 2
+set_location "\PWMA:PWMUDB:db_cnt_1\" macrocell 3 5 0 0
+set_location "\PWMB:PWMUDB:sP16:pwmdp:u0\" datapathcell 3 4 2 
+set_location "\PWMA:PWMUDB:genblk8:stsreg\" statusicell 3 3 4 
+set_location "\PWMB:PWMUDB:status_1\" macrocell 2 4 1 0
+set_location "\PWMA:PWMUDB:sP16:pwmdp:u0\" datapathcell 2 3 2 
+set_location "\PWMB:PWMUDB:status_2\" macrocell 2 4 0 1
+set_location "\PWMA:PWMUDB:status_2\" macrocell 3 3 0 1
+set_location "\PWMA:PWMUDB:db_ph2_run_temp\" macrocell 3 4 0 1
+set_location "\PWMA:PWMUDB:pwm_db_reg\" macrocell 3 3 1 1
+set_location "\PWMB:PWMUDB:status_0\" macrocell 2 3 0 1
+set_location "\USBUART:bus_reset\" interrupt -1 -1 23
+set_location "\USBUART:sof_int\" interrupt -1 -1 21
+set_io "Servo3(0)" iocell 0 2
+set_location "\PWMA:PWMUDB:genblk1:ctrlreg\" controlcell 2 3 6 
+set_location "\USBUART:arb_int\" interrupt -1 -1 22
+set_location "\PWMB:PWMUDB:genblk1:ctrlreg\" controlcell 2 4 6 
+# Note: port 15 is the logical name for port 8
+set_io "\USBUART:Dp(0)\" iocell 15 6
+set_location "\PWMB:PWMUDB:genblk7:dbctrlreg\" controlcell 2 5 6 
+set_location "\USBUART:Dp\" logicalport -1 -1 8
+set_io "Servo4(0)" iocell 0 3
+set_location "\USBUART:ord_int\" interrupt -1 -1 25
+set_location "\USBUART:ep_1\" interrupt -1 -1 0
+set_location "\USBUART:ep_2\" interrupt -1 -1 1
+set_location "\USBUART:ep_0\" interrupt -1 -1 24
+set_location "\USBUART:ep_3\" interrupt -1 -1 2
+set_location "\USBUART:dp_int\" interrupt -1 -1 12
+set_location "\USBUART:USB\" usbcell -1 -1 0
+set_io "Servo2(0)" iocell 0 0
+set_io "Servo1(0)" iocell 0 1
+# Note: port 15 is the logical name for port 8
+set_io "\USBUART:Dm(0)\" iocell 15 7
+set_location "ClockBlock" clockblockcell -1 -1 0
+set_location "\PWMA:PWMUDB:genblk7:dbctrlreg\" controlcell 3 5 6 

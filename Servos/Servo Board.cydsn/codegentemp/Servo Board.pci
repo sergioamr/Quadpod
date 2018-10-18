@@ -1,0 +1,14 @@
+# Servo Board
+# 2018-09-22 10:13:35Z
+
+# IO_0@[IOP=(1)][IoId=(0)] is reserved: SWDDebugEnabled
+dont_use_io iocell 1 0
+# IO_1@[IOP=(1)][IoId=(1)] is reserved: SWDDebugEnabled
+dont_use_io iocell 1 1
+set_io "Servo4(0)" iocell 0 3
+set_io "Servo3(0)" iocell 0 2
+set_io "Servo1(0)" iocell 0 1
+set_io "\USBUART:Dm(0)\" iocell 15 7
+set_io "\USBUART:Dp(0)\" iocell 15 6
+set_io "Servo2(0)" iocell 0 0
+set_location "\USBUART:USB\" usbcell -1 -1 0
